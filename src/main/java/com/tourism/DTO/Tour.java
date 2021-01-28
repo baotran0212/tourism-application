@@ -16,7 +16,7 @@ import lombok.ToString;
 @ToString
 public class Tour {
 
-  private String id;
+  private Long id;
   private String name;
   private String description;
   private Double price;

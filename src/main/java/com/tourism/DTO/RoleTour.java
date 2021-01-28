@@ -5,6 +5,6 @@ package com.tourism.DTO;
  */
 public class RoleTour {
 
-  private String id;
+  private Long id;
   private String name;
 }

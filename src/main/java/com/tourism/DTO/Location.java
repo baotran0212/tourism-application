@@ -14,7 +14,7 @@ import lombok.ToString;
 @ToString
 public class Location {
 
-  private String id;
+  private Long id;
   private String name;
   private String address;
   private String coordinates;

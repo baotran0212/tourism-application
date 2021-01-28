@@ -4,13 +4,17 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.Statement;
-import java.util.logging.Logger;
-
+import java.util.logging.Logger;
+
 import lombok.AllArgsConstructor;
-import lombok.NoArgsConstructor;
-
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.ToString;
+
 @AllArgsConstructor
-@NoArgsConstructor
+@NoArgsConstructor
+@Data
+@ToString
 public abstract class Connector {
   private static final Logger logger = Logger.getLogger(Connector.class.getName());
   protected String host;
@@ -18,11 +22,8 @@ public abstract class Connector {
   protected String password;
   protected String database;
   protected Connection connection = null;
-  protected Statement statement = null;
-  protected ResultSet resultSet = null;
 
   public Connector(String host, String userName, String password, String database) {
-    super();
     this.host = host;
     this.userName = userName;
     this.password = password;
@@ -31,4 +32,7 @@ public abstract class Connector {
 
   public abstract void getConnect();
 
+  public abstract ResultSet executeQuery(String query);
+
+  public abstract int executeUpdate(String query);
 }

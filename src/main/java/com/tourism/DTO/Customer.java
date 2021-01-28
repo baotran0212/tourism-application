@@ -13,7 +13,7 @@ import lombok.ToString;
 @NoArgsConstructor
 @AllArgsConstructor
 public class Customer {
-  private String id;
+  private Long id;
   private String name;
   private String identityCard;
   private String address;

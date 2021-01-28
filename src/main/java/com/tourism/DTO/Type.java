@@ -14,6 +14,6 @@ import lombok.ToString;
 @ToString
 public class Type {
 
-  private String id;
+  private Long id;
   private String name;
 }
