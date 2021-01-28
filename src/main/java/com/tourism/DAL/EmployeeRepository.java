@@ -10,13 +10,13 @@ import com.tourism.DTO.Employee;
 public class EmployeeRepository implements Repositories<Employee, Long> {
 
   @Override
-  public <S extends Employee> S save(S entity) {
+  public Employee save(Employee entity) {
     // TODO Auto-generated method stub
     return null;
   }
 
   @Override
-  public <S extends Employee> Iterable<S> saveAll(Iterable<S> entities) {
+  public Iterable<Employee> saveAll(Iterable<Employee> entities) {
     // TODO Auto-generated method stub
     return null;
   }

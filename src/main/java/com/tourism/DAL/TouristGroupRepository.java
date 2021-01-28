@@ -75,9 +75,7 @@ public class TouristGroupRepository implements Repositories<TouristGroup, Long> 
   public Optional<TouristGroup> findById(Long id) {
     List<Long> ids = new ArrayList<Long>();
     ids.add(id);
-    Optional<TouristGroup> opt;
-    opt = Optional.ofNullable(findAllById(ids).get(0));
-    return opt;
+    return Optional.ofNullable(findAllById(ids).get(0));
   }
 
 	@Override
@@ -118,14 +116,14 @@ public class TouristGroupRepository implements Repositories<TouristGroup, Long> 
 
   @Override
   public void delete(TouristGroup entity) {
-    // TODO Auto-generated method stub
 
   }
 
   @Override
   public void deleteById(Long id) {
-    // TODO Auto-generated method stub
-
+	  List<Long> ids = new ArrayList<Long>();
+	  ids.add(id);
+	  deleteAllById(ids);
   }
 
   @Override
@@ -136,7 +134,12 @@ public class TouristGroupRepository implements Repositories<TouristGroup, Long> 
 
   @Override
   public void deleteAllById(Iterable<? extends Long> ids) {
-	  System.out.println("DELETED");
+	  StringBuilder query = new StringBuilder("DELETE FROM tourist_group WHERE ");
+	  ids.forEach(id->{
+		  query.append(" id = "+id+" OR");
+	  });
+	  this.connector.executeUpdate(query.substring(0, query.length()-2));
+	  System.out.println(query.substring(0, query.length()-2));
   }
 
   @Override
@@ -152,9 +155,9 @@ public class TouristGroupRepository implements Repositories<TouristGroup, Long> 
 		TouristGroupRepository touristGroupRepository = new TouristGroupRepository();
 		List<TouristGroup> touristGroups = new ArrayList<TouristGroup>();
 		/* TEST INSERT */
-		TouristGroup tg = new TouristGroup(new Long(123), "name", new Date(), new Date(), "description",
+		TouristGroup tg = new TouristGroup(new Long(4), "name", new Date(), new Date(), "description",
 				new Double(300000), new Double(50000), new Double(130000), new Double(12300000));
-		TouristGroup tg2 = new TouristGroup(new Long(123), "name", new Date(), new Date(), "description",
+		TouristGroup tg2 = new TouristGroup(new Long(5), "name", new Date(), new Date(), "description",
 				new Double(300000), new Double(50000), new Double(130000), new Double(12300000));
 		touristGroups.add(tg);
 		touristGroups.add(tg2);

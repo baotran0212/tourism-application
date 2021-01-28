@@ -19,13 +19,11 @@ public class MysqlConnector extends Connector {
     this.userName = ProjectProperties.getProperties("mysql.user");
     this.password = ProjectProperties.getProperties("mysql.password");
     this.database = ProjectProperties.getProperties("mysql.database");
-    System.out.println(super.toString());
     this.getConnect();
   }
 
   public void getConnect() {
     String url = "jdbc:mysql://" + this.host + ":3306/" + this.database;
-    System.out.println(url);
     try {
       this.connection = DriverManager.getConnection(url, this.userName, this.password);
       logger.info("Connect success!!!");
@@ -33,11 +31,22 @@ public class MysqlConnector extends Connector {
       logger.info(e.toString());
     }
   }
-
+ 
+	@Override
+	public void setStatement() {
+		try {
+			this.statement = this.connection.createStatement();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
   public int executeUpdate(String query) {
     int res = Integer.MIN_VALUE;
     try {
-      res = this.connection.createStatement().executeUpdate(query);
+    	this.setStatement();
+    	this.statement.execute(query);
     } catch (Exception e) {
       // TODO: handle exception
     } finally {
@@ -49,7 +58,8 @@ public class MysqlConnector extends Connector {
   public ResultSet executeQuery(String query) {
     ResultSet rs = null;
     try {
-      rs = this.connection.createStatement().executeQuery(query);
+    	this.setStatement();
+    	rs = this.statement.executeQuery(query);
     } catch (Exception e) {
       // TODO: handle exception
     }
@@ -59,8 +69,18 @@ public class MysqlConnector extends Connector {
   public void closeConnection() {
     try {
       if (this.connection != null && !this.connection.isClosed()) {
-        this.connection.close();
-        this.connection = null;
+        //this.connection.close();
+        //this.connection = null;
+      }
+      
+      if(this.statement != null && !this.statement.isClosed()) {
+    	  this.statement.close();
+    	  this.statement.close();
+      }
+      
+      if(this.resultSet!=null && !this.resultSet.isClosed()) {
+    	  this.resultSet.close();
+    	  this.resultSet.close();
       }
     } catch (Exception e) {
       // TODO: handle exception

@@ -10,13 +10,13 @@ import com.tourism.DTO.Tour;
 public class TourRepository implements Repositories<Tour, Long> {
 
   @Override
-  public <S extends Tour> S save(S entity) {
+  public Tour save(Tour entity) {
     // TODO Auto-generated method stub
     return null;
   }
 
   @Override
-  public <S extends Tour> Iterable<S> saveAll(Iterable<S> entities) {
+  public Iterable<Tour> saveAll(Iterable<Tour> entities) {
     // TODO Auto-generated method stub
     return null;
   }
