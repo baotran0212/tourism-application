@@ -1,10 +1,27 @@
 package com.tourism.DTO;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.NonNull;
+import lombok.RequiredArgsConstructor;
+import lombok.ToString;
+
 /**
  * RoleTour
  */
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
+@RequiredArgsConstructor
+@ToString
 public class RoleTour {
-
-  private Long id;
-  private String name;
+	private Long id;
+	@NonNull
+	private String name;
+	protected List<TouristGroup> touristGroups = new ArrayList<TouristGroup>();
+	protected List<Employee> employees = new ArrayList<Employee>();
 }

@@ -1,5 +1,6 @@
 package com.tourism.DAL;
 
+import java.util.List;
 import java.util.Optional;
 
 import com.tourism.DTO.Employee;
@@ -16,7 +17,7 @@ public class EmployeeRepository implements Repositories<Employee, Long> {
   }
 
   @Override
-  public Iterable<Employee> saveAll(Iterable<Employee> entities) {
+  public List<Employee> saveAll(Iterable<Employee> entities) {
     // TODO Auto-generated method stub
     return null;
   }
@@ -28,13 +29,13 @@ public class EmployeeRepository implements Repositories<Employee, Long> {
   }
 
   @Override
-  public Iterable<Employee> findAll() {
+  public List<Employee> findAll() {
     // TODO Auto-generated method stub
     return null;
   }
 
   @Override
-  public Iterable<Employee> findAllById(Iterable<Long> ids) {
+  public List<Employee> findAllById(Iterable<Long> ids) {
     // TODO Auto-generated method stub
     return null;
   }
@@ -74,5 +75,35 @@ public class EmployeeRepository implements Repositories<Employee, Long> {
     // TODO Auto-generated method stub
 
   }
+
+@Override
+public List<Employee> loadAllRelationship(Iterable<Employee> entities) {
+	// TODO Auto-generated method stub
+	return null;
+}
+
+@Override
+public Optional<Employee> loadRelationshipById(Long id) {
+	// TODO Auto-generated method stub
+	return null;
+}
+
+@Override
+public Optional<Employee> loadRelationship(Employee entity) {
+	// TODO Auto-generated method stub
+	return null;
+}
+
+@Override
+public List<Employee> saveAllRelationship(Iterable<Employee> entities) {
+	// TODO Auto-generated method stub
+	return null;
+}
+
+@Override
+public Employee saveRelationship(Employee entity) {
+	// TODO Auto-generated method stub
+	return null;
+}
 
 }

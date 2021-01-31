@@ -1,10 +1,14 @@
 package com.tourism.DTO;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.NonNull;
+import lombok.RequiredArgsConstructor;
 import lombok.ToString;
 
 /**
@@ -14,10 +18,18 @@ import lombok.ToString;
 @AllArgsConstructor
 @NoArgsConstructor
 @ToString
+@RequiredArgsConstructor
 public class Tour {
 
-  private Long id;
-  private String name;
-  private String description;
-  private Double price;
+	protected Long id;
+	protected Long typeId;
+	@NonNull
+	protected String name;
+	@NonNull
+	protected String description;
+	@NonNull
+	protected Double price;
+	protected Type type = new Type();
+	List<TouristGroup> touristGroups = new ArrayList<TouristGroup>();
+	List<Location> locations = new ArrayList<Location>();
 }

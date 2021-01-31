@@ -3,6 +3,8 @@ package com.tourism.DTO;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.NonNull;
+import lombok.RequiredArgsConstructor;
 import lombok.ToString;
 
 /**
@@ -12,12 +14,19 @@ import lombok.ToString;
 @AllArgsConstructor
 @NoArgsConstructor
 @ToString
+@RequiredArgsConstructor
 public class Employee {
 
-  private Long id;
+  protected Long id;
+  @NonNull
   private String name;
+  @NonNull
   private String identityCard;
+  @NonNull
   private String address;
+  @NonNull
   private String gender;
+  @NonNull
   private String phoneNumber;
+  
 }

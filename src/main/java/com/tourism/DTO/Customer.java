@@ -1,5 +1,8 @@
 package com.tourism.DTO;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.Getter;
@@ -16,24 +19,24 @@ import lombok.ToString;
 @ToString
 @NoArgsConstructor
 @AllArgsConstructor
-@Getter
-@Setter
 @RequiredArgsConstructor
 public class Customer {
-  private Long id;
-  @NonNull
-  private String name;
-  @NonNull
-  private String identityCard;
-  @NonNull
-  private String address;
-  @NonNull
-  private String gender;
-  @NonNull
-  private String phoneNumber;
+	@NonNull
+	protected Long id;
+	@NonNull
+	protected String name;
+	@NonNull
+	protected String identityCard;
+	@NonNull
+	protected String address;
+	@NonNull
+	protected String gender;
+	@NonNull
+	protected String phoneNumber;
+	protected List<TouristGroup> touristGroups = new ArrayList<TouristGroup>();
 
-  public static void main(String[] args) {
-    Customer c = new Customer();
-  }
+	public static void main(String[] args) {
+		Customer c = new Customer();
+	}
 
 }
