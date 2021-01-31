@@ -21,7 +21,6 @@ import lombok.ToString;
 @AllArgsConstructor
 @RequiredArgsConstructor
 public class Customer {
-	@NonNull
 	protected Long id;
 	@NonNull
 	protected String name;

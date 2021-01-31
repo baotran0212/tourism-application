@@ -19,14 +19,14 @@ public class Employee {
 
   protected Long id;
   @NonNull
-  private String name;
+  protected String name;
   @NonNull
-  private String identityCard;
+  protected String identityCard;
   @NonNull
-  private String address;
+  protected String address;
   @NonNull
-  private String gender;
+  protected String gender;
   @NonNull
-  private String phoneNumber;
+  protected String phoneNumber;
   
 }

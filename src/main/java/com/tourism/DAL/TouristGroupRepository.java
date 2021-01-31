@@ -83,9 +83,11 @@ public class TouristGroupRepository implements Repositories<TouristGroup, Long> 
 									+ e.getId() + "\", \"" + cus.getId() + "\" );");
 				});
 				new RoleTourRepository().saveAll(e.getRoleTours()).forEach(roleTour -> {
-					connector.executeUpdate(
-							"INSERT INTO role_tour_tourist_group (`tourist_group_id`, `role_tour_id`) VALUES (\""
-									+ e.getId() + "\", \"" + roleTour.getId() + "\" );");
+					new EmployeeRepository().saveAll(roleTour.getEmployees()).forEach(emp ->{
+						connector.executeUpdate(
+								"INSERT INTO tourist_group_role_tour_employee (`tourist_group_id`, `role_tour_id`, `employee_id`) VALUES (\""
+										+ e.getId() + "\", \"" + roleTour.getId() +"\", \"" + emp.getId() +"\" );");
+					});
 				});
 				new HotelRepository().saveAll(e.getHotels()).forEach(hotel -> {
 					connector.executeUpdate("INSERT INTO tourist_group_hotel (`tourist_group_id`, `hotel`) VALUES (\""
@@ -113,9 +115,11 @@ public class TouristGroupRepository implements Repositories<TouristGroup, Long> 
 									+ e.getId() + "\", \"" + cus.getId() + "\" );");
 				});
 				new RoleTourRepository().saveAll(e.getRoleTours()).forEach(roleTour -> {
-					connector.executeUpdate(
-							"INSERT INTO role_tour_tourist_group (`tourist_group_id`, `role_tour_id`) VALUES (\""
-									+ e.getId() + "\", \"" + roleTour.getId() + "\" );");
+					new EmployeeRepository().saveAll(roleTour.getEmployees()).forEach(emp -> {
+						connector.executeUpdate(
+								"INSERT INTO tourist_group_role_tour_employee (`tourist_group_id`, `role_tour_id`, `employee_id`) VALUES (\""
+										+ e.getId() + "\", \"" + roleTour.getId() + "\", \"" + emp.getId() + "\" );");
+					});
 				});
 				new HotelRepository().saveAll(e.getHotels()).forEach(hotel -> {
 					connector.executeUpdate("INSERT INTO tourist_group_hotel (`tourist_group_id`, `hotel`) VALUES (\""
@@ -145,6 +149,15 @@ public class TouristGroupRepository implements Repositories<TouristGroup, Long> 
 		return Optional.ofNullable(tourisGroups.isEmpty() ? null : tourisGroups.get(0));
 	}
 
+	/*
+SELECT * 
+FROM tourist_group, role_tour, tourist_group_role_tour_employee
+WHERE tourist_group.id = tourist_group_role_tour_employee.tourist_group_id
+AND tourist_group_role_tour_employee.role_tour_id = role_tour.id
+-- AND tourist_group_role_tour_employee.employee_id = employee_id
+AND tourist_group.id = 1
+GROUP BY tourist_group_role_tour_employee.role_tour_id
+	 */
 	@Override
 	public List<TouristGroup> findAllById(Iterable<Long> ids) {
 		List<TouristGroup> touristGroups = new ArrayList<TouristGroup>();

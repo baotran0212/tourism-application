@@ -24,8 +24,8 @@ public class TestTouristGroupRepository extends TestCase{
 		TouristGroup tg = new TouristGroup("name", new Date(), new Date(), "description",
 				Double.valueOf(300000), Double.valueOf(50000), Double.valueOf(130000), Double.valueOf(12300000));
 		Tour tour = new Tour("tour name", "tour description", Double.valueOf(500));
-		Customer customer = new Customer(null,"customer name", "311842023", "customer address", "male", "340545345");
-		Customer customer2 = new Customer(null, "customer2 name", "3525445", "customer2 address", "female", "453463456");
+		Customer customer = new Customer("customer name", "311842023", "customer address", "male", "340545345");
+		Customer customer2 = new Customer("customer2 name", "3525445", "customer2 address", "female", "453463456");
 		tg.setTour(tour);
 		tg.setCustomers(new ArrayList<Customer>(Arrays.asList(new Customer[] {customer,customer2})));
 		tg = touristGroupRepos.save(tg);
