@@ -22,6 +22,6 @@ public class RoleTour {
 	private Long id;
 	@NonNull
 	private String name;
-	protected List<TouristGroup> touristGroups = new ArrayList<TouristGroup>();
+	protected TouristGroup touristGroup; 
 	protected List<Employee> employees = new ArrayList<Employee>();
 }

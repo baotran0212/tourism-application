@@ -27,7 +27,11 @@ public class Customer {
 	@NonNull
 	protected String identityCard;
 	@NonNull
-	protected String address;
+	protected String address1;
+	@NonNull
+	protected String address2;
+	@NonNull
+	protected String address3;
 	@NonNull
 	protected String gender;
 	@NonNull

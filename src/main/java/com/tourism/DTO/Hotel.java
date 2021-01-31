@@ -24,6 +24,10 @@ public class Hotel {
   @NonNull
   protected String price;
   @NonNull
-  protected String address;
+  protected String address1;
+  @NonNull
+  protected String address2;
+  @NonNull
+  protected String address3;
   protected List<TouristGroup> touristGroups = new ArrayList<TouristGroup>();
 }

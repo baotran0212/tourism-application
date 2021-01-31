@@ -12,7 +12,9 @@ import java.util.Optional;
 import java.util.logging.Logger;
 
 import com.tourism.DTO.Customer;
+import com.tourism.DTO.Employee;
 import com.tourism.DTO.Hotel;
+import com.tourism.DTO.RoleTour;
 import com.tourism.DTO.Tour;
 import com.tourism.DTO.TouristGroup;
 
@@ -31,8 +33,8 @@ public class TouristGroupRepository implements Repositories<TouristGroup, Long> 
 		try {
 			while (rs.next() && rs != null) {
 				TouristGroup tg = new TouristGroup();
-				tg.setId(Long.valueOf(rs.getString("id")));
-				tg.setTourId(Long.valueOf(rs.getString("tour_id")));
+				tg.setId(Long.valueOf(rs.getLong("id")));
+				tg.setTourId(Long.valueOf(rs.getLong("tour_id")));
 				tg.setName(rs.getString("name"));
 				tg.setDepatureDate(rs.getDate("depature_date"));
 				tg.setEndDate(rs.getDate("end_date"));
@@ -60,7 +62,6 @@ public class TouristGroupRepository implements Repositories<TouristGroup, Long> 
 	public List<TouristGroup> saveAll(Iterable<TouristGroup> entities) {
 		List<Long> ids = new ArrayList<Long>();
 		entities.forEach(e -> {
-			Long returnedId = null;
 			e.setTourId(e.getTour().getId());
 			if (findById(e.getId()).isPresent()) {
 				StringBuilder updateQuery = new StringBuilder("UPDATE tourist_group SET ");
@@ -76,24 +77,6 @@ public class TouristGroupRepository implements Repositories<TouristGroup, Long> 
 				updateQuery.append("WHERE id = \"" + e.getId() + "\" ;");
 				logger.info(updateQuery.toString());
 				this.connector.executeUpdate(updateQuery.toString());
-				new TourRepository().save(e.getTour());
-				new CustomerRepository().saveAll(e.getCustomers()).forEach(cus -> {
-					connector.executeUpdate(
-							"INSERT INTO tourist_group_customer (`tourist_group_id`, `customer_id`) VALUES (\""
-									+ e.getId() + "\", \"" + cus.getId() + "\" );");
-				});
-				new RoleTourRepository().saveAll(e.getRoleTours()).forEach(roleTour -> {
-					new EmployeeRepository().saveAll(roleTour.getEmployees()).forEach(emp ->{
-						connector.executeUpdate(
-								"INSERT INTO tourist_group_role_tour_employee (`tourist_group_id`, `role_tour_id`, `employee_id`) VALUES (\""
-										+ e.getId() + "\", \"" + roleTour.getId() +"\", \"" + emp.getId() +"\" );");
-					});
-				});
-				new HotelRepository().saveAll(e.getHotels()).forEach(hotel -> {
-					connector.executeUpdate("INSERT INTO tourist_group_hotel (`tourist_group_id`, `hotel`) VALUES (\""
-							+ e.getId() + "\", \"" + hotel.getId() + "\" );");
-				});
-				returnedId = e.getId();
 			} else {
 				StringBuilder insertQuery = new StringBuilder(
 						"INSERT INTO tourist_group(`tour_id`, `name`, `depature_date`, `end_date`, `description`, `food_price`, `transport_price`, `hotel_price`, `other_price`, `tour_id`) VALUES ");
@@ -108,35 +91,42 @@ public class TouristGroupRepository implements Repositories<TouristGroup, Long> 
 				insertQuery.append("\"" + e.getOtherPrice() + "\", ");
 				insertQuery.append("\"" + e.getTour().getId() + "\" ); ");
 				connector.executeUpdate(insertQuery.toString());
-				new TourRepository().save(e.getTour());
-				new CustomerRepository().saveAll(e.getCustomers()).forEach(cus -> {
-					connector.executeUpdate(
-							"INSERT INTO tourist_group_customer (`tourist_group_id`, `customer_id`) VALUES (\""
-									+ e.getId() + "\", \"" + cus.getId() + "\" );");
-				});
-				new RoleTourRepository().saveAll(e.getRoleTours()).forEach(roleTour -> {
-					new EmployeeRepository().saveAll(roleTour.getEmployees()).forEach(emp -> {
-						connector.executeUpdate(
-								"INSERT INTO tourist_group_role_tour_employee (`tourist_group_id`, `role_tour_id`, `employee_id`) VALUES (\""
-										+ e.getId() + "\", \"" + roleTour.getId() + "\", \"" + emp.getId() + "\" );");
-					});
-				});
-				new HotelRepository().saveAll(e.getHotels()).forEach(hotel -> {
-					connector.executeUpdate("INSERT INTO tourist_group_hotel (`tourist_group_id`, `hotel`) VALUES (\""
-							+ e.getId() + "\", \"" + hotel.getId() + "\" );");
-				});
 				ResultSet returnedResultSet = connector
 						.executeQuery("SELECT * FROM tourist_group ORDER BY `id` DESC LIMIT 1");
 				try {
 					while (returnedResultSet != null && returnedResultSet.next()) {
-						returnedId = Long.valueOf(returnedResultSet.getString("id"));
-						logger.info(returnedId.toString());
+						e.setId(Long.valueOf(returnedResultSet.getLong("id")));
 					}
 				} catch (Exception e1) {
-					e1.printStackTrace();
 				}
 			}
-			ids.add(returnedId);
+			new TourRepository().save(e.getTour());
+			e.getCustomers().forEach(cus -> {
+				cus.setTouristGroups(new ArrayList<TouristGroup>());
+				cus = new CustomerRepository().save(cus);
+				connector.executeUpdate(
+						"INSERT INTO tourist_group_customer (`tourist_group_id`, `customer_id`) VALUES (\"" + e.getId()
+								+ "\", \"" + cus.getId() + "\" );");
+			});
+			e.getRoleTours().forEach(roleTour -> {
+				roleTour.setTouristGroup(e);
+				roleTour = new RoleTourRepository().save(roleTour);
+				RoleTour roleTemp = roleTour;
+				roleTour.getEmployees().forEach(emp -> {
+					emp.setTouristGroups(new ArrayList<TouristGroup>());
+					emp = new EmployeeRepository().save(emp);
+					connector.executeUpdate(
+							"INSERT INTO tourist_group_role_tour_employee (`tourist_group_id`, `role_tour_id`, `employee_id`) VALUES (\""
+									+ e.getId() + "\", \"" + roleTemp.getId() + "\", \"" + emp.getId() + "\" );");
+				});
+			});
+			e.getHotels().forEach(hotel -> {
+				hotel.setTouristGroups(new ArrayList<TouristGroup>());
+				hotel = new HotelRepository().save(hotel);
+				connector.executeUpdate("INSERT INTO tourist_group_hotel (`tourist_group_id`, `hotel`) VALUES (\""
+						+ e.getId() + "\", \"" + hotel.getId() + "\" );");
+			});
+			ids.add(e.getId());
 		});
 		return findAllById(ids);
 	}
@@ -169,8 +159,8 @@ GROUP BY tourist_group_role_tour_employee.role_tour_id
 		try {
 			while (rs != null && rs.next()) {
 				TouristGroup tg = new TouristGroup();
-				tg.setId(Long.valueOf(rs.getString("id")));
-				tg.setTourId(Long.valueOf(rs.getString("tour_id")));
+				tg.setId(Long.valueOf(rs.getLong("id")));
+				tg.setTourId(Long.valueOf(rs.getLong("tour_id")));
 				tg.setName(rs.getString("name"));
 				tg.setDepatureDate(rs.getDate("depature_date"));
 				tg.setEndDate(rs.getDate("end_date"));

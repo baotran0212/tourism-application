@@ -22,7 +22,11 @@ public class Location {
 	@NonNull
 	protected String name;
 	@NonNull
-	protected String address;
+	protected String address1;
+	@NonNull
+	protected String address2;
+	@NonNull
+	protected String address3;
 	@NonNull
 	protected String coordinates;
 	protected List<Tour> tours = new ArrayList<Tour>();

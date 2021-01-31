@@ -34,7 +34,7 @@ public class CustomerRepository implements Repositories<Customer, Long> {
 				StringBuilder updateQuery = new StringBuilder("UPDATE customer SET ");
 				updateQuery.append("name = \"" + e.getName() + "\", ");
 				updateQuery.append("identity_card = \"" + e.getIdentityCard() + "\", ");
-				updateQuery.append("address = \"" + e.getAddress() + "\", ");
+				updateQuery.append("address = \"" + e.getAddress1() + "\", ");
 				updateQuery.append("gender = \"" + e.getGender() + "\", ");
 				updateQuery.append("phone_number = \"" + e.getPhoneNumber() + "\"");
 				updateQuery.append(" WHERE id = \"" + e.getId() + "\" ;");
@@ -51,7 +51,7 @@ public class CustomerRepository implements Repositories<Customer, Long> {
 						"INSERT INTO customer(`name`, `identity_card`, `address`, `gender`, `phone_number`) VALUES ");
 				insertQuery.append("( \"" + e.getName() + "\", ");
 				insertQuery.append("\"" + e.getIdentityCard() + "\", ");
-				insertQuery.append("\"" + e.getAddress() + "\", ");
+				insertQuery.append("\"" + e.getAddress1() + "\", ");
 				insertQuery.append(" \"" + e.getGender() + "\", ");
 				insertQuery.append("\"" + e.getPhoneNumber() + "\") ");
 				connector.executeUpdate(insertQuery.toString());
@@ -75,7 +75,46 @@ public class CustomerRepository implements Repositories<Customer, Long> {
 		});
 		return findAllById(ids);
 	}
-
+	
+	public List<Customer> saveOriginTableAll(Iterable<Customer> entities) {
+		List<Long> ids = new ArrayList<Long>();
+		entities.forEach(e -> {
+			Long returnedId = null;
+			if (findById(e.getId()).isPresent()) {
+				StringBuilder updateQuery = new StringBuilder("UPDATE customer SET ");
+				updateQuery.append("name = \"" + e.getName() + "\", ");
+				updateQuery.append("identity_card = \"" + e.getIdentityCard() + "\", ");
+				updateQuery.append("address = \"" + e.getAddress1() + "\", ");
+				updateQuery.append("gender = \"" + e.getGender() + "\", ");
+				updateQuery.append("phone_number = \"" + e.getPhoneNumber() + "\"");
+				updateQuery.append(" WHERE id = \"" + e.getId() + "\" ;");
+				logger.info(updateQuery.toString());
+				this.connector.executeUpdate(updateQuery.toString());
+				returnedId = e.getId();
+			} else {
+				StringBuilder insertQuery = new StringBuilder(
+						"INSERT INTO customer(`name`, `identity_card`, `address`, `gender`, `phone_number`) VALUES ");
+				insertQuery.append("( \"" + e.getName() + "\", ");
+				insertQuery.append("\"" + e.getIdentityCard() + "\", ");
+				insertQuery.append("\"" + e.getAddress1() + "\", ");
+				insertQuery.append(" \"" + e.getGender() + "\", ");
+				insertQuery.append("\"" + e.getPhoneNumber() + "\") ");
+				connector.executeUpdate(insertQuery.toString());
+				ResultSet returnedResutSet = connector
+						.executeQuery("SELECT * FROM customer ORDER BY `id` DESC LIMIT 1");
+				try {
+					while (returnedResutSet != null && returnedResutSet.next()) {
+						returnedId = Long.valueOf(returnedResutSet.getString("id"));
+						logger.info(returnedId.toString());
+					}
+				} catch (SQLException e1) {
+					e1.printStackTrace();
+				}
+			}
+			ids.add(returnedId);
+		});
+		return findAllById(ids);
+	}
 	@Override
 	public Optional<Customer> findById(Long id) {
 		List<Long> ids = new ArrayList<Long>();
@@ -91,9 +130,13 @@ public class CustomerRepository implements Repositories<Customer, Long> {
 		List<Customer> customers = new ArrayList<Customer>();
 		try {
 			while (rs.next()) {
-				Customer tg = new Customer(Long.valueOf(rs.getLong("id")), rs.getString("name"),
-						rs.getString("identity_card"), rs.getString("address"), rs.getString("gender"),
-						rs.getString("phone_number"));
+				Customer tg = new Customer();
+				tg.setId(Long.valueOf(rs.getLong("id")));
+				tg.setName(rs.getString("name"));
+				tg.setIdentityCard("identity_card");
+				tg.setAddress1(rs.getString("address")); 
+				tg.setGender(rs.getString("gender"));
+				tg.setPhoneNumber(rs.getString("phone_number"));
 				customers.add(tg);
 			}
 		} catch (Exception e) {
@@ -112,11 +155,13 @@ public class CustomerRepository implements Repositories<Customer, Long> {
 		ResultSet rs = this.connector.executeQuery(query.substring(0, query.length() - 2));
 		try {
 			while (rs != null && rs.next()) {
-				Customer tg = new Customer(Long.valueOf(rs.getString("id")), rs.getString("name"),
-						rs.getString("identity_card"),
-						rs.getString("address"),
-						rs.getString("gender"),
-						rs.getString("phone_number"));
+				Customer tg = new Customer();
+				tg.setId(Long.valueOf(rs.getLong("id")));
+				tg.setName(rs.getString("name"));
+				tg.setIdentityCard("identity_card");
+				tg.setAddress1(rs.getString("address")); 
+				tg.setGender(rs.getString("gender"));
+				tg.setPhoneNumber(rs.getString("phone_number"));
 				customers.add(tg);
 			}
 		} catch (SQLException e) {
@@ -201,15 +246,5 @@ public class CustomerRepository implements Repositories<Customer, Long> {
 
 	public static void main(String[] args) {
 		CustomerRepository customerRepository = new CustomerRepository();
-		/* TEST SAVE */
-		List<Customer> customers = new ArrayList<Customer>();
-		customers.add(new Customer(Long.valueOf(17), "Long", "311098490", "Nguyen Trai", "nam", "09123455"));
-		customers.add(new Customer(Long.valueOf(18), "Vu", "311098490", "Nguyen Trai", "nam", "09123455"));
-		customers = customerRepository.findAll();
-		System.out.println(customers);
-		// TEST FIND
-		List<Long> ids = new ArrayList<Long>();
-		ids.add(Long.valueOf(1));
-		// System.out.println(!customerRepository.findAllById(ids).isEmpty()?customerRepository.findAllById(ids).get(0):null);
 	}
 }
