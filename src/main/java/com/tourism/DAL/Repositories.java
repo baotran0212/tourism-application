@@ -1,5 +1,6 @@
 package com.tourism.DAL;
 
+import java.util.List;
 import java.util.Optional;
 
 /**
@@ -8,13 +9,13 @@ import java.util.Optional;
 public interface Repositories<T, ID> {
   T save(T entity);
 
-  Iterable<T> saveAll(Iterable<T> entities);
+  List<T> saveAll(Iterable<T> entities);
 
   Optional<T> findById(ID id);
 
-  Iterable<T> findAll();
+  List<T> findAll();
 
-  Iterable<T> findAllById(Iterable<ID> ids);
+  List<T> findAllById(Iterable<ID> ids);
 
   long count();
 
@@ -27,4 +28,14 @@ public interface Repositories<T, ID> {
   void deleteAllById(Iterable<? extends ID> ids);
 
   void deleteAll(Iterable<? extends T> entities);
+  
+  List<T> loadAllRelationship(Iterable<T> entities);
+  
+  Optional<T> loadRelationshipById(ID id);
+  
+  Optional<T> loadRelationship(T entity);
+  
+  List<T> saveAllRelationship(Iterable<T> entities);
+  
+  T saveRelationship(T entity);
 }
