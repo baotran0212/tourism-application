@@ -42,6 +42,6 @@ public class TouristGroup {
   protected Tour tour;
   
 public static void main(String[] args) {
-	new TouristGroup(new Long(123), "name", new Date(), new Date(), "description", new Double(123), new Double(123), new Double(123), new Double(123));
+	new TouristGroup();
 }
 }

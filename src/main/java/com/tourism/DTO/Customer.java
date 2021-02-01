@@ -16,8 +16,6 @@ import lombok.ToString;
 @ToString
 @NoArgsConstructor
 @AllArgsConstructor
-@Getter
-@Setter
 @RequiredArgsConstructor
 public class Customer {
   private Long id;
@@ -34,6 +32,7 @@ public class Customer {
 
   public static void main(String[] args) {
     Customer c = new Customer();
+    c.getName();
   }
 
 }
