@@ -40,7 +40,7 @@ public class JsonAddress {
 		return address;
 	}
 	
-	public List<Object> getAddressLv2(String cityName){
+	public List<Object> getAddressLv2(String nameCity){
 		Object obj;
 		List<Object> address = new ArrayList<>();
 		try {
@@ -49,12 +49,12 @@ public class JsonAddress {
 			JSONArray listAddress = (JSONArray) jsonObject.get("data");
 			Iterator itr = listAddress.iterator();
 			Iterator itr2 = null;
-			String CityName = "Thành phố Hà Nội";
-			while(!cityName.equals(CityName)) {				
+			String NameCity = "Thành phố Hà Nội";
+			while(!nameCity.equals(NameCity)) {				
 				JSONObject name= (JSONObject) itr.next();
 				JSONArray  listDistric = (JSONArray) name.get("level2s");
 				itr2 = listDistric.iterator();
-				CityName = (String) name.get("name");
+				NameCity = (String) name.get("name");
 				}
 			while(itr2.hasNext()) {
 				JSONObject nameDistric = (JSONObject) itr2.next();
@@ -71,5 +71,44 @@ public class JsonAddress {
 		return address;
 	}
 	
+	public List<Object> getAddressLV3(String nameCity,String nameDistrict){
+		Object obj;
+		List<Object> address = new ArrayList<>();
+		try {
+			obj = new JSONParser().parse(new FileReader("src\\main\\java\\com\\tourism\\service\\address.json"));
+			JSONObject jsonObject = (JSONObject) obj;
+			JSONArray listAddress = (JSONArray) jsonObject.get("data");
+			Iterator itr = listAddress.iterator();
+			Iterator itr2 = null;
+			String NameCity = "Thành phố Hà Nội";
+			while(!nameCity.equals(NameCity)) {				
+				JSONObject name= (JSONObject) itr.next();
+				JSONArray  listDistric = (JSONArray) name.get("level2s");
+				itr2 = listDistric.iterator();
+				NameCity = (String) name.get("name");
+				}
+			Iterator itr3 =null;
+			String NameDistrict = "Quận Ba Đình";
+			while(!nameDistrict.equals(NameDistrict)) {
+				JSONObject name= (JSONObject) itr2.next();
+				JSONArray listWard = (JSONArray) name.get("level3s");
+				itr3 = listWard.iterator();
+				NameDistrict = (String) name.get("name");
+			}
+			while(itr3.hasNext()) {
+				JSONObject nameWard = (JSONObject) itr3.next();
+				address.add(nameWard.get("name"));
+			}
+			
+		}
+		catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+		return address;
+	}
 	
 }

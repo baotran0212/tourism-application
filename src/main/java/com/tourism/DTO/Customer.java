@@ -38,15 +38,11 @@ public class Customer {
 	protected String phoneNumber;
 	protected List<TouristGroup> touristGroups = new ArrayList<TouristGroup>();
 
-<<<<<<< HEAD
   public static void main(String[] args) {
     Customer c = new Customer();
     c.getName();
   }
-=======
-	public static void main(String[] args) {
-		Customer c = new Customer();
-	}
->>>>>>> eeb1bbac5e2ab628b8f3f78805b741d3539b7b7e
+
+
 
 }
