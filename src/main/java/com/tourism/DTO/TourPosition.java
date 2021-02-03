@@ -16,12 +16,13 @@ import lombok.ToString;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@RequiredArgsConstructor
 @ToString
-public class RoleTour {
-	private Long id;
-	@NonNull
-	private String name;
+public class TourPosition {
+	protected Long id;
+	protected Long touristGroupId;
+	protected Long employeeId;
+	protected Long positionId;
 	protected TouristGroup touristGroup; 
-	protected List<Employee> employees = new ArrayList<Employee>();
+	protected Employee employee;
+	protected Position position;
 }

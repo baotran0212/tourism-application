@@ -29,118 +29,89 @@ public class CustomerRepository implements Repositories<Customer, Long> {
 	public List<Customer> saveAll(Iterable<Customer> entities) {
 		List<Long> ids = new ArrayList<Long>();
 		entities.forEach(e -> {
-			Long returnedId = null;
 			if (findById(e.getId()).isPresent()) {
 				StringBuilder updateQuery = new StringBuilder("UPDATE customer SET ");
 				updateQuery.append("name = \"" + e.getName() + "\", ");
 				updateQuery.append("identity_card = \"" + e.getIdentityCard() + "\", ");
-				updateQuery.append("address = \"" + e.getAddress1() + "\", ");
+				updateQuery.append("address1 = \"" + e.getAddress1() + "\", ");
+				updateQuery.append("address2 = \"" + e.getAddress2() + "\", ");
+				updateQuery.append("address3 = \"" + e.getAddress3() + "\", ");
 				updateQuery.append("gender = \"" + e.getGender() + "\", ");
 				updateQuery.append("phone_number = \"" + e.getPhoneNumber() + "\"");
 				updateQuery.append(" WHERE id = \"" + e.getId() + "\" ;");
 				logger.info(updateQuery.toString());
 				this.connector.executeUpdate(updateQuery.toString());
-				new TouristGroupRepository().saveAll(e.getTouristGroups()).forEach(tg->{
-					connector.executeUpdate(
-							"INSERT INTO tourist_group_customer (`tourist_group_id`,`customer_id`) VALUES ("
-							+e.getId() + "\", \""+tg.getId() + "\" );");
-				});
-				returnedId = e.getId();
 			} else {
 				StringBuilder insertQuery = new StringBuilder(
-						"INSERT INTO customer(`name`, `identity_card`, `address`, `gender`, `phone_number`) VALUES ");
+						"INSERT INTO customer(`name`, `identity_card`, `address1`, `address2`, `address3`, `gender`, `phone_number`) VALUES ");
 				insertQuery.append("( \"" + e.getName() + "\", ");
 				insertQuery.append("\"" + e.getIdentityCard() + "\", ");
 				insertQuery.append("\"" + e.getAddress1() + "\", ");
+				insertQuery.append("\""+e.getAddress2() + "\", ");
+				insertQuery.append("\""+e.getAddress3() + "\", ");
 				insertQuery.append(" \"" + e.getGender() + "\", ");
 				insertQuery.append("\"" + e.getPhoneNumber() + "\") ");
 				connector.executeUpdate(insertQuery.toString());
-				new TouristGroupRepository().saveAll(e.getTouristGroups()).forEach(tg->{
-					connector.executeUpdate(
-							"INSERT INTO tourist_group_customer (`tourist_group_id`,`customer_id`) VALUES ("
-							+e.getId() + "\", \""+tg.getId() + "\" );");
-				});
 				ResultSet returnedResutSet = connector
 						.executeQuery("SELECT * FROM customer ORDER BY `id` DESC LIMIT 1");
 				try {
 					while (returnedResutSet != null && returnedResutSet.next()) {
-						returnedId = Long.valueOf(returnedResutSet.getString("id"));
-						logger.info(returnedId.toString());
+						 e.setId(Long.valueOf(returnedResutSet.getString("id")));
 					}
-				} catch (SQLException e1) {
+				} catch (Exception e1) {
 					e1.printStackTrace();
 				}
 			}
-			ids.add(returnedId);
+			//Save tourist groups
+			e.getTouristGroups().forEach(tg -> {
+				tg.setCustomers(new ArrayList<Customer>());
+				tg = new TouristGroupRepository().save(tg);
+				connector.executeUpdate(
+						"INSERT INTO tourist_group_customer (`tourist_group_id`, `customer_id`) VALUES (\""
+						+tg.getId() + "\", \"" + e.getId() + "\" );");
+			});
+			ids.add(e.getId());
 		});
 		return findAllById(ids);
 	}
 	
-	public List<Customer> saveOriginTableAll(Iterable<Customer> entities) {
-		List<Long> ids = new ArrayList<Long>();
-		entities.forEach(e -> {
-			Long returnedId = null;
-			if (findById(e.getId()).isPresent()) {
-				StringBuilder updateQuery = new StringBuilder("UPDATE customer SET ");
-				updateQuery.append("name = \"" + e.getName() + "\", ");
-				updateQuery.append("identity_card = \"" + e.getIdentityCard() + "\", ");
-				updateQuery.append("address = \"" + e.getAddress1() + "\", ");
-				updateQuery.append("gender = \"" + e.getGender() + "\", ");
-				updateQuery.append("phone_number = \"" + e.getPhoneNumber() + "\"");
-				updateQuery.append(" WHERE id = \"" + e.getId() + "\" ;");
-				logger.info(updateQuery.toString());
-				this.connector.executeUpdate(updateQuery.toString());
-				returnedId = e.getId();
-			} else {
-				StringBuilder insertQuery = new StringBuilder(
-						"INSERT INTO customer(`name`, `identity_card`, `address`, `gender`, `phone_number`) VALUES ");
-				insertQuery.append("( \"" + e.getName() + "\", ");
-				insertQuery.append("\"" + e.getIdentityCard() + "\", ");
-				insertQuery.append("\"" + e.getAddress1() + "\", ");
-				insertQuery.append(" \"" + e.getGender() + "\", ");
-				insertQuery.append("\"" + e.getPhoneNumber() + "\") ");
-				connector.executeUpdate(insertQuery.toString());
-				ResultSet returnedResutSet = connector
-						.executeQuery("SELECT * FROM customer ORDER BY `id` DESC LIMIT 1");
-				try {
-					while (returnedResutSet != null && returnedResutSet.next()) {
-						returnedId = Long.valueOf(returnedResutSet.getString("id"));
-						logger.info(returnedId.toString());
-					}
-				} catch (SQLException e1) {
-					e1.printStackTrace();
-				}
-			}
-			ids.add(returnedId);
-		});
-		return findAllById(ids);
-	}
 	@Override
 	public Optional<Customer> findById(Long id) {
 		List<Long> ids = new ArrayList<Long>();
 		ids.add(id);
-		List<Customer> customers = findAllById(ids);
-		System.out.println(customers);
-		return Optional.ofNullable(customers.isEmpty() ? null : customers.get(0));
+		return Optional.ofNullable(findAllById(ids).get(0));
 	}
 
 	@Override
 	public List<Customer> findAll() {
 		ResultSet rs = connector.executeQuery("SELECT * FROM customer");
 		List<Customer> customers = new ArrayList<Customer>();
-		try {
+try {
 			while (rs.next()) {
-				Customer tg = new Customer();
-				tg.setId(Long.valueOf(rs.getLong("id")));
-				tg.setName(rs.getString("name"));
-				tg.setIdentityCard("identity_card");
-				tg.setAddress1(rs.getString("address")); 
-				tg.setGender(rs.getString("gender"));
-				tg.setPhoneNumber(rs.getString("phone_number"));
-				customers.add(tg);
+				Customer customer = new Customer();
+				customer.setId(Long.valueOf(rs.getLong("id")));
+				customer.setName(rs.getString("name"));
+				customer.setIdentityCard("identity_card");
+				customer.setAddress1(rs.getString("address1"));
+				customer.setAddress2(rs.getString("address2"));
+				customer.setAddress3(rs.getString("address3"));
+				customer.setGender(rs.getString("gender"));
+				customer.setPhoneNumber(rs.getString("phone_number"));
+				//Set tourist_groups
+				if(customer.getTouristGroups() == null) {
+					ResultSet rsTG = this.connector.executeQuery(
+							"SELECT tg.id FROM tourist_group tg, tourist_group_customer temp WHERE temp.tourist_group_id=tg.id AND temp.customer_id="
+							+customer.getId() +" GROUP BY tg.id");
+					List<Long> idTGs = new ArrayList<Long>();
+					while(rsTG.next() && rsTG!=null) {
+						idTGs.add(Long.valueOf(rsTG.getLong("id")));
+					}
+					customer.setTouristGroups(new TouristGroupRepository().findAllById(idTGs));
+				}
+				customers.add(customer);
 			}
 		} catch (Exception e) {
-			// TODO: handle exception
+			e.printStackTrace();
 		}
 		return customers;
 	}
@@ -148,26 +119,37 @@ public class CustomerRepository implements Repositories<Customer, Long> {
 	@Override
 	public List<Customer> findAllById(Iterable<Long> ids) {
 		List<Customer> customers = new ArrayList<Customer>();
-		StringBuilder query = new StringBuilder("SELECT * FROM customer where ");
 		ids.forEach(id -> {
-			query.append(" id = " + id + " OR");
-		});
-		ResultSet rs = this.connector.executeQuery(query.substring(0, query.length() - 2));
-		try {
-			while (rs != null && rs.next()) {
-				Customer tg = new Customer();
-				tg.setId(Long.valueOf(rs.getLong("id")));
-				tg.setName(rs.getString("name"));
-				tg.setIdentityCard("identity_card");
-				tg.setAddress1(rs.getString("address")); 
-				tg.setGender(rs.getString("gender"));
-				tg.setPhoneNumber(rs.getString("phone_number"));
-				customers.add(tg);
+			ResultSet rs = this.connector.executeQuery(
+					"SELECT * FROM customer WHERE id = \""+id+"\";");
+			try {
+				while (rs.next()) {
+					Customer customer = new Customer();
+					customer.setId(Long.valueOf(rs.getLong("id")));
+					customer.setName(rs.getString("name"));
+					customer.setIdentityCard("identity_card");
+					customer.setAddress1(rs.getString("address1"));
+					customer.setAddress2(rs.getString("address2"));
+					customer.setAddress3(rs.getString("address3"));
+					customer.setGender(rs.getString("gender"));
+					customer.setPhoneNumber(rs.getString("phone_number"));
+					//Set tourist groups
+					if(customer.getTouristGroups() == null) {
+						ResultSet rsTG = this.connector.executeQuery(
+								"SELECT tg.id FROM tourist_group tg, tourist_group_customer temp WHERE temp.tourist_group_id=tg.id AND temp.customer_id="
+								+customer.getId() +" GROUP BY tg.id");
+						List<Long> idTGs = new ArrayList<Long>();
+						while(rsTG.next() && rsTG!=null) {
+							idTGs.add(Long.valueOf(rsTG.getLong("id")));
+						}
+						customer.setTouristGroups(new TouristGroupRepository().findAllById(idTGs));
+					}
+					customers.add(customer);
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
 			}
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		});
 		return customers;
 	}
 
@@ -212,36 +194,6 @@ public class CustomerRepository implements Repositories<Customer, Long> {
 			ids.add(e.getId());
 		});
 		deleteAllById(ids);
-	}
-
-	@Override
-	public List<Customer> loadAllRelationship(Iterable<Customer> entities) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public Optional<Customer> loadRelationshipById(Long id) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public Optional<Customer> loadRelationship(Customer entity) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public List<Customer> saveAllRelationship(Iterable<Customer> entities) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public Customer saveRelationship(Customer entity) {
-		// TODO Auto-generated method stub
-		return null;
 	}
 
 	public static void main(String[] args) {

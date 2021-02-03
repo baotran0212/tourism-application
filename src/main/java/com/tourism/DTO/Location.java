@@ -29,5 +29,5 @@ public class Location {
 	protected String address3;
 	@NonNull
 	protected String coordinates;
-	protected List<Tour> tours = new ArrayList<Tour>();
+	protected List<Tour> tours;
 }

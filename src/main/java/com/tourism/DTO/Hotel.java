@@ -22,12 +22,12 @@ public class Hotel {
   @NonNull
   protected String name;
   @NonNull
-  protected String price;
+  protected Double price;
   @NonNull
   protected String address1;
   @NonNull
   protected String address2;
   @NonNull
   protected String address3;
-  protected List<TouristGroup> touristGroups = new ArrayList<TouristGroup>();
+  protected List<TouristGroup> touristGroups;
 }

@@ -28,14 +28,5 @@ public interface Repositories<T, ID> {
   void deleteAllById(Iterable<? extends ID> ids);
 
   void deleteAll(Iterable<? extends T> entities);
-  
-  List<T> loadAllRelationship(Iterable<T> entities);
-  
-  Optional<T> loadRelationshipById(ID id);
-  
-  Optional<T> loadRelationship(T entity);
-  
-  List<T> saveAllRelationship(Iterable<T> entities);
-  
-  T saveRelationship(T entity);
+
 }
