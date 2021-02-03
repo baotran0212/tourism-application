@@ -42,5 +42,4 @@ public class Customer {
     Customer c = new Customer();
     c.getName();
   }
-
 }
