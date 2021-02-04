@@ -1,4 +1,4 @@
-package com.tourism;
+package com.tourism.DAL;
 
 import java.util.ArrayList;
 import java.util.Arrays;
