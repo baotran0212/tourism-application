@@ -35,8 +35,9 @@ public class Employee {
 	protected String gender;
 	@NonNull
 	protected String phoneNumber;
-	protected List<TouristGroup> touristGroups = new ArrayList<TouristGroup>();
+	@NonNull
+	protected String status;
+	protected List<TourPosition> tourPositions;
 	public static void main(String[] args) {
-		new Employee().setTouristGroups(new ArrayList<TouristGroup>());
 	}
 }

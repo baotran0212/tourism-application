@@ -36,13 +36,10 @@ public class Customer {
 	protected String gender;
 	@NonNull
 	protected String phoneNumber;
-	protected List<TouristGroup> touristGroups = new ArrayList<TouristGroup>();
+	protected List<TouristGroup> touristGroups;
 
   public static void main(String[] args) {
     Customer c = new Customer();
     c.getName();
   }
-
-
-
 }

@@ -29,7 +29,9 @@ public class Tour {
 	protected String description;
 	@NonNull
 	protected Double price;
-	protected Type type = new Type();
-	List<TouristGroup> touristGroups = new ArrayList<TouristGroup>();
-	List<Location> locations = new ArrayList<Location>();
+	@NonNull
+	protected String status;
+	protected Type type ;
+	List<TouristGroup> touristGroups ;
+	List<Location> locations;
 }

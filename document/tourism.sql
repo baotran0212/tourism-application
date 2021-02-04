@@ -60,6 +60,7 @@ CREATE TABLE `employee` (
   `address3` varchar(255) DEFAULT NULL,
   `gender` varchar(255) DEFAULT NULL,
   `phone_number` varchar(255) DEFAULT NULL,
+  `status` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -70,7 +71,7 @@ CREATE TABLE `employee` (
 
 LOCK TABLES `employee` WRITE;
 /*!40000 ALTER TABLE `employee` DISABLE KEYS */;
-INSERT INTO `employee` VALUES (1,'name1','1223343','address1',NULL,NULL,'male','123435678'),(2,'name2','1234567','address2',NULL,NULL,'female','0985654745');
+INSERT INTO `employee` VALUES (1,'name1','1223343','address1','address2','address3','male','123435678',NULL),(2,'name2','1234567','address2','``','\'\'','female','0985654745',NULL);
 /*!40000 ALTER TABLE `employee` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -128,13 +129,13 @@ LOCK TABLES `location` WRITE;
 UNLOCK TABLES;
 
 --
--- Table structure for table `role_tour`
+-- Table structure for table `position`
 --
 
-DROP TABLE IF EXISTS `role_tour`;
+DROP TABLE IF EXISTS `position`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `role_tour` (
+CREATE TABLE `position` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`id`)
@@ -142,13 +143,45 @@ CREATE TABLE `role_tour` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `role_tour`
+-- Dumping data for table `position`
 --
 
-LOCK TABLES `role_tour` WRITE;
-/*!40000 ALTER TABLE `role_tour` DISABLE KEYS */;
-INSERT INTO `role_tour` VALUES (1,'lái xe'),(2,'hướng dẫn viên'),(3,'phục vụ'),(4,'thông dịch viên'),(5,'tiền trạm');
-/*!40000 ALTER TABLE `role_tour` ENABLE KEYS */;
+LOCK TABLES `position` WRITE;
+/*!40000 ALTER TABLE `position` DISABLE KEYS */;
+INSERT INTO `position` VALUES (1,'lái xe'),(2,'hướng dẫn viên'),(3,'phục vụ'),(4,'thông dịch viên'),(5,'tiền trạm');
+/*!40000 ALTER TABLE `position` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `position_in_tour`
+--
+
+DROP TABLE IF EXISTS `position_in_tour`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `position_in_tour` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `tourist_group_id` int(11) NOT NULL,
+  `position_id` int(11) NOT NULL,
+  `employee_id` int(11) NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `role_tour_id` (`position_id`),
+  KEY `employee_id` (`employee_id`),
+  KEY `position_in_tour_ibfk_1_idx` (`tourist_group_id`),
+  CONSTRAINT `position_in_tour_ibfk_1` FOREIGN KEY (`tourist_group_id`) REFERENCES `tourist_group` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `position_in_tour_ibfk_2` FOREIGN KEY (`position_id`) REFERENCES `position` (`id`),
+  CONSTRAINT `position_in_tour_ibfk_3` FOREIGN KEY (`employee_id`) REFERENCES `employee` (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `position_in_tour`
+--
+
+LOCK TABLES `position_in_tour` WRITE;
+/*!40000 ALTER TABLE `position_in_tour` DISABLE KEYS */;
+INSERT INTO `position_in_tour` VALUES (1,1,1,1),(2,1,1,2),(3,1,2,1),(4,1,2,2),(5,1,3,1),(6,1,3,2),(7,1,4,1);
+/*!40000 ALTER TABLE `position_in_tour` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -164,6 +197,7 @@ CREATE TABLE `tour` (
   `name` varchar(255) DEFAULT NULL,
   `description` text DEFAULT NULL,
   `price` double(15,2) DEFAULT NULL,
+  `status` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `type_id` (`type_id`),
   CONSTRAINT `tour_ibfk_1` FOREIGN KEY (`type_id`) REFERENCES `type_of_tour` (`id`)
@@ -223,6 +257,7 @@ CREATE TABLE `tourist_group` (
   `transport_price` double(15,2) DEFAULT NULL,
   `hotel_price` double(15,2) DEFAULT NULL,
   `other_price` double(15,2) DEFAULT NULL,
+  `status` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `tourist_group_tour_fk` (`tour_id`),
   CONSTRAINT `tourist_group_tour_fk` FOREIGN KEY (`tour_id`) REFERENCES `tour` (`id`)
@@ -235,7 +270,7 @@ CREATE TABLE `tourist_group` (
 
 LOCK TABLES `tourist_group` WRITE;
 /*!40000 ALTER TABLE `tourist_group` DISABLE KEYS */;
-INSERT INTO `tourist_group` VALUES (1,NULL,'name tour','2020-01-01','2020-01-05','this is description',300.00,400.00,500.00,800.00),(2,NULL,'name tour 2','2020-02-01','2020-02-05','this is description 2',300.00,400.00,500.00,800.00),(3,NULL,'name tour 3','2020-03-01','2020-03-05','this is description 3',300.00,400.00,500.00,800.00);
+INSERT INTO `tourist_group` VALUES (1,NULL,'name tour','2020-01-01','2020-01-05','this is description',300.00,400.00,500.00,800.00,NULL),(2,NULL,'name tour 2','2020-02-01','2020-02-05','this is description 2',300.00,400.00,500.00,800.00,NULL),(3,NULL,'name tour 3','2020-03-01','2020-03-05','this is description 3',300.00,400.00,500.00,800.00,NULL);
 /*!40000 ALTER TABLE `tourist_group` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -289,36 +324,6 @@ CREATE TABLE `tourist_group_hotel` (
 LOCK TABLES `tourist_group_hotel` WRITE;
 /*!40000 ALTER TABLE `tourist_group_hotel` DISABLE KEYS */;
 /*!40000 ALTER TABLE `tourist_group_hotel` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `tourist_group_role_tour_employee`
---
-
-DROP TABLE IF EXISTS `tourist_group_role_tour_employee`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `tourist_group_role_tour_employee` (
-  `tourist_group_id` int(11) NOT NULL,
-  `role_tour_id` int(11) NOT NULL,
-  `employee_id` int(11) NOT NULL,
-  PRIMARY KEY (`tourist_group_id`,`role_tour_id`,`employee_id`),
-  KEY `role_tour_id` (`role_tour_id`),
-  KEY `employee_id` (`employee_id`),
-  CONSTRAINT `tourist_group_role_tour_employee_ibfk_1` FOREIGN KEY (`tourist_group_id`) REFERENCES `tourist_group` (`id`),
-  CONSTRAINT `tourist_group_role_tour_employee_ibfk_2` FOREIGN KEY (`role_tour_id`) REFERENCES `role_tour` (`id`),
-  CONSTRAINT `tourist_group_role_tour_employee_ibfk_3` FOREIGN KEY (`employee_id`) REFERENCES `employee` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `tourist_group_role_tour_employee`
---
-
-LOCK TABLES `tourist_group_role_tour_employee` WRITE;
-/*!40000 ALTER TABLE `tourist_group_role_tour_employee` DISABLE KEYS */;
-INSERT INTO `tourist_group_role_tour_employee` VALUES (1,1,1),(1,1,2),(1,2,1),(1,2,2),(1,3,1),(1,3,2),(1,4,1);
-/*!40000 ALTER TABLE `tourist_group_role_tour_employee` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -378,4 +383,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2021-01-31 16:10:54
+-- Dump completed on 2021-02-03 23:08:14

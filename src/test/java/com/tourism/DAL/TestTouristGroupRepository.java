@@ -1,4 +1,4 @@
-package com.tourism;
+package com.tourism.DAL;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -8,7 +8,9 @@ import java.util.List;
 import com.tourism.DAL.TourRepository;
 import com.tourism.DAL.TouristGroupRepository;
 import com.tourism.DTO.Customer;
+import com.tourism.DTO.Employee;
 import com.tourism.DTO.Tour;
+import com.tourism.DTO.TourPosition;
 import com.tourism.DTO.TouristGroup;
 
 import junit.framework.TestCase;
@@ -36,6 +38,8 @@ public class TestTouristGroupRepository extends TestCase{
 	}
 	
 	public void testNullInName() {
-		
+		TourPosition tp = new TourPosition();
+		//tp.setEmployee(new Employee());
+		assertNotNull(tp.getEmployee());
 	}
 }

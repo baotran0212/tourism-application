@@ -38,18 +38,11 @@ public class TouristGroup {
 	protected Double hotelPrice;
 	@NonNull
 	protected Double otherPrice;
-	protected List<Customer> customers = new ArrayList<Customer>();
-	protected Tour tour = new Tour();
-	protected List<RoleTour> roleTours = new ArrayList<RoleTour>();
-	protected List<Hotel> hotels = new ArrayList<Hotel>();
+	protected List<Customer> customers;
+	protected Tour tour;
+	protected List<TourPosition> tourPositions;
+	protected List<Hotel> hotels;
 
-  
-public static void main(String[] args) {
-	new TouristGroup();
-}
-
-	
-
-	
-
+	public static void main(String[] args) {
+	}
 }
