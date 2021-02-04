@@ -49,7 +49,7 @@ public class JsonAddress {
 			JSONArray listAddress = (JSONArray) jsonObject.get("data");
 			Iterator itr = listAddress.iterator();
 			Iterator itr2 = null;
-			String NameCity = "Thành phố Hà Nội";
+			String NameCity = "";
 			while(!nameCity.equals(NameCity)) {				
 				JSONObject name= (JSONObject) itr.next();
 				JSONArray  listDistric = (JSONArray) name.get("level2s");
@@ -80,7 +80,7 @@ public class JsonAddress {
 			JSONArray listAddress = (JSONArray) jsonObject.get("data");
 			Iterator itr = listAddress.iterator();
 			Iterator itr2 = null;
-			String NameCity = "Thành phố Hà Nội";
+			String NameCity = "";
 			while(!nameCity.equals(NameCity)) {				
 				JSONObject name= (JSONObject) itr.next();
 				JSONArray  listDistric = (JSONArray) name.get("level2s");
@@ -88,7 +88,7 @@ public class JsonAddress {
 				NameCity = (String) name.get("name");
 				}
 			Iterator itr3 =null;
-			String NameDistrict = "Quận Ba Đình";
+			String NameDistrict = "";
 			while(!nameDistrict.equals(NameDistrict)) {
 				JSONObject name= (JSONObject) itr2.next();
 				JSONArray listWard = (JSONArray) name.get("level3s");

@@ -47674,6 +47674,140 @@
                     ]
                 },
                 {
+                    "level2_id": "1001",
+                    "name": "Quận 2",
+                    "type": "Quận",
+                    "level3s": [
+                        {
+                            "level3_id": "40001",
+                            "name": "Phường An Khánh",
+                            "type": "Phường"
+                        },
+                        {
+                            "level3_id": "40002",
+                            "name": "Phường An Lợi Đông",
+                            "type": "Phường"
+                        },
+                        {
+                            "level3_id": "40003",
+                            "name": "Phường An Phú",
+                            "type": "Phường"
+                        },
+                        {
+                            "level3_id": "40004",
+                            "name": "Phường Bình An",
+                            "type": "Phường"
+                        },
+                        {
+                            "level3_id": "40005",
+                            "name": "Phường Bình Khánh",
+                            "type": "Phường"
+                        },
+                        {
+                            "level3_id": "40006",
+                            "name": "Phường Bình Trưng Đông",
+                            "type": "Phường"
+                        },
+                        {
+                            "level3_id": "40007",
+                            "name": "Phường Bình Trưng Tây",
+                            "type": "Phường"
+                        },
+                        {
+                            "level3_id": "40008",
+                            "name": "Phường Cát Lái",
+                            "type": "Phường"
+                        },
+                        {
+                            "level3_id": "40009",
+                            "name": "Phường Thạnh Mỹ Lợi",
+                            "type": "Phường"
+                        },
+                        {
+                            "level3_id": "40010",
+                            "name": "Phường Thảo Điền",
+                            "type": "Phường"
+                        },
+                         {
+                            "level3_id": "40011",
+                            "name": "Phường Thủ Thiêm",
+                            "type": "Phường"
+                        }
+                    ]
+                },
+                 {
+                    "level2_id": "1002",
+                    "name": "Quận 9",
+                    "type": "Quận",
+                    "level3s": [
+                        {
+                            "level3_id": "40012",
+                            "name": "Phường Tăng Nhơn Phú B",
+                            "type": "Phường"
+                        },
+                        {
+                            "level3_id": "40013",
+                            "name": "Phường Hiệp Phú",
+                            "type": "Phường"
+                        },
+                        {
+                            "level3_id": "40014",
+                            "name": "Phường Phước Bình",
+                            "type": "Phường"
+                        },
+                        {
+                            "level3_id": "40015",
+                            "name": "Phường Phước Long A",
+                            "type": "Phường"
+                        },
+                        {
+                            "level3_id": "40016",
+                            "name": "Phường Long Phước",
+                            "type": "Phường"
+                        },
+                        {
+                            "level3_id": "40017",
+                            "name": "Phường Long Bình",
+                            "type": "Phường"
+                        },
+                        {
+                            "level3_id": "40018",
+                            "name": "Phường Long Thạnh Mỹ",
+                            "type": "Phường"
+                        },
+                        {
+                            "level3_id": "40019",
+                            "name": "Phường Tăng Nhơn Phú A",
+                            "type": "Phường"
+                        },
+                        {
+                            "level3_id": "40020",
+                            "name": "Phường Tân Phú",
+                            "type": "Phường"
+                        },
+                        {
+                            "level3_id": "40021",
+                            "name": "Phường Trường Thạnh",
+                            "type": "Phường"
+                        },
+                         {
+                            "level3_id": "40022",
+                            "name": "Phường Phú Hữu",
+                            "type": "Phường"
+                        },
+                        {
+                            "level3_id": "40023",
+                            "name": "Phường Long Trường",
+                            "type": "Phường"
+                        },
+                        {
+                            "level3_id": "40024",
+                            "name": "Phường Phước Long B",
+                            "type": "Phường"
+                        }
+                    ]
+                },
+                {
                     "level2_id": "761",
                     "name": "Quận 12",
                     "type": "Quận",
