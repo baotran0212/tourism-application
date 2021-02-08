@@ -36,6 +36,7 @@ public class CustomerRepository implements Repositories<Customer, Long> {
 				updateQuery.append("address1 = \"" + e.getAddress1() + "\", ");
 				updateQuery.append("address2 = \"" + e.getAddress2() + "\", ");
 				updateQuery.append("address3 = \"" + e.getAddress3() + "\", ");
+				updateQuery.append("street = \"" + e.getStreet() + "\", ");
 				updateQuery.append("gender = \"" + e.getGender() + "\", ");
 				updateQuery.append("phone_number = \"" + e.getPhoneNumber() + "\"");
 				updateQuery.append(" WHERE id = \"" + e.getId() + "\" ;");
@@ -43,12 +44,13 @@ public class CustomerRepository implements Repositories<Customer, Long> {
 				this.connector.executeUpdate(updateQuery.toString());
 			} else {
 				StringBuilder insertQuery = new StringBuilder(
-						"INSERT INTO customer(`name`, `identity_card`, `address1`, `address2`, `address3`, `gender`, `phone_number`) VALUES ");
+						"INSERT INTO customer(`name`, `identity_card`, `address1`, `address2`, `address3`, `street`, `gender`, `phone_number`) VALUES ");
 				insertQuery.append("( \"" + e.getName() + "\", ");
 				insertQuery.append("\"" + e.getIdentityCard() + "\", ");
 				insertQuery.append("\"" + e.getAddress1() + "\", ");
 				insertQuery.append("\""+e.getAddress2() + "\", ");
 				insertQuery.append("\""+e.getAddress3() + "\", ");
+				insertQuery.append("\""+e.getStreet() + "\", ");
 				insertQuery.append(" \"" + e.getGender() + "\", ");
 				insertQuery.append("\"" + e.getPhoneNumber() + "\") ");
 				connector.executeUpdate(insertQuery.toString());
@@ -62,14 +64,14 @@ public class CustomerRepository implements Repositories<Customer, Long> {
 					e1.printStackTrace();
 				}
 			}
-			//Save tourist groups
-			e.getTouristGroups().forEach(tg -> {
-				tg.setCustomers(new ArrayList<Customer>());
-				tg = new TouristGroupRepository().save(tg);
-				connector.executeUpdate(
-						"INSERT INTO tourist_group_customer (`tourist_group_id`, `customer_id`) VALUES (\""
-						+tg.getId() + "\", \"" + e.getId() + "\" );");
-			});
+//			//Save tourist groups
+//			e.getTouristGroups().forEach(tg -> {
+//				tg.setCustomers(new ArrayList<Customer>());
+//				tg = new TouristGroupRepository().save(tg);
+//				connector.executeUpdate(
+//						"INSERT INTO tourist_group_customer (`tourist_group_id`, `customer_id`) VALUES (\""
+//						+tg.getId() + "\", \"" + e.getId() + "\" );");
+//			});
 			ids.add(e.getId());
 		});
 		return findAllById(ids);
@@ -79,7 +81,8 @@ public class CustomerRepository implements Repositories<Customer, Long> {
 	public Optional<Customer> findById(Long id) {
 		List<Long> ids = new ArrayList<Long>();
 		ids.add(id);
-		return Optional.ofNullable(findAllById(ids).get(0));
+		List<Customer> objs = findAllById(ids);
+		return objs.isEmpty() ? Optional.empty() : Optional.ofNullable(objs.get(0)); 
 	}
 
 	@Override
@@ -87,7 +90,7 @@ public class CustomerRepository implements Repositories<Customer, Long> {
 		ResultSet rs = connector.executeQuery("SELECT * FROM customer");
 		List<Customer> customers = new ArrayList<Customer>();
 try {
-			while (rs.next()) {
+			while (rs!=null && rs.next()) {
 				Customer customer = new Customer();
 				customer.setId(Long.valueOf(rs.getLong("id")));
 				customer.setName(rs.getString("name"));
@@ -95,19 +98,20 @@ try {
 				customer.setAddress1(rs.getString("address1"));
 				customer.setAddress2(rs.getString("address2"));
 				customer.setAddress3(rs.getString("address3"));
+				customer.setStreet(rs.getString("street"));
 				customer.setGender(rs.getString("gender"));
 				customer.setPhoneNumber(rs.getString("phone_number"));
-				//Set tourist_groups
-				if(customer.getTouristGroups() == null) {
-					ResultSet rsTG = this.connector.executeQuery(
-							"SELECT tg.id FROM tourist_group tg, tourist_group_customer temp WHERE temp.tourist_group_id=tg.id AND temp.customer_id="
-							+customer.getId() +" GROUP BY tg.id");
-					List<Long> idTGs = new ArrayList<Long>();
-					while(rsTG.next() && rsTG!=null) {
-						idTGs.add(Long.valueOf(rsTG.getLong("id")));
-					}
-					customer.setTouristGroups(new TouristGroupRepository().findAllById(idTGs));
-				}
+//				//Set tourist_groups
+//				if(customer.getTouristGroups() == null) {
+//					ResultSet rsTG = this.connector.executeQuery(
+//							"SELECT tg.id FROM tourist_group tg, tourist_group_customer temp WHERE temp.tourist_group_id=tg.id AND temp.customer_id="
+//							+customer.getId() +" GROUP BY tg.id");
+//					List<Long> idTGs = new ArrayList<Long>();
+//					while(rsTG.next() && rsTG!=null) {
+//						idTGs.add(Long.valueOf(rsTG.getLong("id")));
+//					}
+//					customer.setTouristGroups(new TouristGroupRepository().findAllById(idTGs));
+//				}
 				customers.add(customer);
 			}
 		} catch (Exception e) {
@@ -123,7 +127,7 @@ try {
 			ResultSet rs = this.connector.executeQuery(
 					"SELECT * FROM customer WHERE id = \""+id+"\";");
 			try {
-				while (rs.next()) {
+				while (rs!=null && rs.next()) {
 					Customer customer = new Customer();
 					customer.setId(Long.valueOf(rs.getLong("id")));
 					customer.setName(rs.getString("name"));
@@ -131,19 +135,20 @@ try {
 					customer.setAddress1(rs.getString("address1"));
 					customer.setAddress2(rs.getString("address2"));
 					customer.setAddress3(rs.getString("address3"));
+					customer.setStreet(rs.getString("street"));
 					customer.setGender(rs.getString("gender"));
 					customer.setPhoneNumber(rs.getString("phone_number"));
-					//Set tourist groups
-					if(customer.getTouristGroups() == null) {
-						ResultSet rsTG = this.connector.executeQuery(
-								"SELECT tg.id FROM tourist_group tg, tourist_group_customer temp WHERE temp.tourist_group_id=tg.id AND temp.customer_id="
-								+customer.getId() +" GROUP BY tg.id");
-						List<Long> idTGs = new ArrayList<Long>();
-						while(rsTG.next() && rsTG!=null) {
-							idTGs.add(Long.valueOf(rsTG.getLong("id")));
-						}
-						customer.setTouristGroups(new TouristGroupRepository().findAllById(idTGs));
-					}
+//					//Set tourist groups
+//					if(customer.getTouristGroups() == null) {
+//						ResultSet rsTG = this.connector.executeQuery(
+//								"SELECT tg.id FROM tourist_group tg, tourist_group_customer temp WHERE temp.tourist_group_id=tg.id AND temp.customer_id="
+//								+customer.getId() +" GROUP BY tg.id");
+//						List<Long> idTGs = new ArrayList<Long>();
+//						while(rsTG.next() && rsTG!=null) {
+//							idTGs.add(Long.valueOf(rsTG.getLong("id")));
+//						}
+//						customer.setTouristGroups(new TouristGroupRepository().findAllById(idTGs));
+//					}
 					customers.add(customer);
 				}
 			} catch (Exception e) {

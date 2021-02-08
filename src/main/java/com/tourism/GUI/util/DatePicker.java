@@ -65,7 +65,7 @@ public class DatePicker {
 		d.setVisible(true);
 	}
 
-	public DatePicker(JButton parent) {
+	public DatePicker(JComponent parent) {
 		d = new JDialog();
 		d.setModal(true);
 		//TODO: Set background d

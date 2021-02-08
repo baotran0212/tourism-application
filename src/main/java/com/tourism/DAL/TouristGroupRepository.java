@@ -23,6 +23,11 @@ import com.tourism.DTO.TouristGroup;
  */
 public class TouristGroupRepository implements Repositories<TouristGroup, Long> {
 	Connector connector = new MysqlConnector();
+	TourPositionRepository tourPositionRepos =  new TourPositionRepository();
+	CustomerRepository customerRepos = new CustomerRepository();
+	HotelRepository hotelRepos = new HotelRepository();
+	TourRepository tourRepos = new TourRepository();
+	
 	Logger logger = Logger.getLogger(this.getClass().getName());
 	SimpleDateFormat formatter = new SimpleDateFormat("yyyy/MM/dd");
 
@@ -48,13 +53,14 @@ public class TouristGroupRepository implements Repositories<TouristGroup, Long> 
 				updateQuery.append("food_price = " + e.getFoodPrice() + ", ");
 				updateQuery.append("transport_price = " + e.getTransportPrice() + ", ");
 				updateQuery.append("hotel_price = " + e.getHotelPrice() + ", ");
-				updateQuery.append("other_price = " + e.getOtherPrice() + " ");
+				updateQuery.append("other_price = " + e.getOtherPrice() + ", ");
+				updateQuery.append("status = " + e.getStatus() + " ");
 				updateQuery.append("WHERE id = \"" + e.getId() + "\" ;");
 				logger.info(updateQuery.toString());
 				this.connector.executeUpdate(updateQuery.toString());
 			} else {
 				StringBuilder insertQuery = new StringBuilder(
-						"INSERT INTO tourist_group(`tour_id`, `name`, `depature_date`, `end_date`, `description`, `food_price`, `transport_price`, `hotel_price`, `other_price`, `tour_id`) VALUES ");
+						"INSERT INTO tourist_group(`tour_id`, `name`, `depature_date`, `end_date`, `description`, `food_price`, `transport_price`, `hotel_price`, `other_price`, `status`, `tour_id`) VALUES ");
 				insertQuery.append("( \"" + e.getTourId() + "\", ");
 				insertQuery.append("\"" + e.getName() + "\", ");
 				insertQuery.append("\"" + formatter.format(e.getDepatureDate()) + "\", ");
@@ -64,6 +70,7 @@ public class TouristGroupRepository implements Repositories<TouristGroup, Long> 
 				insertQuery.append("\"" + e.getTransportPrice() + "\", ");
 				insertQuery.append("\"" + e.getHotelPrice() + "\", ");
 				insertQuery.append("\"" + e.getOtherPrice() + "\", ");
+				insertQuery.append("\"" + e.getStatus() + "\", ");
 				insertQuery.append("\"" + e.getTour().getId() + "\" ); ");
 				connector.executeUpdate(insertQuery.toString());
 				ResultSet returnedResultSet = connector
@@ -75,31 +82,31 @@ public class TouristGroupRepository implements Repositories<TouristGroup, Long> 
 				} catch (Exception e1) {
 				}
 			}
-			// Save tour positions
-			e.getTourPositions().forEach(tourPosition -> {
-				tourPosition.setTouristGroup(new TouristGroup());
-				tourPosition.setTouristGroupId(e.getId());
-				tourPosition = new TourPositionRepository().save(tourPosition);
-			});
-			// Save tour
-			e.getTour().setTouristGroups(new ArrayList<TouristGroup>());
-			e.setTour(new TourRepository().save(e.getTour()));
-			e.setTourId(e.getTour().getId());
-			// Save customers
-			e.getCustomers().forEach(cus -> {
-				cus.setTouristGroups(new ArrayList<TouristGroup>());
-				cus = new CustomerRepository().save(cus);
-				connector.executeUpdate(
-						"INSERT INTO tourist_group_customer (`tourist_group_id`, `customer_id`) VALUES (\"" 
-				+ e.getId()+ "\", \"" + cus.getId() + "\" );");
-			});
-			// save hotels
-			e.getHotels().forEach(hotel -> {
-				hotel.setTouristGroups(new ArrayList<TouristGroup>());
-				hotel = new HotelRepository().save(hotel);
-				connector.executeUpdate("INSERT INTO tourist_group_hotel (`tourist_group_id`, `hotel`) VALUES (\""
-						+ e.getId() + "\", \"" + hotel.getId() + "\" );");
-			});
+//			// Save tour positions
+//			e.getTourPositions().forEach(tourPosition -> {
+//				tourPosition.setTouristGroup(new TouristGroup());
+//				tourPosition.setTouristGroupId(e.getId());
+//				tourPosition = new TourPositionRepository().save(tourPosition);
+//			});
+//			// Save tour
+//			e.getTour().setTouristGroups(new ArrayList<TouristGroup>());
+//			e.setTour(new TourRepository().save(e.getTour()));
+//			e.setTourId(e.getTour().getId());
+//			// Save customers
+//			e.getCustomers().forEach(cus -> {
+//				cus.setTouristGroups(new ArrayList<TouristGroup>());
+//				cus = new CustomerRepository().save(cus);
+//				connector.executeUpdate(
+//						"INSERT INTO tourist_group_customer (`tourist_group_id`, `customer_id`) VALUES (\"" 
+//				+ e.getId()+ "\", \"" + cus.getId() + "\" );");
+//			});
+//			// save hotels
+//			e.getHotels().forEach(hotel -> {
+//				hotel.setTouristGroups(new ArrayList<TouristGroup>());
+//				hotel = new HotelRepository().save(hotel);
+//				connector.executeUpdate("INSERT INTO tourist_group_hotel (`tourist_group_id`, `hotel`) VALUES (\""
+//						+ e.getId() + "\", \"" + hotel.getId() + "\" );");
+//			});
 			ids.add(e.getId());
 		});
 		return findAllById(ids);
@@ -109,7 +116,8 @@ public class TouristGroupRepository implements Repositories<TouristGroup, Long> 
 	public Optional<TouristGroup> findById(Long id) {
 		List<Long> ids = new ArrayList<Long>();
 		ids.add(id);
-		return Optional.ofNullable(findAllById(ids).get(0));
+		List<TouristGroup> objs = findAllById(ids);
+		return objs.isEmpty() ? Optional.empty() : Optional.ofNullable(objs.get(0));
 	}
 
 	@Override
@@ -117,9 +125,10 @@ public class TouristGroupRepository implements Repositories<TouristGroup, Long> 
 		List<TouristGroup> touristGroups = new ArrayList<TouristGroup>();
 		ResultSet rsTG = this.connector.executeQuery("SELECT * FROM tourist_group ;");
 		try {
-			while (rsTG.next()) {
+			while (rsTG!=null && rsTG.next()) {
 				TouristGroup tg = new TouristGroup();
 				tg.setId(Long.valueOf(rsTG.getLong("id")));
+				tg.setTourId(Long.valueOf(rsTG.getLong("tour_id")));
 				tg.setName(rsTG.getString("name"));
 				tg.setDepatureDate(rsTG.getDate("depature_date"));
 				tg.setEndDate(rsTG.getDate("end_date"));
@@ -128,42 +137,44 @@ public class TouristGroupRepository implements Repositories<TouristGroup, Long> 
 				tg.setTransportPrice(Double.valueOf(rsTG.getDouble("transport_price")));
 				tg.setHotelPrice(Double.valueOf(rsTG.getDouble("hotel_price")));
 				tg.setOtherPrice(Double.valueOf(rsTG.getDouble("other_price")));
-				// Set tour positions
-				if (tg.getTourPositions() == null) {
-					ResultSet rsTourPosition = this.connector.executeQuery(
-							"SELECT tp.id FROM position_in_tour tp WHERE tp.tourist_group_id = " + tg.getId());
-					List<Long> idTourPositions = new ArrayList<Long>();
-					while (rsTourPosition != null && rsTourPosition.next()) {
-						idTourPositions.add(Long.valueOf(rsTourPosition.getLong("id")));
-					}
-					tg.setTourPositions(new TourPositionRepository().findAllById(idTourPositions));
-				}
-				// Set customers
-				if (tg.getCustomers() == null) {
-					ResultSet rsCustomers = this.connector.executeQuery(
-							"SELECT c.id FROM customer c, tourist_group_customer temp WHERE temp.customer_id=c.id AND temp.tourist_group_id = "
-									+ tg.getId() + " GROUP BY c.id");
-					List<Long> idCustomers = new ArrayList<Long>();
-					while (rsCustomers.next() && rsCustomers != null) {
-						idCustomers.add(Long.valueOf(rsCustomers.getLong("id")));
-					}
-					tg.setCustomers(new CustomerRepository().findAllById(idCustomers));
-				}
-				// Set hotels
-				if (tg.getHotels() == null) {
-					ResultSet rsHotel = this.connector.executeQuery(
-							"SELECT h.id FROM hotel h, tourist_group_hotel temp WHERE temp.hotel_id=h.id AND temp.tourist_group_id="
-									+ tg.getId() + " GROUP BY h.id");
-					List<Long> idHotels = new ArrayList<Long>();
-					while (rsHotel.next()) {
-						idHotels.add(Long.valueOf(rsHotel.getLong("id")));
-					}
-					tg.setHotels(new HotelRepository().findAllById(idHotels));
-				}
-				// Set tour
-				if (tg.getTour() == null) {
-					tg.setTour(new TourRepository().findById(tg.getTourId()).orElse(new Tour()));
-				}
+				tg.setStatus(rsTG.getString("status"));
+//				// Set tour positions
+//				if (tg.getTourPositions() == null) {
+//					ResultSet rsTourPosition = this.connector.executeQuery(
+//							"SELECT tp.id FROM position_in_tour tp WHERE tp.tourist_group_id = " + tg.getId());
+//					List<Long> idTourPositions = new ArrayList<Long>();
+//					while (rsTourPosition != null && rsTourPosition.next()) {
+//						idTourPositions.add(Long.valueOf(rsTourPosition.getLong("id")));
+//					}
+//					tg.setTourPositions(tourPositionRepos.findAllById(idTourPositions));
+//				}
+//				// Set customers
+//				if (tg.getCustomers() == null) {
+//					ResultSet rsCustomers = this.connector.executeQuery(
+//							"SELECT c.id FROM customer c, tourist_group_customer temp WHERE temp.customer_id=c.id AND temp.tourist_group_id = "
+//									+ tg.getId() + " GROUP BY c.id");
+//					List<Long> idCustomers = new ArrayList<Long>();
+//					while (rsCustomers.next() && rsCustomers != null) {
+//						idCustomers.add(Long.valueOf(rsCustomers.getLong("id")));
+//					}
+//					tg.setCustomers(customerRepos.findAllById(idCustomers));
+//				}
+//				// Set hotels
+//				if (tg.getHotels() == null) {
+//					ResultSet rsHotel = this.connector.executeQuery(
+//							"SELECT h.id FROM hotel h, tourist_group_hotel temp WHERE temp.hotel_id=h.id AND temp.tourist_group_id="
+//									+ tg.getId() + " GROUP BY h.id");
+//					List<Long> idHotels = new ArrayList<Long>();
+//					while (rsHotel !=null && rsHotel.next()) {
+//						idHotels.add(Long.valueOf(rsHotel.getLong("id")));
+//					}
+//					tg.setHotels(hotelRepos.findAllById(idHotels));
+//				}
+//				// Set tour
+//				if (tg.getTour() == null) {
+//					tg.getTour().setTouristGroups(new ArrayList<TouristGroup>());
+//					tg.setTour(tourRepos.findById(tg.getTourId()).orElse(new Tour()));
+//				}
 				touristGroups.add(tg);
 			}
 		} catch (Exception e) {
@@ -190,42 +201,43 @@ public class TouristGroupRepository implements Repositories<TouristGroup, Long> 
 					tg.setTransportPrice(Double.valueOf(rsTG.getDouble("transport_price")));
 					tg.setHotelPrice(Double.valueOf(rsTG.getDouble("hotel_price")));
 					tg.setOtherPrice(Double.valueOf(rsTG.getDouble("other_price")));
-					// Set tour positions
-					if(tg.getTourPositions() == null) {
-						ResultSet rsTourPosition = this.connector.executeQuery(
-								"SELECT tp.id FROM position_in_tour tp WHERE tp.tourist_group_id = " + tg.getId());
-						List<Long> idTourPositions = new ArrayList<Long>();
-						while (rsTourPosition != null && rsTourPosition.next()) {
-							idTourPositions.add(Long.valueOf(rsTourPosition.getLong("id")));
-						}
-						tg.setTourPositions(new TourPositionRepository().findAllById(idTourPositions));	
-					}
-					// Set customers
-					if(tg.getCustomers() == null ) {
-						ResultSet rsCustomers = this.connector.executeQuery(
-								"SELECT c.id FROM customer c, tourist_group_customer temp WHERE temp.customer_id=c.id AND temp.tourist_group_id = "
-										+ tg.getId() + " GROUP BY c.id");
-						List<Long> idCustomers = new ArrayList<Long>();
-						while (rsCustomers.next() && rsCustomers != null) {
-							idCustomers.add(Long.valueOf(rsCustomers.getLong("id")));
-						}
-						tg.setCustomers(new CustomerRepository().findAllById(idCustomers));
-					}
-					// Set hotels
-					if (tg.getHotels() == null) {
-						ResultSet rsHotel = this.connector.executeQuery(
-								"SELECT h.id FROM hotel h, tourist_group_hotel temp WHERE temp.hotel_id=h.id AND temp.tourist_group_id="
-										+ tg.getId() + " GROUP BY h.id");
-						List<Long> idHotels = new ArrayList<Long>();
-						while (rsHotel.next()) {
-							idHotels.add(Long.valueOf(rsHotel.getLong("id")));
-						}
-						tg.setHotels(new HotelRepository().findAllById(idHotels));
-					}
-					// Set tour
-					if (tg.getTour() == null) {
-						tg.setTour(new TourRepository().findById(tg.getTourId()).orElse(new Tour()));
-					}
+					tg.setStatus(rsTG.getString("status"));
+//					// Set tour positions
+//					if(tg.getTourPositions() == null) {
+//						ResultSet rsTourPosition = this.connector.executeQuery(
+//								"SELECT tp.id FROM position_in_tour tp WHERE tp.tourist_group_id = " + tg.getId());
+//						List<Long> idTourPositions = new ArrayList<Long>();
+//						while (rsTourPosition != null && rsTourPosition.next()) {
+//							idTourPositions.add(Long.valueOf(rsTourPosition.getLong("id")));
+//						}
+//						tg.setTourPositions(new TourPositionRepository().findAllById(idTourPositions));	
+//					}
+//					// Set customers
+//					if(tg.getCustomers() == null ) {
+//						ResultSet rsCustomers = this.connector.executeQuery(
+//								"SELECT c.id FROM customer c, tourist_group_customer temp WHERE temp.customer_id=c.id AND temp.tourist_group_id = "
+//										+ tg.getId() + " GROUP BY c.id");
+//						List<Long> idCustomers = new ArrayList<Long>();
+//						while (rsCustomers.next() && rsCustomers != null) {
+//							idCustomers.add(Long.valueOf(rsCustomers.getLong("id")));
+//						}
+//						tg.setCustomers(new CustomerRepository().findAllById(idCustomers));
+//					}
+//					// Set hotels
+//					if (tg.getHotels() == null) {
+//						ResultSet rsHotel = this.connector.executeQuery(
+//								"SELECT h.id FROM hotel h, tourist_group_hotel temp WHERE temp.hotel_id=h.id AND temp.tourist_group_id="
+//										+ tg.getId() + " GROUP BY h.id");
+//						List<Long> idHotels = new ArrayList<Long>();
+//						while (rsHotel!=null && rsHotel.next()) {
+//							idHotels.add(Long.valueOf(rsHotel.getLong("id")));
+//						}
+//						tg.setHotels(new HotelRepository().findAllById(idHotels));
+//					}
+//					// Set tour
+//					if (tg.getTour() == null) {
+//						tg.setTour(new TourRepository().findById(tg.getTourId()).orElse(new Tour()));
+//					}
 					touristGroups.add(tg);
 				}
 			} catch (Exception e) {
@@ -277,7 +289,25 @@ public class TouristGroupRepository implements Repositories<TouristGroup, Long> 
 		});
 		deleteAllById(ids);
 	}
-
+	
+	public List<TouristGroup> findByCustomerId(List<Long> ids){
+		List<Long> idTGs = new ArrayList<Long>();
+		List<TouristGroup> TGs = new ArrayList<TouristGroup>();
+		StringBuilder query = new StringBuilder("SELECT temp.tourist_group_id as id FROM tourist_group_customer temp WHERE ");
+		ids.forEach(cusId->{
+			query.append(" temp.customer_id =  " + cusId + " OR ");
+		});
+		ResultSet rs = this.connector.executeQuery(query.toString());
+		try {
+			while(rs != null && rs.next()) {
+				idTGs.add(Long.valueOf(rs.getLong("id")));
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return TGs;
+	}
 	public static void main(String[] args) {
 
 	}

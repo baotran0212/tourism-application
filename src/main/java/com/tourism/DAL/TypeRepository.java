@@ -43,12 +43,12 @@ public class TypeRepository implements Repositories<Type, Long> {
 				} catch (Exception e2) {
 				}
 			 }
-			 // Set tours
-			 e.getTours().forEach(tour ->{
-				 tour.setType(new Type());
-				 tour.setTypeId(e.getId());
-				 tour = new TourRepository().save(tour);
-			 });
+//			 // Set tours
+//			 e.getTours().forEach(tour ->{
+//				 tour.setType(new Type());
+//				 tour.setTypeId(e.getId());
+//				 tour = new TourRepository().save(tour);
+//			 });
 			 ids.add(e.getId());
 		 });
 		 return findAllById(ids);
@@ -58,7 +58,8 @@ public class TypeRepository implements Repositories<Type, Long> {
 	public Optional<Type> findById(Long id) {
 		List<Long> ids = new ArrayList<Long>();
 		ids.add(id);
-		return Optional.ofNullable(findAllById(ids).get(0));
+		List<Type> objs = findAllById(ids);
+		return objs.isEmpty() ? Optional.empty() : Optional.ofNullable(objs.get(0)); 
 	}
 
 	@Override
@@ -70,16 +71,16 @@ public class TypeRepository implements Repositories<Type, Long> {
 				Type type = new Type();
 				type.setId(Long.valueOf(rsType.getLong("id")));
 				type.setName(rsType.getString("name"));
-				// Set tours
-				if (type.getTours() == null) {
-					ResultSet rsTour = connector
-							.executeQuery("SELECT tour.id FROM tour WHERE tour.type_id = \"" + type.getId() + "\" ;");
-					List<Long> idTours = new ArrayList<Long>();
-					while (rsTour != null && rsTour.next()) {
-						idTours.add(Long.valueOf(rsTour.getLong("id")));
-					}
-					type.setTours(new TourRepository().findAllById(idTours));
-				}
+//				// Set tours
+//				if (type.getTours() == null) {
+//					ResultSet rsTour = connector
+//							.executeQuery("SELECT tour.id FROM tour WHERE tour.type_id = \"" + type.getId() + "\" ;");
+//					List<Long> idTours = new ArrayList<Long>();
+//					while (rsTour != null && rsTour.next()) {
+//						idTours.add(Long.valueOf(rsTour.getLong("id")));
+//					}
+//					type.setTours(new TourRepository().findAllById(idTours));
+//				}
 				types.add(type);
 			}
 		} catch (Exception e) {
@@ -99,16 +100,16 @@ public class TypeRepository implements Repositories<Type, Long> {
 					Type type = new Type();
 					type.setId(Long.valueOf(rsType.getLong("id")));
 					type.setName(rsType.getString("name"));
-					// Set tours
-					if(type.getTours() == null) {
-						ResultSet rsTour = connector.executeQuery(
-								"SELECT tour.id FROM tour WHERE tour.type_id = \""+type.getId() + "\" ;");
-						List<Long> idTours = new ArrayList<Long>();
-						while(rsTour!=null && rsTour.next()) {
-							idTours.add(Long.valueOf(rsTour.getLong("id")));
-						}
-						type.setTours(new TourRepository().findAllById(idTours));
-					}
+//					// Set tours
+//					if(type.getTours() == null) {
+//						ResultSet rsTour = connector.executeQuery(
+//								"SELECT tour.id FROM tour WHERE tour.type_id = \""+type.getId() + "\" ;");
+//						List<Long> idTours = new ArrayList<Long>();
+//						while(rsTour!=null && rsTour.next()) {
+//							idTours.add(Long.valueOf(rsTour.getLong("id")));
+//						}
+//						type.setTours(new TourRepository().findAllById(idTours));
+//					}
 					types.add(type);
 				}
 			} catch (Exception e) {

@@ -28,6 +28,8 @@ public class Location {
 	@NonNull
 	protected String address3;
 	@NonNull
+	protected String street;
+	@NonNull
 	protected String coordinates;
 	protected List<Tour> tours;
 }

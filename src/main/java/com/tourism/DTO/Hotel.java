@@ -29,5 +29,7 @@ public class Hotel {
   protected String address2;
   @NonNull
   protected String address3;
+  @NonNull
+	protected String street;
   protected List<TouristGroup> touristGroups;
 }
