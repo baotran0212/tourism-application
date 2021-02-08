@@ -1,6 +1,7 @@
-package com.tourism.GUI.frames.touristgroup;
+package com.tourism.GUI.frames.touristgroup.management;
 
 import java.awt.Color;
+import java.awt.image.ImageObserver;
 import java.util.List;
 
 import javax.swing.GroupLayout;
@@ -13,6 +14,7 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 
 import com.tourism.DTO.TouristGroup;
+import com.tourism.GUI.frames.touristgroup.Resources;
 import com.tourism.GUI.util.DatePicker;
 import com.tourism.GUI.util.IconUtil;
 
@@ -49,7 +51,6 @@ public class SearchPanel extends JPanel {
 	JButton btnSearch;
 	
 	public SearchPanel() {
-		TouristGroupFrame.touristGroups.add(new TouristGroup());
 		initData();
 		initComp();
 	}
@@ -87,36 +88,32 @@ public class SearchPanel extends JPanel {
 	}
 	
 	public void initComp() {
-		JComponent[] compPanelSearchItems = {pnlId, pnlName, pnlTourName, pnlDepatureDate, pnlEndDate, pnlStatus};
-		for (JComponent comp : compPanelSearchItems) {
-			comp.setPreferredSize(Resources.INPUT_SEARCH_PANEL);
-			comp.setBackground(Color.BLACK);
-		}
+		btnDepatureDate.setPreferredSize(Resources.CLENDAR_BUTTON);
 		
 		JComponent[] compInputs = {txtId, txtName,cbxTourName, txtDepatureDate, txtEndDate, cbxStatus};
 		for (JComponent comp : compInputs) {
 			comp.setPreferredSize(Resources.INPUT_SEARCH_TEXTFIELD);
 		}
 		
-		pnlId.add(lblId);
-		pnlId.add(txtId);
-		
-		pnlName.add(lblName);
-		pnlName.add(txtName);
-		
-		pnlTourName.add(lblTourName);
-		pnlTourName.add(cbxTourName);
-		
-		pnlDepatureDate.add(lblDepatureDate);
-		pnlDepatureDate.add(txtDepatureDate);
-		pnlDepatureDate.add(btnDepatureDate);
-		
-		pnlEndDate.add(lblEndDate);
-		pnlEndDate.add(txtEndDate);
-		pnlEndDate.add(btnEndDate);
-		
-		pnlStatus.add(lblStatus);
-		pnlStatus.add(cbxStatus);
+//		pnlId.add(lblId);
+//		pnlId.add(txtId);
+//		
+//		pnlName.add(lblName);
+//		pnlName.add(txtName);
+//		
+//		pnlTourName.add(lblTourName);
+//		pnlTourName.add(cbxTourName);
+//		
+//		pnlDepatureDate.add(lblDepatureDate);
+//		pnlDepatureDate.add(txtDepatureDate);
+//		pnlDepatureDate.add(btnDepatureDate);
+//		
+//		pnlEndDate.add(lblEndDate);
+//		pnlEndDate.add(txtEndDate);
+//		pnlEndDate.add(btnEndDate);
+//		
+//		pnlStatus.add(lblStatus);
+//		pnlStatus.add(cbxStatus);
 		
 		this.setLayout(layout);
 		layout.setAutoCreateGaps(true);
@@ -145,7 +142,7 @@ public class SearchPanel extends JPanel {
 										.addComponent(btnDepatureDate)
 										.addComponent(btnEndDate)))
 						.addComponent(cbxStatus))
-				.addGap(25)
+				.addGap(ImageObserver.FRAMEBITS)
 				.addGroup(layout.createParallelGroup()
 						.addComponent(btnCreate)
 						.addComponent(btnSearch))
@@ -154,19 +151,19 @@ public class SearchPanel extends JPanel {
 		layout.setVerticalGroup(
 				layout.createParallelGroup(Alignment.CENTER)
 				.addGroup(layout.createSequentialGroup()
-						.addGroup(layout.createParallelGroup()
+						.addGroup(layout.createParallelGroup(Alignment.CENTER)
 								.addComponent(lblId)
 								.addComponent(txtId)
 								.addComponent(lblDepatureDate)
 								.addComponent(txtDepatureDate)
 								.addComponent(btnDepatureDate))
-						.addGroup(layout.createParallelGroup()
+						.addGroup(layout.createParallelGroup(Alignment.CENTER)
 								.addComponent(lblName)
 								.addComponent(txtName)
 								.addComponent(lblEndDate)
 								.addComponent(txtEndDate)
 								.addComponent(btnEndDate))
-						.addGroup(layout.createParallelGroup()
+						.addGroup(layout.createParallelGroup(Alignment.CENTER)
 								.addComponent(lblTourName)
 								.addComponent(cbxTourName)
 								.addComponent(lblStatus)
@@ -175,7 +172,7 @@ public class SearchPanel extends JPanel {
 				.addGap(100)
 				.addGroup(layout.createSequentialGroup()
 						.addComponent(btnCreate)
-						.addGap(FRAMEBITS)
+						.addGap(ImageObserver.FRAMEBITS)
 						.addComponent(btnSearch)
 						)
 				);

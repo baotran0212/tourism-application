@@ -13,7 +13,7 @@ import javax.swing.LayoutStyle.ComponentPlacement;
 import javax.swing.JTextField;
 import javax.swing.JButton;
 
-public class SearchTest extends JFrame {
+public class TestFrame extends JFrame {
 
 	private JPanel contentPane;
 	private JTextField textField;
@@ -27,7 +27,7 @@ public class SearchTest extends JFrame {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					SearchTest frame = new SearchTest();
+					TestFrame frame = new TestFrame();
 					frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -39,7 +39,7 @@ public class SearchTest extends JFrame {
 	/**
 	 * Create the frame.
 	 */
-	public SearchTest() {
+	public TestFrame() {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 450, 300);
 		contentPane = new JPanel();
