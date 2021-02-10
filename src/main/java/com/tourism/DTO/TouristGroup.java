@@ -38,6 +38,8 @@ public class TouristGroup {
 	protected Double hotelPrice;
 	@NonNull
 	protected Double otherPrice;
+	@NonNull
+	protected String status;
 	protected List<Customer> customers;
 	protected Tour tour;
 	protected List<TourPosition> tourPositions;

@@ -32,6 +32,8 @@ public class Employee {
 	@NonNull
 	protected String address3;
 	@NonNull
+	protected String street;
+	@NonNull
 	protected String gender;
 	@NonNull
 	protected String phoneNumber;

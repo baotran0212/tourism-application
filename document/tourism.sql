@@ -29,10 +29,11 @@ CREATE TABLE `customer` (
   `address1` varchar(255) DEFAULT NULL,
   `address2` varchar(255) DEFAULT NULL,
   `address3` varchar(255) DEFAULT NULL,
+  `street` varchar(255) DEFAULT NULL,
   `gender` varchar(255) DEFAULT NULL,
   `phone_number` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -41,6 +42,7 @@ CREATE TABLE `customer` (
 
 LOCK TABLES `customer` WRITE;
 /*!40000 ALTER TABLE `customer` DISABLE KEYS */;
+INSERT INTO `customer` VALUES (1,'Lam','123456789','Lam\'s address 1','Lam\'s address 2','Lam\'s address 3',NULL,'nam','0912345678'),(2,'Vy','1234564534','Lam\'s address 1','Lam\'s address 2','Lam\'s address 3',NULL,'nu','0912345564');
 /*!40000 ALTER TABLE `customer` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -58,6 +60,7 @@ CREATE TABLE `employee` (
   `address1` varchar(255) DEFAULT NULL,
   `address2` varchar(255) DEFAULT NULL,
   `address3` varchar(255) DEFAULT NULL,
+  `street` varchar(255) DEFAULT NULL,
   `gender` varchar(255) DEFAULT NULL,
   `phone_number` varchar(255) DEFAULT NULL,
   `status` varchar(255) DEFAULT NULL,
@@ -71,7 +74,7 @@ CREATE TABLE `employee` (
 
 LOCK TABLES `employee` WRITE;
 /*!40000 ALTER TABLE `employee` DISABLE KEYS */;
-INSERT INTO `employee` VALUES (1,'name1','1223343','address1','address2','address3','male','123435678',NULL),(2,'name2','1234567','address2','``','\'\'','female','0985654745',NULL);
+INSERT INTO `employee` VALUES (1,'name1','1223343','address1','address2','address3',NULL,'male','123435678','active'),(2,'name2','1234567','address2','``','\'\'',NULL,'female','0985654745','active');
 /*!40000 ALTER TABLE `employee` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -83,14 +86,15 @@ DROP TABLE IF EXISTS `hotel`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `hotel` (
-  `id` int(11) NOT NULL,
+  `id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(255) DEFAULT NULL,
   `price` double(15,2) DEFAULT NULL,
   `address1` varchar(255) DEFAULT NULL,
   `address2` varchar(255) DEFAULT NULL,
   `address3` varchar(255) DEFAULT NULL,
+  `street` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -99,6 +103,7 @@ CREATE TABLE `hotel` (
 
 LOCK TABLES `hotel` WRITE;
 /*!40000 ALTER TABLE `hotel` DISABLE KEYS */;
+INSERT INTO `hotel` VALUES (1,'Ngoc Lan',300000.00,'address 1','address 2','address 3',NULL),(2,'Ngọc Dung',500000.00,'address 1','address 2','address 3',NULL);
 /*!40000 ALTER TABLE `hotel` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -115,8 +120,9 @@ CREATE TABLE `location` (
   `address1` varchar(255) DEFAULT NULL,
   `address2` varchar(255) DEFAULT NULL,
   `address3` varchar(255) DEFAULT NULL,
+  `street` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -125,6 +131,7 @@ CREATE TABLE `location` (
 
 LOCK TABLES `location` WRITE;
 /*!40000 ALTER TABLE `location` DISABLE KEYS */;
+INSERT INTO `location` VALUES (1,'Tỉnh Khánh Hòa - Thành phố Nha Trang - Phường Vĩnh Hòa','Tỉnh Khánh Hòa','Thành phố Nha Trang','Phường Vĩnh Hòa',NULL),(2,'Tỉnh An Giang - Thành phố Long Xuyên - Phường Mỹ Xuyên','Tỉnh An Giang','Thành phố Long Xuyên','Phường Mỹ Xuyên',NULL),(3,'Thành phố Hồ Chí Minh - Quận 1 - Phường Tân Định','Thành phố Hồ Chí Minh','Quận 1','Phường Tân Định',NULL),(4,'Tỉnh Lâm Đồng - Thành phố Đà Lạt - Phường 7','Tỉnh Lâm Đồng','Thành phố Đà Lạt','Phường 7',NULL),(5,'Tỉnh Lâm Đồng - Thành phố Bảo Lộc - Phường Lộc Phát','Tỉnh Lâm Đồng','Thành phố Bảo Lộc','Phường Lộc Phát',NULL);
 /*!40000 ALTER TABLE `location` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -201,7 +208,7 @@ CREATE TABLE `tour` (
   PRIMARY KEY (`id`),
   KEY `type_id` (`type_id`),
   CONSTRAINT `tour_ibfk_1` FOREIGN KEY (`type_id`) REFERENCES `type_of_tour` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -210,6 +217,7 @@ CREATE TABLE `tour` (
 
 LOCK TABLES `tour` WRITE;
 /*!40000 ALTER TABLE `tour` DISABLE KEYS */;
+INSERT INTO `tour` VALUES (1,1,'Tour Sài Gòn – Nha Trang','\"\"',300000.00,'active'),(2,3,'Sài Gòn – Đà Lạt','description',500000.00,'active'),(3,2,'Sài Gòn – Miền Tây','description',500000.00,'active'),(4,2,'Sài Gòn – Tây Nguyên','descrip',200000.00,'active');
 /*!40000 ALTER TABLE `tour` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -270,7 +278,7 @@ CREATE TABLE `tourist_group` (
 
 LOCK TABLES `tourist_group` WRITE;
 /*!40000 ALTER TABLE `tourist_group` DISABLE KEYS */;
-INSERT INTO `tourist_group` VALUES (1,NULL,'name tour','2020-01-01','2020-01-05','this is description',300.00,400.00,500.00,800.00,NULL),(2,NULL,'name tour 2','2020-02-01','2020-02-05','this is description 2',300.00,400.00,500.00,800.00,NULL),(3,NULL,'name tour 3','2020-03-01','2020-03-05','this is description 3',300.00,400.00,500.00,800.00,NULL);
+INSERT INTO `tourist_group` VALUES (1,1,'name tour','2020-01-01','2020-01-05','this is description',300.00,400.00,500.00,800.00,NULL),(2,1,'name tour 2','2020-02-01','2020-02-05','this is description 2',300.00,400.00,500.00,800.00,NULL),(3,1,'name tour 3','2020-03-01','2020-03-05','this is description 3',300.00,400.00,500.00,800.00,NULL);
 /*!40000 ALTER TABLE `tourist_group` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -311,9 +319,9 @@ CREATE TABLE `tourist_group_hotel` (
   `tourist_group_id` int(11) NOT NULL,
   `hotel_id` int(11) NOT NULL,
   PRIMARY KEY (`tourist_group_id`,`hotel_id`),
-  KEY `hotel_id` (`hotel_id`),
+  KEY `tourist_group_hotel_ibfk_2_idx` (`hotel_id`),
   CONSTRAINT `tourist_group_hotel_ibfk_1` FOREIGN KEY (`tourist_group_id`) REFERENCES `tourist_group` (`id`),
-  CONSTRAINT `tourist_group_hotel_ibfk_2` FOREIGN KEY (`hotel_id`) REFERENCES `hotel` (`id`)
+  CONSTRAINT `tourist_group_hotel_ibfk_2` FOREIGN KEY (`hotel_id`) REFERENCES `hotel` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -337,7 +345,7 @@ CREATE TABLE `type_of_tour` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -346,6 +354,7 @@ CREATE TABLE `type_of_tour` (
 
 LOCK TABLES `type_of_tour` WRITE;
 /*!40000 ALTER TABLE `type_of_tour` DISABLE KEYS */;
+INSERT INTO `type_of_tour` VALUES (1,'du lịch di động'),(2,'du lịch kết hợp nghề nghiệp'),(3,'du lịch xã hội và gia đình');
 /*!40000 ALTER TABLE `type_of_tour` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -383,4 +392,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2021-02-03 23:08:14
+-- Dump completed on 2021-02-08 10:07:17

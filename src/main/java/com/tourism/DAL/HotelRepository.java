@@ -28,16 +28,18 @@ public class HotelRepository implements Repositories<Hotel, Long>{
 				updateQuery.append("address1 = \""+e.getAddress1() + "\", ");
 				updateQuery.append("address2 = \"" +e.getAddress2() + "\", ");
 				updateQuery.append("address3 = \"" + e.getAddress3() + "\", ");
+				updateQuery.append("street = \"" + e.getStreet() + "\", ");
 				updateQuery.append("WHERE id = \"" + e.getId() + "\" ;");
 				this.connector.executeUpdate(updateQuery.toString());
 			} else {
 				StringBuilder insertQuery = new StringBuilder(
-						"INSERT INTO hotel(`name`, `price`, `address1`, `address2`, `address3`) VALUES ");
+						"INSERT INTO hotel(`name`, `price`, `address1`, `address2`, `address3`, `street`) VALUES ");
 				insertQuery.append("( \"" + e.getName() + "\", ");
 				insertQuery.append("\"" + e.getPrice() + "\", ");
 				insertQuery.append("\"" + e.getAddress1() + "\", ");
 				insertQuery.append("\"" + e.getAddress2() + "\", ");
-				insertQuery.append("\"" + e.getAddress3() + "\" ); ");
+				insertQuery.append("\"" + e.getAddress3() + "\", ");
+				insertQuery.append("\""+e.getStreet() + "\"); ");
 				connector.executeUpdate(insertQuery.toString());
 				ResultSet returnedResultSet = connector
 						.executeQuery("SELECT * FROM tourist_group ORDER BY `id` DESC LIMIT 1");
@@ -48,14 +50,14 @@ public class HotelRepository implements Repositories<Hotel, Long>{
 				} catch (Exception e1) {
 				}
 			}
-			// Save tourist groups 
-			e.getTouristGroups().forEach(tg -> {
-				tg.setHotels(new ArrayList<Hotel>());
-				tg = new TouristGroupRepository().save(tg);
-				connector.executeUpdate(
-						"INSERT INTO tourist_group_hotel (`tourist_group_id`, `hotel_id`) VALUES ( \""
-						+tg.getId() + "\", \"" + e.getId() + "\" );");
-			});
+//			// Save tourist groups 
+//			e.getTouristGroups().forEach(tg -> {
+//				tg.setHotels(new ArrayList<Hotel>());
+//				tg = new TouristGroupRepository().save(tg);
+//				connector.executeUpdate(
+//						"INSERT INTO tourist_group_hotel (`tourist_group_id`, `hotel_id`) VALUES ( \""
+//						+tg.getId() + "\", \"" + e.getId() + "\" );");
+//			});
 			ids.add(e.getId());
 		});
 		return findAllById(ids);
@@ -65,7 +67,8 @@ public class HotelRepository implements Repositories<Hotel, Long>{
 	public Optional<Hotel> findById(Long id) {
 		List<Long> ids = new ArrayList<Long>();
 		ids.add(id);
-		return Optional.ofNullable(findAllById(ids).get(0));
+		List<Hotel> objs = findAllById(ids);
+		return objs.isEmpty() ? Optional.empty() : Optional.ofNullable(objs.get(0)); 
 	}
 
 	@Override
@@ -74,7 +77,7 @@ public class HotelRepository implements Repositories<Hotel, Long>{
 			ResultSet rsHotel = this.connector.executeQuery(
 					"SELECT * FROM hotel  ;");
 			try {
-			while (rsHotel.next()) {
+			while (rsHotel!=null && rsHotel.next()) {
 				Hotel h = new Hotel();
 				h.setId(Long.valueOf(rsHotel.getLong("id")));
 				h.setName(rsHotel.getString("name"));
@@ -82,17 +85,18 @@ public class HotelRepository implements Repositories<Hotel, Long>{
 				h.setAddress1(rsHotel.getString("address1"));
 				h.setAddress2(rsHotel.getString("address2"));
 				h.setAddress3(rsHotel.getString("address3"));
-				//Set tourist groups
-				if(h.getTouristGroups() == null) {
-					ResultSet rsTG = this.connector.executeQuery(
-							"SELECT temp.tourist_group_id as id FROM tourist_group_hotel temp WHERE temp.hotel_id = \""
-							+ h.getId() + "\" ;");
-					List<Long> idTGs = new ArrayList<Long>();
-					while(rsTG != null && rsTG.next()) {
-						idTGs.add(Long.valueOf(rsTG.getLong("id")));
-					}
-					h.setTouristGroups(new TouristGroupRepository().findAllById(idTGs));
-				}
+				h.setStreet(rsHotel.getString("street"));
+//				//Set tourist groups
+//				if(h.getTouristGroups() == null) {
+//					ResultSet rsTG = this.connector.executeQuery(
+//							"SELECT temp.tourist_group_id as id FROM tourist_group_hotel temp WHERE temp.hotel_id = \""
+//							+ h.getId() + "\" ;");
+//					List<Long> idTGs = new ArrayList<Long>();
+//					while(rsTG != null && rsTG.next()) {
+//						idTGs.add(Long.valueOf(rsTG.getLong("id")));
+//					}
+//					h.setTouristGroups(new TouristGroupRepository().findAllById(idTGs));
+//				}
 				hotels.add(h);
 			}	
 			} catch (Exception e) {
@@ -108,7 +112,7 @@ public class HotelRepository implements Repositories<Hotel, Long>{
 			ResultSet rsHotel = this.connector.executeQuery(
 					"SELECT * FROM hotel WHERE id = \"" + id + "\" ;");
 			try {
-			while (rsHotel.next()) {
+			while (rsHotel!=null && rsHotel.next()) {
 				Hotel h = new Hotel();
 				h.setId(Long.valueOf(rsHotel.getLong("id")));
 				h.setName(rsHotel.getString("name"));
@@ -116,17 +120,18 @@ public class HotelRepository implements Repositories<Hotel, Long>{
 				h.setAddress1(rsHotel.getString("address1"));
 				h.setAddress2(rsHotel.getString("address2"));
 				h.setAddress3(rsHotel.getString("address3"));
-				//Set tourist groups
-				if(h.getTouristGroups() == null) {
-					ResultSet rsTG = this.connector.executeQuery(
-							"SELECT temp.tourist_group_id as id FROM tourist_group_hotel temp WHERE temp.hotel_id = \""
-							+ h.getId() + "\" ;");
-					List<Long> idTGs = new ArrayList<Long>();
-					while(rsTG != null && rsTG.next()) {
-						idTGs.add(Long.valueOf(rsTG.getLong("id")));
-					}
-					h.setTouristGroups(new TouristGroupRepository().findAllById(idTGs));
-				}
+				h.setStreet(rsHotel.getString("street"));
+//				//Set tourist groups
+//				if(h.getTouristGroups() == null) {
+//					ResultSet rsTG = this.connector.executeQuery(
+//							"SELECT temp.tourist_group_id as id FROM tourist_group_hotel temp WHERE temp.hotel_id = \""
+//							+ h.getId() + "\" ;");
+//					List<Long> idTGs = new ArrayList<Long>();
+//					while(rsTG != null && rsTG.next()) {
+//						idTGs.add(Long.valueOf(rsTG.getLong("id")));
+//					}
+//					h.setTouristGroups(new TouristGroupRepository().findAllById(idTGs));
+//				}
 				hotels.add(h);
 			}	
 			} catch (Exception e) {

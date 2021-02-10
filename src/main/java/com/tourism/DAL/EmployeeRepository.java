@@ -34,6 +34,7 @@ public class EmployeeRepository implements Repositories<Employee, Long> {
 				updateQuery.append("address1 = \"" + e.getAddress1() + "\", ");
 				updateQuery.append("address2 = \"" + e.getAddress2() + "\", ");
 				updateQuery.append("address3 = \"" + e.getAddress3() + "\", ");
+				updateQuery.append("street = \"" + e.getStreet() + "\", ");
 				updateQuery.append("gender = \"" + e.getGender() + "\", ");
 				updateQuery.append("phone_number = \"" + e.getPhoneNumber() + "\" ");
 				updateQuery.append("status = \"" + e.getStatus() + "\" ");
@@ -41,12 +42,13 @@ public class EmployeeRepository implements Repositories<Employee, Long> {
 				this.connector.executeUpdate(updateQuery.toString());
 			} else {
 				StringBuilder insertQuery = new StringBuilder(
-						"INSERT INTO employee(`name`, `identity_card`, `address1`, `address2`, `address3`, `gender`, `phone_number`, `status`) VALUES ");
+						"INSERT INTO employee(`name`, `identity_card`, `address1`, `address2`, `address3`, `street`, `gender`, `phone_number`, `status`) VALUES ");
 				insertQuery.append("( \"" + e.getName() + "\", ");
 				insertQuery.append("\"" + e.getIdentityCard() + "\", ");
 				insertQuery.append("\"" + e.getAddress1() + "\", ");
 				insertQuery.append("\"" + e.getAddress2() + "\", ");
 				insertQuery.append("\"" + e.getAddress3() + "\", ");
+				insertQuery.append("\""+e.getStreet() + "\", ");
 				insertQuery.append("\"" + e.getGender() + "\", ");
 				insertQuery.append("\"" + e.getPhoneNumber() + "\" ");
 				insertQuery.append("\"" + e.getStatus() + "\" ); ");
@@ -60,12 +62,12 @@ public class EmployeeRepository implements Repositories<Employee, Long> {
 				} catch (Exception e1) {
 				}
 			}
-			// Save position_in_tour
-			e.getTourPositions().forEach(tourPosition -> {
-				tourPosition.setEmployeeId(e.getId());
-				tourPosition.setEmployee(new Employee());
-				new TourPositionRepository().save(tourPosition);
-			});
+//			// Save position_in_tour
+//			e.getTourPositions().forEach(tourPosition -> {
+//				tourPosition.setEmployeeId(e.getId());
+//				tourPosition.setEmployee(new Employee());
+//				new TourPositionRepository().save(tourPosition);
+//			});
 			ids.add(e.getId());
 		});
 		return findAllById(ids);
@@ -75,7 +77,8 @@ public class EmployeeRepository implements Repositories<Employee, Long> {
 	public Optional<Employee> findById(Long id) {
 		List<Long> ids = new ArrayList<Long>();
 		ids.add(id);
-		return Optional.ofNullable(findAllById(ids).get(0));
+		List<Employee> objs = findAllById(ids);
+		return objs.isEmpty() ? Optional.empty() : Optional.ofNullable(objs.get(0)); 
 	}
 
 	@Override
@@ -83,7 +86,7 @@ public class EmployeeRepository implements Repositories<Employee, Long> {
 		List<Employee> employees = new ArrayList<Employee>();
 		ResultSet rsEmp = this.connector.executeQuery("SELECT * FROM employee ;");
 		try {
-			while (rsEmp.next()) {
+			while (rsEmp!=null && rsEmp.next()) {
 				Employee emp = new Employee();
 				emp.setId(Long.valueOf(rsEmp.getLong("id")));
 				emp.setName(rsEmp.getString("name"));
@@ -91,20 +94,21 @@ public class EmployeeRepository implements Repositories<Employee, Long> {
 				emp.setAddress1(rsEmp.getString("address1"));
 				emp.setAddress2(rsEmp.getString("address2"));
 				emp.setAddress3(rsEmp.getString("address3"));
+				emp.setStreet(rsEmp.getString("street"));
 				emp.setGender(rsEmp.getString("gender"));
 				emp.setPhoneNumber(rsEmp.getString("phone_number"));
 				emp.setStatus(rsEmp.getString("status"));
-				// Set position_in_tour
-				if (emp.getTourPositions() == null) {
-					ResultSet rsTourPosition = this.connector.executeQuery(
-							"SELECT temp.position_id as id FROM position_in_tour temp WHERE temp.employee_id="
-									+ emp.getId() + " GROUP BY temp.position_id");
-					List<Long> idTourPositions = new ArrayList<Long>();
-					while (rsTourPosition != null && rsTourPosition.next()) {
-						idTourPositions.add(Long.valueOf(rsTourPosition.getString("id")));
-					}
-					emp.setTourPositions(new TourPositionRepository().findAllById(idTourPositions));
-				}
+//				// Set position_in_tour
+//				if (emp.getTourPositions() == null) {
+//					ResultSet rsTourPosition = this.connector.executeQuery(
+//							"SELECT temp.position_id as id FROM position_in_tour temp WHERE temp.employee_id="
+//									+ emp.getId() + " GROUP BY temp.position_id");
+//					List<Long> idTourPositions = new ArrayList<Long>();
+//					while (rsTourPosition != null && rsTourPosition.next()) {
+//						idTourPositions.add(Long.valueOf(rsTourPosition.getString("id")));
+//					}
+//					emp.setTourPositions(new TourPositionRepository().findAllById(idTourPositions));
+//				}
 				employees.add(emp);
 			}
 		} catch (Exception e) {
@@ -119,7 +123,7 @@ public class EmployeeRepository implements Repositories<Employee, Long> {
 		ids.forEach(id -> {
 			ResultSet rsEmp = this.connector.executeQuery("SELECT * FROM employee WHERE id = \"" + id + "\" ;");
 			try {
-				while (rsEmp.next()) {
+				while (rsEmp!=null && rsEmp.next()) {
 					Employee emp = new Employee();
 					emp.setId(Long.valueOf(rsEmp.getLong("id")));
 					emp.setName(rsEmp.getString("name"));
@@ -127,20 +131,21 @@ public class EmployeeRepository implements Repositories<Employee, Long> {
 					emp.setAddress1(rsEmp.getString("address1"));
 					emp.setAddress2(rsEmp.getString("address2"));
 					emp.setAddress3(rsEmp.getString("address3"));
+					emp.setStreet(rsEmp.getString("street"));
 					emp.setGender(rsEmp.getString("gender"));
 					emp.setPhoneNumber(rsEmp.getString("phone_number"));
 					emp.setStatus(rsEmp.getString("status"));
-					// Set position_in_tour
-					if (emp.getTourPositions() == null) {
-						ResultSet rsTourPosition = this.connector.executeQuery(
-								"SELECT temp.position_id as id FROM position_in_tour temp WHERE temp.employee_id="
-										+ emp.getId() + " GROUP BY temp.position_id");
-						List<Long> idTourPositions = new ArrayList<Long>();
-						while (rsTourPosition != null && rsTourPosition.next()) {
-							idTourPositions.add(Long.valueOf(rsTourPosition.getString("id")));
-						}
-						emp.setTourPositions(new TourPositionRepository().findAllById(idTourPositions));
-					}
+//					// Set position_in_tour
+//					if (emp.getTourPositions() == null) {
+//						ResultSet rsTourPosition = this.connector.executeQuery(
+//								"SELECT temp.position_id as id FROM position_in_tour temp WHERE temp.employee_id="
+//										+ emp.getId() + " GROUP BY temp.position_id");
+//						List<Long> idTourPositions = new ArrayList<Long>();
+//						while (rsTourPosition != null && rsTourPosition.next()) {
+//							idTourPositions.add(Long.valueOf(rsTourPosition.getString("id")));
+//						}
+//						emp.setTourPositions(new TourPositionRepository().findAllById(idTourPositions));
+//					}
 					employees.add(emp);
 				}
 			} catch (Exception e) {

@@ -27,15 +27,17 @@ public class LocationRepository implements Repositories<Location, Long> {
 				updateQuery.append("address1 = \"" + e.getAddress1() + "\", ");
 				updateQuery.append("address2 = \"" +e.getAddress2() + "\", ");
 				updateQuery.append("address2 = \"" +e.getAddress3() + "\" ");
+				updateQuery.append("street = \"" + e.getStreet() + "\", ");
 				updateQuery.append("WHERE id = \"" + e.getId() + "\" ;");
 				connector.executeUpdate(updateQuery.toString());
 			} else {
 				StringBuilder insertQuery = new StringBuilder(
-						"INSERT INTO location(`name`, `address1`, `address2`, `address3`) VALUES ");
+						"INSERT INTO location(`name`, `address1`, `address2`, `address3`, `street`) VALUES ");
 				insertQuery.append("( \"" + e.getName() + "\", ");
 				insertQuery.append("\"" + e.getAddress1() + "\", ");
 				insertQuery.append("\"" + e.getAddress2() + "\", ");
-				insertQuery.append("\"" + e.getAddress3() + "\" ); ");
+				insertQuery.append("\"" + e.getAddress3() + "\", ");
+				insertQuery.append("\""+e.getStreet() + "\" ); ");
 				connector.executeUpdate(insertQuery.toString());
 				ResultSet returnedResultSet = connector.executeQuery(
 						"SELECT * FROM location ORDER BY `id` DESC LIMIT 1");
@@ -46,14 +48,14 @@ public class LocationRepository implements Repositories<Location, Long> {
 				} catch (Exception e2) {
 				}
 			}
-			//Save tours
-			e.getTours().forEach(tour ->{
-				tour.setLocations(new ArrayList<Location>());
-				tour = new TourRepository().save(tour);
-				connector.executeUpdate(
-						"INSERT INTO tour_location (`tour_id`, `location_id`) VALUES ( \""
-						+tour.getId() + "\", \"" + e.getId() + "\" );");
-			});
+//			//Save tours
+//			e.getTours().forEach(tour ->{
+//				tour.setLocations(new ArrayList<Location>());
+//				tour = new TourRepository().save(tour);
+//				connector.executeUpdate(
+//						"INSERT INTO tour_location (`tour_id`, `location_id`) VALUES ( \""
+//						+tour.getId() + "\", \"" + e.getId() + "\" );");
+//			});
 			ids.add(e.getId());
 		});
 		return findAllById(ids);
@@ -63,7 +65,8 @@ public class LocationRepository implements Repositories<Location, Long> {
 	public Optional<Location> findById(Long id) {
 		List<Long> ids = new ArrayList<Long>();
 		ids.add(id);
-		return Optional.ofNullable(findAllById(ids).get(0));
+		List<Location> objs = findAllById(ids);
+		return objs.isEmpty() ? Optional.empty() : Optional.ofNullable(objs.get(0)); 
 	}
 
 	@Override
@@ -78,17 +81,18 @@ public class LocationRepository implements Repositories<Location, Long> {
 				location.setAddress1(rsLocation.getString("address1"));
 				location.setAddress2(rsLocation.getString("address2"));
 				location.setAddress3(rsLocation.getString("address3"));
-				// Set tours
-				if (location.getTours() == null) {
-					ResultSet rsTour = connector
-							.executeQuery("SELECT temp.tour_id as id FROM tour_location temp WHERE temp.location = \""
-									+ location.getId() + "\" GROUP BY temp.tour_id ;");
-					List<Long> idTours = new ArrayList<Long>();
-					while (rsTour != null && rsTour.next()) {
-						idTours.add(Long.valueOf(rsTour.getString("id")));
-					}
-					location.setTours(new TourRepository().findAllById(idTours));
-				}
+				location.setStreet(rsLocation.getString("street"));
+//				// Set tours
+//				if (location.getTours() == null) {
+//					ResultSet rsTour = connector
+//							.executeQuery("SELECT temp.tour_id as id FROM tour_location temp WHERE temp.location = \""
+//									+ location.getId() + "\" GROUP BY temp.tour_id ;");
+//					List<Long> idTours = new ArrayList<Long>();
+//					while (rsTour != null && rsTour.next()) {
+//						idTours.add(Long.valueOf(rsTour.getString("id")));
+//					}
+//					location.setTours(new TourRepository().findAllById(idTours));
+//				}
 				locations.add(location);
 			}
 		} catch (Exception e) {
@@ -111,17 +115,18 @@ public class LocationRepository implements Repositories<Location, Long> {
 					location.setAddress1(rsLocation.getString("address1"));
 					location.setAddress2(rsLocation.getString("address2"));
 					location.setAddress3(rsLocation.getString("address3"));
-					// Set tours
-					if(location.getTours() == null) {
-						ResultSet rsTour = connector.executeQuery(
-								"SELECT temp.tour_id as id FROM tour_location temp WHERE temp.location = \""
-								+location.getId() + "\" GROUP BY temp.tour_id ;");
-						List<Long> idTours = new ArrayList<Long>();
-						while(rsTour != null && rsTour.next() ) {
-							idTours.add(Long.valueOf(rsTour.getString("id")));
-						}
-						location.setTours(new TourRepository().findAllById(idTours));
-					}
+					location.setStreet(rsLocation.getString("street"));
+//					// Set tours
+//					if(location.getTours() == null) {
+//						ResultSet rsTour = connector.executeQuery(
+//								"SELECT temp.tour_id as id FROM tour_location temp WHERE temp.location = \""
+//								+location.getId() + "\" GROUP BY temp.tour_id ;");
+//						List<Long> idTours = new ArrayList<Long>();
+//						while(rsTour != null && rsTour.next() ) {
+//							idTours.add(Long.valueOf(rsTour.getString("id")));
+//						}
+//						location.setTours(new TourRepository().findAllById(idTours));
+//					}
 					locations.add(location);
 				}
 			} catch (Exception e) {

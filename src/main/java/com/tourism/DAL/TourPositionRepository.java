@@ -70,7 +70,8 @@ public class TourPositionRepository implements Repositories<TourPosition, Long>{
 	public Optional<TourPosition> findById(Long id) {
 		List<Long> ids = new ArrayList<Long>();
 		ids.add(id);
-		return Optional.ofNullable(findAllById(ids).get(0));
+		List<TourPosition> objs = findAllById(ids);
+		return objs.isEmpty() ? Optional.empty() : Optional.ofNullable(objs.get(0)); 
 	}
 
 	@Override
@@ -78,10 +79,10 @@ public class TourPositionRepository implements Repositories<TourPosition, Long>{
 		List<TourPosition> tourPositions = new ArrayList<TourPosition>();
 		ResultSet rsTourPosition = this.connector.executeQuery("SELECT * FROM position_in_tour ;");
 		try {
-			while (rsTourPosition.next()) {
+			while (rsTourPosition!=null && rsTourPosition.next()) {
 				TourPosition tp = new TourPosition();
 				tp.setId(Long.valueOf(rsTourPosition.getLong("id")));
-				tp.setTouristGroupId(Long.valueOf(rsTourPosition.getLong("tourist_group_id)")));
+				tp.setTouristGroupId(Long.valueOf(rsTourPosition.getLong("tourist_group_id")));
 				tp.setPositionId(Long.valueOf(rsTourPosition.getLong("position_id")));
 				tp.setEmployeeId(Long.valueOf(rsTourPosition.getLong("employee_id")));
 				// Set tourist group
@@ -111,10 +112,10 @@ public class TourPositionRepository implements Repositories<TourPosition, Long>{
 	    ids.forEach(id->{
 	    	ResultSet rsTourPosition = this.connector.executeQuery("SELECT * FROM position_in_tour WHERE id = \"" +id+ "\" ;");
 	    	try {
-	    		while(rsTourPosition.next()) {
+	    		while(rsTourPosition!=null && rsTourPosition.next()) {
 	    			TourPosition tp = new TourPosition();
 	    			tp.setId(Long.valueOf(rsTourPosition.getLong("id")));
-	    			tp.setTouristGroupId(Long.valueOf(rsTourPosition.getLong("tourist_group_id)")));
+	    			tp.setTouristGroupId(Long.valueOf(rsTourPosition.getLong("tourist_group_id")));
 	    			tp.setPositionId(Long.valueOf(rsTourPosition.getLong("position_id")));
 	    			tp.setEmployeeId(Long.valueOf(rsTourPosition.getLong("employee_id")));
 	    			//Set tourist group

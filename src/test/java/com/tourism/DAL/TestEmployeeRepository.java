@@ -19,7 +19,6 @@ public class TestEmployeeRepository extends TestCase {
 		List<Long> ids = 
 				new ArrayList<Long>(Arrays.asList(new Long[] {Long.valueOf(1), Long.valueOf(2)}));
 		employees = new EmployeeRepository().findAllById(ids);
-		employees.get(1).getTouristGroups().forEach(System.out::println);
 		assertNotNull(ids.get(0));
 	}
 }

@@ -12,6 +12,7 @@ import lombok.ToString;
 @ToString
 public class MysqlConnector extends Connector {
   private static Logger logger = Logger.getLogger(MysqlConnector.class.getName());
+  public static int count = 0; 
 
   public MysqlConnector() {
 	super();
@@ -19,16 +20,18 @@ public class MysqlConnector extends Connector {
     this.userName = ProjectProperties.getProperties("mysql.user");
     this.password = ProjectProperties.getProperties("mysql.password");
     this.database = ProjectProperties.getProperties("mysql.database");
-    this.getConnect();
+    //this.getConnect();
   }
 
   public void getConnect() {
-    String url = "jdbc:mysql://" + this.host + ":3306/" + this.database;
-    try {
-      this.connection = DriverManager.getConnection(url, this.userName, this.password);
-      logger.info("Connect success!!!");
-    } catch (Exception e) {
-      logger.info(e.toString());
+    if(connection == null) {
+    	String url = "jdbc:mysql://" + this.host + ":3306/" + this.database;
+        try {
+          this.connection = DriverManager.getConnection(url, this.userName, this.password);
+          logger.info("Connect success!!! count = " + count++);
+        } catch (Exception e) {
+          logger.info(e.toString());
+        }
     }
   }
  
@@ -45,6 +48,7 @@ public class MysqlConnector extends Connector {
   public int executeUpdate(String query) {
     int res = Integer.MIN_VALUE;
     try {
+    	this.getConnect();
     	this.setStatement();
     	this.statement.execute(query);
     } catch (Exception e) {
@@ -58,10 +62,12 @@ public class MysqlConnector extends Connector {
   public ResultSet executeQuery(String query) {
     ResultSet rs = null;
     try {
+    	this.getConnect();
     	this.setStatement();
     	rs = this.statement.executeQuery(query);
     } catch (Exception e) {
       // TODO: handle exception
+    } finally {
     }
     return rs;
   }
@@ -69,19 +75,19 @@ public class MysqlConnector extends Connector {
   public void closeConnection() {
     try {
       if (this.connection != null && !this.connection.isClosed()) {
-        //this.connection.close();
-        //this.connection = null;
+        this.connection.close();
+        this.connection = null;
       }
       
-      if(this.statement != null && !this.statement.isClosed()) {
-    	  this.statement.close();
-    	  this.statement.close();
-      }
-      
-      if(this.resultSet!=null && !this.resultSet.isClosed()) {
-    	  this.resultSet.close();
-    	  this.resultSet.close();
-      }
+//      if(this.statement != null && !this.statement.isClosed()) {
+//    	  this.statement.close();
+//    	  this.statement.close();
+//      }
+//      
+//      if(this.resultSet!=null && !this.resultSet.isClosed()) {
+//    	  this.resultSet.close();
+//    	  this.resultSet.close();
+//      }
     } catch (Exception e) {
       // TODO: handle exception
     }
