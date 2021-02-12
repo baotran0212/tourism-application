@@ -1,5 +1,6 @@
 package com.tourism.DAL;
 
+
 import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.List;
@@ -7,8 +8,6 @@ import java.util.Optional;
 import java.util.logging.Logger;
 
 import com.tourism.DTO.Tour;
-import com.tourism.DTO.TouristGroup;
-import com.tourism.DTO.Type;
 
 /**
  * TourRepository
@@ -28,7 +27,8 @@ public class TourRepository implements Repositories<Tour, Long> {
 	public List<Tour> saveAll(Iterable<Tour> entities) {
 		List<Long> ids = new ArrayList<Long>();
 		entities.forEach(e -> {
-			e.setTypeId(e.getType().getId());
+			if(e.getType().getId()!=null)
+				e.setTypeId(e.getType().getId());
 			if (findById(e.getId()).isPresent()) {
 				StringBuilder updateQuery = new StringBuilder("UPDATE tour SET ");
 				updateQuery.append("type_id = \"" + e.getTypeId() + "\", ");
@@ -39,12 +39,12 @@ public class TourRepository implements Repositories<Tour, Long> {
 				updateQuery.append("WHERE id = \"" + e.getId() + "\" ;");
 				logger.info(updateQuery.toString());
 				this.connector.executeUpdate(updateQuery.toString());
-				new TypeRepository().save(e.getType());
-				new TouristGroupRepository().saveAll(e.getTouristGroups());
-				new LocationRepository().saveAll(e.getLocations()).forEach(location -> {
-					connector.executeUpdate("INSERT INTO tour_location (`tour_id`, `location_id`) VALUES (\""
-							+ e.getId() + "\", \"" + location.getId() + "\" );");
-				});
+//				new TypeRepository().save(e.getType());
+//				new TouristGroupRepository().saveAll(e.getTouristGroups());
+//				new LocationRepository().saveAll(e.getLocations()).forEach(location -> {
+//					connector.executeUpdate("INSERT INTO tour_location (`tour_id`, `location_id`) VALUES (\""
+//							+ e.getId() + "\", \"" + location.getId() + "\" );");
+//				});
 			} else {
 				StringBuilder insertQuery = new StringBuilder(
 						"INSERT INTO tour(`type_id`, `name`, `description`, `price`, `status`) VALUES ");
@@ -97,96 +97,19 @@ public class TourRepository implements Repositories<Tour, Long> {
 
 	@Override
 	public List<Tour> findAll() {
-		List<Tour> tours = new ArrayList<Tour>();
 		ResultSet rsTour = this.connector.executeQuery("SELECT * FROM tour  ;");
-		try {
-			while (rsTour!=null && rsTour.next()) {
-				Tour tour = new Tour();
-				tour.setId(Long.valueOf(rsTour.getLong("id")));
-				tour.setTypeId(Long.valueOf(rsTour.getString("type_id")));
-				tour.setName(rsTour.getString("name"));
-				tour.setDescription(rsTour.getString("description"));
-				tour.setPrice(Double.valueOf(rsTour.getDouble("price")));
-				tour.setStatus(rsTour.getString("status"));
-//				// Set tourist groups
-//				if (tour.getTouristGroups() == null) {
-//					ResultSet rsTG = connector.executeQuery(
-//							"SELECT tg.id FROM tourist_group tg WHERE tg.tour_id = \"" + tour.getId() + "\" ;");
-//					List<Long> idTGs = new ArrayList<Long>();
-//					while (rsTG != null && rsTG.next()) {
-//						idTGs.add(Long.valueOf(rsTG.getLong("id")));
-//					}
-//					tour.setTouristGroups(new TouristGroupRepository().findAllById(idTGs));
-//				}
-//				// Set locations
-//				if (tour.getLocations() == null) {
-//					ResultSet rsLocation = connector
-//							.executeQuery("SELECT temp.location_id as id FROM tour_location temp WHERE temp.tour_id= \""
-//									+ tour.getId() + "\" GROUP BY temp.location_id");
-//					List<Long> idLocations = new ArrayList<Long>();
-//					while (rsLocation != null && rsLocation.next()) {
-//						idLocations.add(Long.valueOf(rsLocation.getLong("id")));
-//					}
-//					tour.setLocations(new LocationRepository().findAllById(idLocations));
-//				}
-//				// Set type
-//				if (tour.getType() == null) {
-//					tour.setType(new TypeRepository().findById(tour.getTypeId()).orElse(new Type()));
-//				}
-				tours.add(tour);
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		return tours;
+		return loadFromResultSet(rsTour);
 	}
 
 	@Override
 	public List<Tour> findAllById(Iterable<Long> ids) {
 		List<Tour> tours = new ArrayList<Tour>();
+		StringBuilder query = new StringBuilder("SELECT * FROM tour WHERE ");
 		ids.forEach(id -> {
-			ResultSet rsTour = this.connector.executeQuery("SELECT * FROM tour WHERE id = \"" + id + "\" ;");
-			try {
-				while (rsTour !=null && rsTour.next()) {
-					Tour tour = new Tour();
-					tour.setId(Long.valueOf(rsTour.getLong("id")));
-					tour.setTypeId(Long.valueOf(rsTour.getString("type_id")));
-					tour.setName(rsTour.getString("name"));
-					tour.setDescription(rsTour.getString("description"));
-					tour.setPrice(Double.valueOf(rsTour.getDouble("price")));
-					tour.setStatus(rsTour.getString("status"));
-//					// Set tourist groups
-//					if (tour.getTouristGroups() == null) {
-//						ResultSet rsTG = connector.executeQuery(
-//								"SELECT tg.id FROM tourist_group tg WHERE tg.tour_id = \"" + tour.getId() + "\" ;");
-//						List<Long> idTGs = new ArrayList<Long>();
-//						while (rsTG != null && rsTG.next()) {
-//							idTGs.add(Long.valueOf(rsTG.getLong("id")));
-//						}
-//						tour.setTouristGroups(new TouristGroupRepository().findAllById(idTGs));
-//					}
-//					// Set locations
-//					if (tour.getLocations() == null) {
-//						ResultSet rsLocation = connector.executeQuery(
-//								"SELECT temp.location_id as id FROM tour_location temp WHERE temp.tour_id= \""
-//										+ tour.getId() + "\" GROUP BY temp.location_id");
-//						List<Long> idLocations = new ArrayList<Long>();
-//						while (rsLocation != null && rsLocation.next()) {
-//							idLocations.add(Long.valueOf(rsLocation.getLong("id")));
-//						}
-//						tour.setLocations(new LocationRepository().findAllById(idLocations));
-//					}
-//					// Set type
-//					if (tour.getType() == null) {
-//						tour.setType(new TypeRepository().findById(tour.getTypeId()).orElse(new Type()));
-//					}
-					tours.add(tour);
-				}
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
+			query.append("id = \"" + id + "\" OR ");
 		});
-		return tours;
+		ResultSet rs = connector.executeQuery(query.substring(0,query.lastIndexOf("OR")));
+		return loadFromResultSet(rs);
 	}
 
 	@Override
@@ -224,5 +147,48 @@ public class TourRepository implements Repositories<Tour, Long> {
 		// TODO Auto-generated method stub
 
 	}
-
+	
+	public List<Tour> loadFromResultSet(ResultSet rs){
+		List<Tour> tours = new ArrayList<Tour>();
+		try {
+			while (rs!=null && rs.next()) {
+				Tour tour = new Tour();
+				tour.setId(Long.valueOf(rs.getLong("id")));
+				tour.setTypeId(Long.valueOf(rs.getString("type_id")));
+				tour.setName(rs.getString("name"));
+				tour.setDescription(rs.getString("description"));
+				tour.setPrice(Double.valueOf(rs.getDouble("price")));
+				tour.setStatus(rs.getString("status"));
+//				// Set tourist groups
+//				if (tour.getTouristGroups() == null) {
+//					ResultSet rsTG = connector.executeQuery(
+//							"SELECT tg.id FROM tourist_group tg WHERE tg.tour_id = \"" + tour.getId() + "\" ;");
+//					List<Long> idTGs = new ArrayList<Long>();
+//					while (rsTG != null && rsTG.next()) {
+//						idTGs.add(Long.valueOf(rsTG.getLong("id")));
+//					}
+//					tour.setTouristGroups(new TouristGroupRepository().findAllById(idTGs));
+//				}
+//				// Set locations
+//				if (tour.getLocations() == null) {
+//					ResultSet rsLocation = connector.executeQuery(
+//							"SELECT temp.location_id as id FROM tour_location temp WHERE temp.tour_id= \""
+//									+ tour.getId() + "\" GROUP BY temp.location_id");
+//					List<Long> idLocations = new ArrayList<Long>();
+//					while (rsLocation != null && rsLocation.next()) {
+//						idLocations.add(Long.valueOf(rsLocation.getLong("id")));
+//					}
+//					tour.setLocations(new LocationRepository().findAllById(idLocations));
+//				}
+//				// Set type
+//				if (tour.getType() == null) {
+//					tour.setType(new TypeRepository().findById(tour.getTypeId()).orElse(new Type()));
+//				}
+				tours.add(tour);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return tours;
+	}
 }

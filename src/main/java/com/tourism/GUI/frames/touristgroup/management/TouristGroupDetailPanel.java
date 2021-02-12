@@ -1,8 +1,11 @@
 package com.tourism.GUI.frames.touristgroup.management;
 
+import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseEvent;
 import java.awt.image.ImageObserver;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.logging.Logger;
 
@@ -14,11 +17,13 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 
 import com.tourism.DTO.TouristGroup;
-import com.tourism.GUI.frames.touristgroup.TouristGroupFrame;
+import com.tourism.GUI.frames.touristgroup.Resources;
+import com.tourism.GUI.frames.touristgroup.TouristGroupMainPanel;
+import com.tourism.GUI.frames.touristgroup.modify.TouristGroupModify;
 
-public class DetailTouristGroupPanel extends JPanel {
+public class TouristGroupDetailPanel extends JPanel {
+	private static final long serialVersionUID = 1L;
 	Logger logger = Logger.getLogger(getClass().getName());
-	static TouristGroup TG;
 	GroupLayout layout;
 	
 	JLabel lblId;
@@ -60,40 +65,24 @@ public class DetailTouristGroupPanel extends JPanel {
 	JButton btnModify;
 	JButton btnDelete;
 	
-	public DetailTouristGroupPanel() {
-		
-	}
-	public DetailTouristGroupPanel(Long touristGroupId) {
-		initData(touristGroupId);
+	public TouristGroupDetailPanel() {
+		initData();
 		initComp();
 	}
 	
-	public void initData(Long touristGroupId) {
-		DetailTouristGroupPanel.TG = new TouristGroup();
-		TouristGroupFrame.touristGroups.forEach(TG->{
-			if(TG.getId() == touristGroupId) {
-				DetailTouristGroupPanel.TG = TG;
-			}
-		});
-
-		logger.info(TG.toString());
+	public void initData() {
 		layout = new GroupLayout(this);
-		lblId = new JLabel("Mã đoàn" + TG.getId());
-		lblId.setText("Max doan" + TG.getId());
-		txtId = new JTextField(TG.getId()+"");
-
+		lblId = new JLabel("Mã đoàn");
+		txtId = new JTextField();
+		
 		lblName = new JLabel("Tên đoàn");
-		txtName = new JTextField(TG.getName());
-		//----
-		lblName.setText(TG.getName());
-		txtName.setText(TG.getName());
-		//---
+		txtName = new JTextField();
+
 		lblDepatureDate = new JLabel("Ngày khởi hành");
-		txtDepatureDate = new JTextField(TG.getDepatureDate()+"");
-		txtDepatureDate.setText(TG.getDepatureDate()+"");
+		txtDepatureDate = new JTextField();
 		
 		lblEndDate = new JLabel("Ngày kết thúc");
-		txtEndDate = new JTextField(TG.getEndDate()+"");
+		txtEndDate = new JTextField();
 
 		lblFoodPrice = new JLabel("Phí ăn uống");
 		txtFoodPrice = new JTextField();
@@ -124,7 +113,7 @@ public class DetailTouristGroupPanel extends JPanel {
 	}
 	
 	public void initComp() {
-		btnModify.addActionListener(new BtnModifyAction(txtName));
+		btnModify.addActionListener(new BtnModifyAction());
 		this.setLayout(layout);
 		layout.setAutoCreateContainerGaps(true);
 		layout.setAutoCreateGaps(true);
@@ -206,17 +195,29 @@ public class DetailTouristGroupPanel extends JPanel {
 								.addComponent(btnDelete))
 				);
 	}
-}
 
-class BtnModifyAction implements ActionListener{
-	JTextField txt;
-	public BtnModifyAction(JTextField txt) {
-		this.txt = txt;
+	static public void reload() {
+		TouristGroup TG = TouristGroupMainPanel.selectedTouristGroup;
+		TouristGroupDetailPanel detailPanel = TouristGroupManager.detailPanel; 
+		detailPanel.txtName.setText(TG.getName());
+		detailPanel.txtId.setText(TG.getId().toString());
+		detailPanel.txtDepatureDate.setText(Resources.simpleDateFormat.format(TG.getDepatureDate()));
+		detailPanel.txtEndDate.setText(Resources.simpleDateFormat.format(TG.getEndDate()));
+		detailPanel.txtFoodPrice.setText(TG.getFoodPrice().toString());
+		detailPanel.txtTransportPrice.setText(TG.getTransportPrice().toString());
+		detailPanel.txtHotelPrice.setText(TG.getHotelPrice().toString());
+		detailPanel.txtOtherPrice.setText(TG.getOtherPrice().toString());
+		detailPanel.txtTour.setText(TG.getTour().getName());
+		detailPanel.txtStatus.setText(TG.getStatus());
+		detailPanel.txtCustomerCount.setText(TG.getCustomers().size()+"");
+		detailPanel.txtEmployeeCount.setText(TG.getTourPositions().size()+"");
 	}
-	
+}
+class BtnModifyAction implements ActionListener{
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		 txt.setText(DetailTouristGroupPanel.TG.getName());
+		if(TouristGroupMainPanel.selectedTouristGroup != null && TouristGroupMainPanel.selectedTouristGroup.getId() != null)
+			TouristGroupMainPanel.loadModifyPanel();
 	}
 }
 

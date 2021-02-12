@@ -25,17 +25,17 @@ public class TourPositionRepository implements Repositories<TourPosition, Long>{
 	public List<TourPosition> saveAll(Iterable<TourPosition> entities) {
 		List<Long> ids = new ArrayList<Long>();
 		entities.forEach(e -> {
-			//Save tourist group
-			e.getTouristGroup().setTourPositions(new ArrayList<TourPosition>());
-			e.setTouristGroup(new TouristGroupRepository().save(e.getTouristGroup()));
-			e.setTouristGroupId(e.getTouristGroup().getId());
-			//Save position
-			e.setPosition(new PositionRepository().save(e.getPosition()));
-			e.setPositionId(e.getPosition().getId());
-			//Save employee
-			e.getEmployee().setTourPositions(new ArrayList<TourPosition>());
-			e.setEmployee(new EmployeeRepository().save(e.getEmployee()));
-			e.setEmployeeId(e.getEmployee().getId());
+//			//Save tourist group
+//			e.getTouristGroup().setTourPositions(new ArrayList<TourPosition>());
+//			e.setTouristGroup(new TouristGroupRepository().save(e.getTouristGroup()));
+//			e.setTouristGroupId(e.getTouristGroup().getId());
+//			//Save position
+//			e.setPosition(new PositionRepository().save(e.getPosition()));
+//			e.setPositionId(e.getPosition().getId());
+//			//Save employee
+//			e.getEmployee().setTourPositions(new ArrayList<TourPosition>());
+//			e.setEmployee(new EmployeeRepository().save(e.getEmployee()));
+//			e.setEmployeeId(e.getEmployee().getId());
 			
 			if (findById(e.getId()).isPresent()) {
 				StringBuilder updateQuery = new StringBuilder("UPDATE position_in_tour SET ");
@@ -76,67 +76,18 @@ public class TourPositionRepository implements Repositories<TourPosition, Long>{
 
 	@Override
 	public List<TourPosition> findAll() {
-		List<TourPosition> tourPositions = new ArrayList<TourPosition>();
 		ResultSet rsTourPosition = this.connector.executeQuery("SELECT * FROM position_in_tour ;");
-		try {
-			while (rsTourPosition!=null && rsTourPosition.next()) {
-				TourPosition tp = new TourPosition();
-				tp.setId(Long.valueOf(rsTourPosition.getLong("id")));
-				tp.setTouristGroupId(Long.valueOf(rsTourPosition.getLong("tourist_group_id")));
-				tp.setPositionId(Long.valueOf(rsTourPosition.getLong("position_id")));
-				tp.setEmployeeId(Long.valueOf(rsTourPosition.getLong("employee_id")));
-				// Set tourist group
-				if (tp.getTouristGroup() == null) {
-					tp.setTouristGroup(
-							new TouristGroupRepository().findById(tp.getTouristGroupId()).orElse(new TouristGroup()));
-				}
-				// Set position
-				if (tp.getPosition() == null) {
-					tp.setPosition(new PositionRepository().findById(tp.getPositionId()).orElse(new Position()));
-				}
-				// Set employee
-				if (tp.getEmployee() == null) {
-					tp.setEmployee(new EmployeeRepository().findById(tp.getEmployeeId()).orElse(new Employee()));
-				}
-				tourPositions.add(tp);
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		return tourPositions;
+		return loadFromResultSet(rsTourPosition);
 	}
 
 	@Override
 	public List<TourPosition> findAllById(Iterable<Long> ids) {
-		List<TourPosition> tourPositions = new ArrayList<TourPosition>();
-	    ids.forEach(id->{
-	    	ResultSet rsTourPosition = this.connector.executeQuery("SELECT * FROM position_in_tour WHERE id = \"" +id+ "\" ;");
-	    	try {
-	    		while(rsTourPosition!=null && rsTourPosition.next()) {
-	    			TourPosition tp = new TourPosition();
-	    			tp.setId(Long.valueOf(rsTourPosition.getLong("id")));
-	    			tp.setTouristGroupId(Long.valueOf(rsTourPosition.getLong("tourist_group_id")));
-	    			tp.setPositionId(Long.valueOf(rsTourPosition.getLong("position_id")));
-	    			tp.setEmployeeId(Long.valueOf(rsTourPosition.getLong("employee_id")));
-	    			//Set tourist group
-	    			if(tp.getTouristGroup() == null) {
-	    			tp.setTouristGroup(new TouristGroupRepository().findById(tp.getTouristGroupId()).orElse(new TouristGroup()));
-	    			}
-	    			//Set position
-	    			if(tp.getPosition() == null) {
-	    			tp.setPosition(new PositionRepository().findById(tp.getPositionId()).orElse(new Position()));
-	    			}
-	    			//Set employee
-	    			if(tp.getEmployee() == null) {
-	    				tp.setEmployee(new EmployeeRepository().findById(tp.getEmployeeId()).orElse(new Employee()));
-	    			}
-	    			tourPositions.add(tp);
-	        	}
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-	    });
-	    return tourPositions;
+		StringBuilder query = new StringBuilder("SELECT * FROM position_in_tour WHERE ");
+		ids.forEach(id->{
+			query.append("id = \"" + id + "\" OR ");
+		});
+		ResultSet rs = this.connector.executeQuery(query.substring(0, query.lastIndexOf("OR")));
+		return loadFromResultSet(rs);
 	}
 
 	@Override
@@ -173,5 +124,41 @@ public class TourPositionRepository implements Repositories<TourPosition, Long>{
 	public void deleteAll(Iterable<? extends TourPosition> entities) {
 		// TODO Auto-generated method stub
 	}	
+	
+	public List<TourPosition> findAllByTouristGroupId(Long id) {
+		StringBuilder query = new StringBuilder(
+				"SELECT * FROM position_in_tour WHERE tourist_group_id = \"");
+		query.append(id + "\" ;");
+		ResultSet rs = this.connector.executeQuery(query.toString());
+		return loadFromResultSet(rs);
+	}
 
+	public List<TourPosition> loadFromResultSet(ResultSet rs){
+		List<TourPosition> tourPositions = new ArrayList<TourPosition>();
+		try {
+			while(rs!=null && rs.next()) {
+				TourPosition tp = new TourPosition();
+				tp.setId(Long.valueOf(rs.getLong("id")));
+				tp.setTouristGroupId(Long.valueOf(rs.getLong("tourist_group_id")));
+				tp.setPositionId(Long.valueOf(rs.getLong("position_id")));
+				tp.setEmployeeId(Long.valueOf(rs.getLong("employee_id")));
+				//Set tourist group
+				if(tp.getTouristGroup() == null) {
+					tp.setTouristGroup(new TouristGroupRepository().findById(tp.getTouristGroupId()).orElse(new TouristGroup()));
+				}
+				//Set position
+				if(tp.getPosition() == null) {
+					tp.setPosition(new PositionRepository().findById(tp.getPositionId()).orElse(new Position()));
+				}
+				//Set employee
+				if(tp.getEmployee() == null) {
+					tp.setEmployee(new EmployeeRepository().findById(tp.getEmployeeId()).orElse(new Employee()));
+				}
+				tourPositions.add(tp);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return tourPositions;
+	}
 }

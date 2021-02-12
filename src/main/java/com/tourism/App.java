@@ -12,8 +12,7 @@ public class App {
 	 JsonAddress j = new JsonAddress();
 	//System.out.println(j.getAddressLv2("Thành phố Hồ Chí Minh"));
 	 // System.out.println(j.getAddressLV1());
-	 System.out.println(j.getAddressLV3("Thành phố Hồ Chí Minh", "Quận 9"));
-	  
+	 System.out.println(j.getAddressLV3("Thành phố Hồ Chí Minh", "Quận 9").toString());
   }
 
 }

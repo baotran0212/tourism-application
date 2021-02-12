@@ -3,6 +3,7 @@ package com.tourism.GUI.frames.touristgroup.management;
 import java.awt.Color;
 import java.awt.Dimension;
 
+import javax.swing.GroupLayout;
 import javax.swing.JPanel;
 
 import com.tourism.DAL.TourPositionRepository;
@@ -11,9 +12,10 @@ import com.tourism.GUI.frames.touristgroup.Resources;
 
 public class TouristGroupManager extends JPanel {
 	private static final long serialVersionUID = 1L;
-	static DetailTouristGroupPanel detailPanel;
-	SearchPanel searchPanel;
+	static TouristGroupDetailPanel detailPanel;
+	TouristGroupSearchPanel searchPanel;
 	TouristGroupManagerTablePanel touristGroupManagerTable;
+	GroupLayout layout;
 	
 	public TouristGroupManager() {
 		initData();
@@ -21,19 +23,26 @@ public class TouristGroupManager extends JPanel {
 	}
 	
 	public void initData() {
-		detailPanel = new DetailTouristGroupPanel(Long.valueOf(0));
-		searchPanel = new SearchPanel();
+		detailPanel = new TouristGroupDetailPanel();
+		searchPanel = new TouristGroupSearchPanel();
 		touristGroupManagerTable = new TouristGroupManagerTablePanel();
+		layout = new GroupLayout(this);
 	}
 	
 	public void initComp() {
-		detailPanel.setPreferredSize(Resources.DETAIL_PANEL);
-		searchPanel.setPreferredSize(Resources.SEARCH_PANEL);
-		touristGroupManagerTable.setPreferredSize(Resources.MANAGER_TABLE_PANEL);
 		
-		this.add(detailPanel);
-		this.add(searchPanel);
-		this.add(touristGroupManagerTable);
+		layout.setAutoCreateContainerGaps(true);
+		layout.setAutoCreateGaps(true);
+		layout.setHorizontalGroup(layout.createParallelGroup()
+				.addComponent(detailPanel)
+				.addComponent(searchPanel)
+				.addComponent(touristGroupManagerTable));
+		layout.setVerticalGroup(layout.createSequentialGroup()
+				.addComponent(detailPanel, 100, Resources.DETAIL_HEIGHT, Resources.DETAIL_HEIGHT)
+				.addComponent(searchPanel)
+				.addComponent(touristGroupManagerTable));
+		
+		this.setLayout(layout);
 		this.setPreferredSize(new Dimension(1110,700));
 		this.setBackground(Color.CYAN);
 	}

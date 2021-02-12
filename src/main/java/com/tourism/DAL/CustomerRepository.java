@@ -88,74 +88,17 @@ public class CustomerRepository implements Repositories<Customer, Long> {
 	@Override
 	public List<Customer> findAll() {
 		ResultSet rs = connector.executeQuery("SELECT * FROM customer");
-		List<Customer> customers = new ArrayList<Customer>();
-try {
-			while (rs!=null && rs.next()) {
-				Customer customer = new Customer();
-				customer.setId(Long.valueOf(rs.getLong("id")));
-				customer.setName(rs.getString("name"));
-				customer.setIdentityCard("identity_card");
-				customer.setAddress1(rs.getString("address1"));
-				customer.setAddress2(rs.getString("address2"));
-				customer.setAddress3(rs.getString("address3"));
-				customer.setStreet(rs.getString("street"));
-				customer.setGender(rs.getString("gender"));
-				customer.setPhoneNumber(rs.getString("phone_number"));
-//				//Set tourist_groups
-//				if(customer.getTouristGroups() == null) {
-//					ResultSet rsTG = this.connector.executeQuery(
-//							"SELECT tg.id FROM tourist_group tg, tourist_group_customer temp WHERE temp.tourist_group_id=tg.id AND temp.customer_id="
-//							+customer.getId() +" GROUP BY tg.id");
-//					List<Long> idTGs = new ArrayList<Long>();
-//					while(rsTG.next() && rsTG!=null) {
-//						idTGs.add(Long.valueOf(rsTG.getLong("id")));
-//					}
-//					customer.setTouristGroups(new TouristGroupRepository().findAllById(idTGs));
-//				}
-				customers.add(customer);
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		return customers;
+		return loadFromResultSet(rs);
 	}
 
 	@Override
 	public List<Customer> findAllById(Iterable<Long> ids) {
-		List<Customer> customers = new ArrayList<Customer>();
-		ids.forEach(id -> {
-			ResultSet rs = this.connector.executeQuery(
-					"SELECT * FROM customer WHERE id = \""+id+"\";");
-			try {
-				while (rs!=null && rs.next()) {
-					Customer customer = new Customer();
-					customer.setId(Long.valueOf(rs.getLong("id")));
-					customer.setName(rs.getString("name"));
-					customer.setIdentityCard("identity_card");
-					customer.setAddress1(rs.getString("address1"));
-					customer.setAddress2(rs.getString("address2"));
-					customer.setAddress3(rs.getString("address3"));
-					customer.setStreet(rs.getString("street"));
-					customer.setGender(rs.getString("gender"));
-					customer.setPhoneNumber(rs.getString("phone_number"));
-//					//Set tourist groups
-//					if(customer.getTouristGroups() == null) {
-//						ResultSet rsTG = this.connector.executeQuery(
-//								"SELECT tg.id FROM tourist_group tg, tourist_group_customer temp WHERE temp.tourist_group_id=tg.id AND temp.customer_id="
-//								+customer.getId() +" GROUP BY tg.id");
-//						List<Long> idTGs = new ArrayList<Long>();
-//						while(rsTG.next() && rsTG!=null) {
-//							idTGs.add(Long.valueOf(rsTG.getLong("id")));
-//						}
-//						customer.setTouristGroups(new TouristGroupRepository().findAllById(idTGs));
-//					}
-					customers.add(customer);
-				}
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
+		StringBuilder query = new StringBuilder("SELECT * FROM customer WHERE ");
+		ids.forEach(id->{
+			query.append("id = \"" + id + "\" OR ");
 		});
-		return customers;
+		ResultSet rs = this.connector.executeQuery(query.substring(0, query.lastIndexOf("OR")));
+		return loadFromResultSet(rs);
 	}
 
 	@Override
@@ -200,7 +143,48 @@ try {
 		});
 		deleteAllById(ids);
 	}
-
+	
+	public List<Customer> findAllByTouristGroupId(Long id){
+		StringBuilder query = new StringBuilder(
+				"SELECT * FROM customer c, tourist_group_customer temp WHERE temp.customer_id=c.id AND temp.tourist_group_id= \"");
+		query.append(id + "\";" );
+		ResultSet rs = this.connector.executeQuery(query.toString());
+		return loadFromResultSet(rs);
+	}
+	
+	public List<Customer> loadFromResultSet(ResultSet rs){
+		List<Customer> customers = new ArrayList<Customer>();
+		try {
+			while (rs!=null && rs.next()) {
+				Customer customer = new Customer();
+				customer.setId(Long.valueOf(rs.getLong("id")));
+				customer.setName(rs.getString("name"));
+				customer.setIdentityCard("identity_card");
+				customer.setAddress1(rs.getString("address1"));
+				customer.setAddress2(rs.getString("address2"));
+				customer.setAddress3(rs.getString("address3"));
+				customer.setStreet(rs.getString("street"));
+				customer.setGender(rs.getString("gender"));
+				customer.setPhoneNumber(rs.getString("phone_number"));
+//				//Set tourist groups
+//				if(customer.getTouristGroups() == null) {
+//					ResultSet rsTG = this.connector.executeQuery(
+//							"SELECT tg.id FROM tourist_group tg, tourist_group_customer temp WHERE temp.tourist_group_id=tg.id AND temp.customer_id="
+//							+customer.getId() +" GROUP BY tg.id");
+//					List<Long> idTGs = new ArrayList<Long>();
+//					while(rsTG.next() && rsTG!=null) {
+//						idTGs.add(Long.valueOf(rsTG.getLong("id")));
+//					}
+//					customer.setTouristGroups(new TouristGroupRepository().findAllById(idTGs));
+//				}
+				customers.add(customer);
+			}
+		} catch (Exception e) {
+			// TODO: handle exception
+		}
+		return customers;
+	}
+	
 	public static void main(String[] args) {
 		CustomerRepository customerRepository = new CustomerRepository();
 	}

@@ -71,69 +71,20 @@ public class LocationRepository implements Repositories<Location, Long> {
 
 	@Override
 	public List<Location> findAll() {
-		List<Location> locations = new ArrayList<Location>();
 		ResultSet rsLocation = connector.executeQuery("SELECT * FROM location ;");
-		try {
-			while (rsLocation != null && rsLocation.next()) {
-				Location location = new Location();
-				location.setId(Long.valueOf(rsLocation.getLong("id")));
-				location.setName(rsLocation.getString("name"));
-				location.setAddress1(rsLocation.getString("address1"));
-				location.setAddress2(rsLocation.getString("address2"));
-				location.setAddress3(rsLocation.getString("address3"));
-				location.setStreet(rsLocation.getString("street"));
-//				// Set tours
-//				if (location.getTours() == null) {
-//					ResultSet rsTour = connector
-//							.executeQuery("SELECT temp.tour_id as id FROM tour_location temp WHERE temp.location = \""
-//									+ location.getId() + "\" GROUP BY temp.tour_id ;");
-//					List<Long> idTours = new ArrayList<Long>();
-//					while (rsTour != null && rsTour.next()) {
-//						idTours.add(Long.valueOf(rsTour.getString("id")));
-//					}
-//					location.setTours(new TourRepository().findAllById(idTours));
-//				}
-				locations.add(location);
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		return locations;
+		return loadFromResultSet(rsLocation);
 	}
 
 	@Override
 	public List<Location> findAllById(Iterable<Long> ids) {
 		List<Location> locations = new ArrayList<Location>();
+		StringBuilder query = new StringBuilder(
+				"SELECT * FROM location WHERE ");
 		ids.forEach(id->{
-			ResultSet rsLocation= connector.executeQuery(
-					"SELECT * FROM location WHERE id = \"" + id + "\" ;");
-			try {
-				while(rsLocation!=null && rsLocation.next()) {
-					Location location = new Location();
-					location.setId(Long.valueOf(rsLocation.getLong("id")));
-					location.setName(rsLocation.getString("name"));
-					location.setAddress1(rsLocation.getString("address1"));
-					location.setAddress2(rsLocation.getString("address2"));
-					location.setAddress3(rsLocation.getString("address3"));
-					location.setStreet(rsLocation.getString("street"));
-//					// Set tours
-//					if(location.getTours() == null) {
-//						ResultSet rsTour = connector.executeQuery(
-//								"SELECT temp.tour_id as id FROM tour_location temp WHERE temp.location = \""
-//								+location.getId() + "\" GROUP BY temp.tour_id ;");
-//						List<Long> idTours = new ArrayList<Long>();
-//						while(rsTour != null && rsTour.next() ) {
-//							idTours.add(Long.valueOf(rsTour.getString("id")));
-//						}
-//						location.setTours(new TourRepository().findAllById(idTours));
-//					}
-					locations.add(location);
-				}
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
+			query.append("id = \"" + id + "\" OR ");
 		});
-		return locations;
+		ResultSet rs = connector.executeQuery(query.substring(0, query.lastIndexOf("OR")));
+		return loadFromResultSet(rs);
 	}
 
 	@Override
@@ -170,5 +121,42 @@ public class LocationRepository implements Repositories<Location, Long> {
 	public void deleteAll(Iterable<? extends Location> entities) {
 		// TODO Auto-generated method stub
 		
+	}
+	
+	public List<Location> loadFromResultSet(ResultSet rs){
+		List<Location> locations = new ArrayList<Location>();
+		try {
+			while(rs!=null && rs.next()) {
+				Location location = new Location();
+				location.setId(Long.valueOf(rs.getLong("id")));
+				location.setName(rs.getString("name"));
+				location.setAddress1(rs.getString("address1"));
+				location.setAddress2(rs.getString("address2"));
+				location.setAddress3(rs.getString("address3"));
+				location.setStreet(rs.getString("street"));
+//				// Set tours
+//				if(location.getTours() == null) {
+//					ResultSet rsTour = connector.executeQuery(
+//							"SELECT temp.tour_id as id FROM tour_location temp WHERE temp.location = \""
+//							+location.getId() + "\" GROUP BY temp.tour_id ;");
+//					List<Long> idTours = new ArrayList<Long>();
+//					while(rsTour != null && rsTour.next() ) {
+//						idTours.add(Long.valueOf(rsTour.getString("id")));
+//					}
+//					location.setTours(new TourRepository().findAllById(idTours));
+//				}
+				locations.add(location);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return locations;
+	}
+	
+	public List<Location> findAllByTourId(Long id){
+		StringBuilder query = new StringBuilder("SELECT * FROM location l, tour_location temp WHERE temp.location_id=l.id AND temp.tour_id=\"");
+		query.append(id+"\"; ");
+		ResultSet rs = connector.executeQuery(query.toString());
+		return loadFromResultSet(rs);
 	}
 }

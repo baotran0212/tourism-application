@@ -24,7 +24,7 @@ import javax.swing.table.TableCellRenderer;
 import com.mysql.cj.protocol.x.ReusableOutputStream;
 import com.tourism.DTO.TouristGroup;
 import com.tourism.GUI.frames.touristgroup.Resources;
-import com.tourism.GUI.frames.touristgroup.TouristGroupFrame;
+import com.tourism.GUI.frames.touristgroup.TouristGroupMainPanel;
 
 public class TouristGroupManagerTablePanel extends JPanel {
 	private static final long serialVersionUID = 1L;
@@ -46,29 +46,26 @@ public class TouristGroupManagerTablePanel extends JPanel {
 		tbl = new JTable(model);
 		scroller = new JScrollPane(tbl);
 		
-		TouristGroupFrame.touristGroups.forEach(TG -> {
+		TouristGroupMainPanel.touristGroups.forEach(TG -> {
 			model.addRow(new Object[] { TG.getId(), TG.getName(), TG.getDepatureDate(), TG.getEndDate(),
 					TG.getOtherPrice(), TG.getStatus()});
 		});
 	}
 
-	public void reloadDetailTGPanel(MouseEvent e) {
-		Long selectedId = (Long) tbl.getValueAt(tbl.getSelectedRow() , 0);
-		TouristGroup TG = new TouristGroup();
-		for(TouristGroup obj : TouristGroupFrame.touristGroups) {
-			if(obj.getId() == selectedId) {
-				TG=obj;
-			}
-		}
-		DetailTouristGroupPanel detailPanel = TouristGroupManager.detailPanel;
-		detailPanel.txtName.setText(TG.getName());
-		detailPanel.txtId.setText(TG.getId().toString());
-		logger.info(selectedId + "");
-	}
+
 	public void initComp() {
+		
 		tbl.addMouseListener(new MouseAdapter() {
 			public void mousePressed(MouseEvent e) {
-				reloadDetailTGPanel(e);
+				Long selectedId = (Long) tbl.getValueAt(tbl.getSelectedRow() , 0);
+				
+				for(TouristGroup obj : TouristGroupMainPanel.touristGroups) {
+					if(obj.getId() == selectedId) {
+						logger.info(obj.toString());
+						TouristGroupMainPanel.selectedTouristGroup=obj;
+					}
+				}
+				TouristGroupDetailPanel.reload();
 			}
 		});
 //		tbl.addMouseListener(new MouseListener() {
@@ -98,6 +95,4 @@ public class TouristGroupManagerTablePanel extends JPanel {
 		scroller.setPreferredSize(Resources.MANAGER_TABLE_SCROLLER);
 		add(scroller);
 	}
-	
-
 }

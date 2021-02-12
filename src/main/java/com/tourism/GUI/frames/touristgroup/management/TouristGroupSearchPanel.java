@@ -18,7 +18,7 @@ import com.tourism.GUI.frames.touristgroup.Resources;
 import com.tourism.GUI.util.DatePicker;
 import com.tourism.GUI.util.IconUtil;
 
-public class SearchPanel extends JPanel {
+public class TouristGroupSearchPanel extends JPanel {
 	private static final long serialVersionUID = 1L;
 	GroupLayout layout;
 	JLabel lblId;
@@ -50,7 +50,7 @@ public class SearchPanel extends JPanel {
 	JButton btnCreate;
 	JButton btnSearch;
 	
-	public SearchPanel() {
+	public TouristGroupSearchPanel() {
 		initData();
 		initComp();
 	}

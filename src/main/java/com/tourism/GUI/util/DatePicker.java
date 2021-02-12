@@ -2,6 +2,8 @@ package com.tourism.GUI.util;
 
 import java.awt.*;
 import java.awt.event.*;
+import java.util.logging.Logger;
+
 import javax.swing.*;
 
 public class DatePicker {
@@ -9,12 +11,13 @@ public class DatePicker {
 	int year = java.util.Calendar.getInstance().get(java.util.Calendar.YEAR);;
 	JLabel l = new JLabel("", JLabel.CENTER);
 	String day = "";
-	JDialog d;
+	JDialog dialog;
 	JButton[] button = new JButton[49];
+	Logger logger = Logger.getLogger(getClass().getName());
 
 	public DatePicker(JFrame parent) {
-		d = new JDialog();
-		d.setModal(true);
+		dialog = new JDialog();
+		dialog.setModal(true);
 		//TODO: Set Background d
 		String[] header = { "Sun", "Mon", "Tue", "Wed", "Thur", "Fri", "Sat" };
 		JPanel p1 = new JPanel(new GridLayout(7, 7));
@@ -30,7 +33,7 @@ public class DatePicker {
 				button[x].addActionListener(new ActionListener() {
 					public void actionPerformed(ActionEvent ae) {
 						day = button[selection].getActionCommand();
-						d.dispose();
+						dialog.dispose();
 					}
 				});
 			if (x < 7) {
@@ -57,17 +60,17 @@ public class DatePicker {
 			}
 		});
 		p2.add(next);
-		d.add(p1, BorderLayout.CENTER);
-		d.add(p2, BorderLayout.SOUTH);
-		d.pack();
-		d.setLocationRelativeTo(parent);
+		dialog.add(p1, BorderLayout.CENTER);
+		dialog.add(p2, BorderLayout.SOUTH);
+		dialog.pack();
+		dialog.setLocationRelativeTo(parent);
 		displayDate();
-		d.setVisible(true);
+		dialog.setVisible(true);
 	}
 
 	public DatePicker(JComponent parent) {
-		d = new JDialog();
-		d.setModal(true);
+		dialog = new JDialog();
+		dialog.setModal(true);
 		//TODO: Set background d
 		String[] header = { "Sun", "Mon", "Tue", "Wed", "Thur", "Fri", "Sat" };
 		JPanel p1 = new JPanel(new GridLayout(7, 7));
@@ -86,7 +89,7 @@ public class DatePicker {
 				button[x].addActionListener(new ActionListener() {
 					public void actionPerformed(ActionEvent ae) {
 						day = button[selection].getActionCommand();
-						d.dispose();
+						dialog.dispose();
 					}
 				});
 			if (x < 7) {
@@ -125,15 +128,66 @@ public class DatePicker {
 			}
 		});
 		p2.add(next);
-		d.add(p1, BorderLayout.CENTER);
-		d.add(p2, BorderLayout.SOUTH);
-		d.pack();
-		d.setLocationRelativeTo(parent);
+		dialog.add(p1, BorderLayout.CENTER);
+		dialog.add(p2, BorderLayout.SOUTH);
+		dialog.pack();
+		dialog.setLocationRelativeTo(parent);
 		displayDate();
-		d.setVisible(true);
+		dialog.setVisible(true);
 	}
+	public DatePicker() {
+		dialog = new JDialog();
+		dialog.setModal(true);
+		//TODO: Set Background d
+		String[] header = { "Sun", "Mon", "Tue", "Wed", "Thur", "Fri", "Sat" };
+		JPanel p1 = new JPanel(new GridLayout(7, 7));
+		//TODO: Set background p1
+		p1.setPreferredSize(new Dimension(400, 400));
 
+		for (int x = 0; x < button.length; x++) {
+			final int selection = x;
+			button[x] = new JButton();
+			button[x].setFocusPainted(false);
+			button[x].setBackground(Color.white);
+			if (x > 6)
+				button[x].addActionListener(new ActionListener() {
+					public void actionPerformed(ActionEvent ae) {
+						day = button[selection].getActionCommand();
+						dialog.dispose();
+					}
+				});
+			if (x < 7) {
+				button[x].setText(header[x]);
+				button[x].setForeground(Color.black);
+			}
+			p1.add(button[x]);
+		}
+		JPanel p2 = new JPanel(new GridLayout(1, 3));
+		JButton previous = new JButton("<< Previous");
+		previous.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent ae) {
+				month--;
+				displayDate();
+			}
+		});
+		p2.add(previous);
+		p2.add(l);
+		JButton next = new JButton("Next >>");
+		next.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent ae) {
+				month++;
+				displayDate();
+			}
+		});
+		p2.add(next);
+		dialog.add(p1, BorderLayout.CENTER);
+		dialog.add(p2, BorderLayout.SOUTH);
+		dialog.pack();
+		displayDate();
+		dialog.setVisible(true);
+	}
 	public void displayDate() {
+		logger.info("display");
 		for (int x = 7; x < button.length; x++)
 			button[x].setText("");
 		java.text.SimpleDateFormat sdf = new java.text.SimpleDateFormat("MMMM yyyy");
@@ -146,7 +200,7 @@ public class DatePicker {
 		}
 
 		l.setText(sdf.format(cal.getTime()));
-		d.setTitle("Date Picker");
+		dialog.setTitle("Date Picker");
 	}
 
 	public String setPickedDate() {
@@ -155,15 +209,22 @@ public class DatePicker {
 		java.text.SimpleDateFormat sdf = new java.text.SimpleDateFormat("dd-MM-yyyy");
 		java.util.Calendar cal = java.util.Calendar.getInstance();
 		cal.set(year, month, Integer.parseInt(day));
+
 		return sdf.format(cal.getTime());
 	}
 
 	public String setPickedDateYearMonthDate() {
+		logger.info("called method");
 		if (day.equals(""))
 			return day;
 		java.text.SimpleDateFormat sdf = new java.text.SimpleDateFormat("yyyy-MM-dd");
 		java.util.Calendar cal = java.util.Calendar.getInstance();
 		cal.set(year, month, Integer.parseInt(day));
+		logger.info("will return");
 		return sdf.format(cal.getTime());
+	}
+	
+	public static void main(String[] args) {
+		System.out.println( new DatePicker().setPickedDateYearMonthDate());
 	}
 }

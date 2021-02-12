@@ -4,12 +4,14 @@ import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.logging.Logger;
 
 import com.tourism.DTO.Hotel;
 import com.tourism.DTO.TouristGroup;
 
 public class HotelRepository implements Repositories<Hotel, Long>{
 	Connector connector = new MysqlConnector();
+	Logger logger = Logger.getLogger(getClass().getName());
 	@Override
 	public Hotel save(Hotel entity) {
 		List<Hotel> hotels = new ArrayList<Hotel>();
@@ -73,72 +75,20 @@ public class HotelRepository implements Repositories<Hotel, Long>{
 
 	@Override
 	public List<Hotel> findAll() {
-		List<Hotel> hotels = new ArrayList<Hotel>();
-			ResultSet rsHotel = this.connector.executeQuery(
-					"SELECT * FROM hotel  ;");
-			try {
-			while (rsHotel!=null && rsHotel.next()) {
-				Hotel h = new Hotel();
-				h.setId(Long.valueOf(rsHotel.getLong("id")));
-				h.setName(rsHotel.getString("name"));
-				h.setPrice(Double.valueOf(rsHotel.getDouble("price")));
-				h.setAddress1(rsHotel.getString("address1"));
-				h.setAddress2(rsHotel.getString("address2"));
-				h.setAddress3(rsHotel.getString("address3"));
-				h.setStreet(rsHotel.getString("street"));
-//				//Set tourist groups
-//				if(h.getTouristGroups() == null) {
-//					ResultSet rsTG = this.connector.executeQuery(
-//							"SELECT temp.tourist_group_id as id FROM tourist_group_hotel temp WHERE temp.hotel_id = \""
-//							+ h.getId() + "\" ;");
-//					List<Long> idTGs = new ArrayList<Long>();
-//					while(rsTG != null && rsTG.next()) {
-//						idTGs.add(Long.valueOf(rsTG.getLong("id")));
-//					}
-//					h.setTouristGroups(new TouristGroupRepository().findAllById(idTGs));
-//				}
-				hotels.add(h);
-			}	
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-		return hotels;
+		ResultSet rsHotel = this.connector.executeQuery(
+				"SELECT * FROM hotel  ;");
+		return loadAllFromResultSet(rsHotel);
 	}
 
 	@Override
 	public List<Hotel> findAllById(Iterable<Long> ids) {
 		List<Hotel> hotels = new ArrayList<Hotel>();
+		StringBuilder query = new StringBuilder("SELECT * FROM hotel WHERE ");
 		ids.forEach(id -> {
-			ResultSet rsHotel = this.connector.executeQuery(
-					"SELECT * FROM hotel WHERE id = \"" + id + "\" ;");
-			try {
-			while (rsHotel!=null && rsHotel.next()) {
-				Hotel h = new Hotel();
-				h.setId(Long.valueOf(rsHotel.getLong("id")));
-				h.setName(rsHotel.getString("name"));
-				h.setPrice(Double.valueOf(rsHotel.getDouble("price")));
-				h.setAddress1(rsHotel.getString("address1"));
-				h.setAddress2(rsHotel.getString("address2"));
-				h.setAddress3(rsHotel.getString("address3"));
-				h.setStreet(rsHotel.getString("street"));
-//				//Set tourist groups
-//				if(h.getTouristGroups() == null) {
-//					ResultSet rsTG = this.connector.executeQuery(
-//							"SELECT temp.tourist_group_id as id FROM tourist_group_hotel temp WHERE temp.hotel_id = \""
-//							+ h.getId() + "\" ;");
-//					List<Long> idTGs = new ArrayList<Long>();
-//					while(rsTG != null && rsTG.next()) {
-//						idTGs.add(Long.valueOf(rsTG.getLong("id")));
-//					}
-//					h.setTouristGroups(new TouristGroupRepository().findAllById(idTGs));
-//				}
-				hotels.add(h);
-			}	
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
+			query.append("id = \""+ id + "\" OR ");
 		});
-		return hotels;
+		ResultSet rs = this.connector.executeQuery(query.substring(0, query.lastIndexOf("OR")));
+		return loadAllFromResultSet(rs);
 	}
 
 	@Override
@@ -177,4 +127,43 @@ public class HotelRepository implements Repositories<Hotel, Long>{
 		
 	}
 	
+	public List<Hotel> loadAllFromResultSet(ResultSet rs){
+		List<Hotel> hotels = new ArrayList<Hotel>();
+		try {
+		while (rs!=null && rs.next()) {
+			Hotel h = new Hotel();
+			h.setId(Long.valueOf(rs.getLong("id")));
+			h.setName(rs.getString("name"));
+			h.setPrice(Double.valueOf(rs.getDouble("price")));
+			h.setAddress1(rs.getString("address1"));
+			h.setAddress2(rs.getString("address2"));
+			h.setAddress3(rs.getString("address3"));
+			h.setStreet(rs.getString("street"));
+//			//Set tourist groups
+//			if(h.getTouristGroups() == null) {
+//				ResultSet rsTG = this.connector.executeQuery(
+//						"SELECT temp.tourist_group_id as id FROM tourist_group_hotel temp WHERE temp.hotel_id = \""
+//						+ h.getId() + "\" ;");
+//				List<Long> idTGs = new ArrayList<Long>();
+//				while(rsTG != null && rsTG.next()) {
+//					idTGs.add(Long.valueOf(rsTG.getLong("id")));
+//				}
+//				h.setTouristGroups(new TouristGroupRepository().findAllById(idTGs));
+//			}
+			hotels.add(h);
+		}	
+		} catch (Exception e) {
+			e.printStackTrace();
+		} 
+		return hotels;
+	}
+	
+	public List<Hotel> findAllByTouristGroupId(Long id){
+		StringBuilder query = new StringBuilder(
+				"SELECT * FROM hotel h, tourist_group_hotel temp WHERE temp.hotel_id=h.id AND temp.tourist_group_id = \"");
+		query.append(id+"\"; ");
+		logger.info(query.toString());
+		ResultSet rs = this.connector.executeQuery(query.toString());
+		return loadAllFromResultSet(rs);
+	}
 }

@@ -30,7 +30,7 @@ public abstract class Connector {
   protected String database;
   protected Statement statement;
   protected ResultSet resultSet;
-  protected Connection connection = null;
+  static protected Connection connection;
 
   public abstract void getConnect();
   
@@ -39,4 +39,6 @@ public abstract class Connector {
   public abstract ResultSet executeQuery(String query);
 
   public abstract int executeUpdate(String query);
+  
+  public abstract void closeConnection();
 }

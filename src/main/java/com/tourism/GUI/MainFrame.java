@@ -18,7 +18,7 @@ import javax.swing.JPanel;
 import com.tourism.DTO.User;
 import com.tourism.GUI.frames.analysis.AnalysisFrame;
 import com.tourism.GUI.frames.tour.TourFrame;
-import com.tourism.GUI.frames.touristgroup.TouristGroupFrame;
+import com.tourism.GUI.frames.touristgroup.TouristGroupMainPanel;
 import com.tourism.GUI.util.IconUtil;
 
 /**
@@ -38,6 +38,9 @@ public class MainFrame extends JFrame {
 
 	// Array Jpanel nội dung chính
 	JPanel[] pnlMainContents;
+	public static JPanel pnlTourManager;
+	public static JPanel pnlTouristGroupManager;
+	public static JPanel pnlAnalysis;
 	JLayeredPane layeredContent = new JLayeredPane();
 
 	public MainFrame() {
@@ -97,9 +100,9 @@ public class MainFrame extends JFrame {
 		layeredContent.setPreferredSize(new Dimension(1110, 700));
 
 		// Init main content panel
-		JPanel pnlTourManager = new TourFrame();
-		JPanel pnlTouristGroupManager = new TouristGroupFrame();
-		JPanel pnlAnalysis = new AnalysisFrame();
+		pnlTourManager = new TourFrame();
+		pnlTouristGroupManager = new TouristGroupMainPanel();
+		pnlAnalysis = new AnalysisFrame();
 
 		this.pnlMainContents = new JPanel[] { pnlAnalysis, pnlTourManager, pnlTouristGroupManager };
 

@@ -20,27 +20,23 @@ public class MysqlConnector extends Connector {
     this.userName = ProjectProperties.getProperties("mysql.user");
     this.password = ProjectProperties.getProperties("mysql.password");
     this.database = ProjectProperties.getProperties("mysql.database");
-    //this.getConnect();
   }
 
   public void getConnect() {
-    if(connection == null) {
     	String url = "jdbc:mysql://" + this.host + ":3306/" + this.database;
         try {
-          this.connection = DriverManager.getConnection(url, this.userName, this.password);
-          logger.info("Connect success!!! count = " + count++);
+          connection = DriverManager.getConnection(url, this.userName, this.password);
+          logger.info("Connect success!!! count = " + ++count);
         } catch (Exception e) {
-          logger.info(e.toString());
+        	e.printStackTrace();
         }
-    }
   }
  
 	@Override
 	public void setStatement() {
 		try {
-			this.statement = this.connection.createStatement();
+			this.statement = connection.createStatement();
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
@@ -52,7 +48,7 @@ public class MysqlConnector extends Connector {
     	this.setStatement();
     	this.statement.execute(query);
     } catch (Exception e) {
-      // TODO: handle exception
+      e.printStackTrace();
     } finally {
       this.closeConnection();
     }
@@ -60,39 +56,36 @@ public class MysqlConnector extends Connector {
   }
 
   public ResultSet executeQuery(String query) {
-    ResultSet rs = null;
+	ResultSet rs = this.resultSet;
     try {
     	this.getConnect();
     	this.setStatement();
     	rs = this.statement.executeQuery(query);
     } catch (Exception e) {
-      // TODO: handle exception
-    } finally {
+    	e.printStackTrace();
     }
     return rs;
   }
 
+  @Override
   public void closeConnection() {
     try {
-      if (this.connection != null && !this.connection.isClosed()) {
-        this.connection.close();
-        this.connection = null;
+      if (connection != null ) {
+        connection.close();
       }
       
-//      if(this.statement != null && !this.statement.isClosed()) {
-//    	  this.statement.close();
-//    	  this.statement.close();
-//      }
-//      
-//      if(this.resultSet!=null && !this.resultSet.isClosed()) {
-//    	  this.resultSet.close();
-//    	  this.resultSet.close();
-//      }
+      if(this.statement != null ) {
+    	  this.statement.close();
+      }
+      
+      if(this.resultSet!=null) {
+    	  this.resultSet.close();
+      }
     } catch (Exception e) {
-      // TODO: handle exception
+    	e.printStackTrace();
     }
   }
-
+  
   public static void main(String[] args) {
     Connector connector = new MysqlConnector();
   }

@@ -1,6 +1,7 @@
 package com.tourism.GUI.frames.touristgroup;
 
 import java.awt.Dimension;
+import java.text.SimpleDateFormat;
 
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
@@ -8,9 +9,10 @@ import javax.swing.ImageIcon;
 import com.tourism.GUI.util.IconUtil;
 
 public class Resources {
-	
+	public static SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd-MM-yyyy");
 	Dimension searchPanelSize;
 	public static ImageIcon CALENDAR_ICON = IconUtil.loadIcon("src/images/noun_Calendar.png", 20, 20);
+	public static ImageIcon ADD_ICON = IconUtil.loadIcon("src/images/add.png", 30, 30);
 	public static Dimension CLENDAR_BUTTON = new Dimension(10,10);
 	
 	public static int DETAIL_WIDTH = 1000;

@@ -3,19 +3,37 @@ package com.tourism;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Properties;
+import java.util.logging.FileHandler;
+import java.util.logging.SimpleFormatter;
 
 /**
  * Properties
  */
 public class ProjectProperties {
   public static Properties properties = new Properties();
-
+  
+  public static FileHandler getFileHandlerLogger() {
+		FileHandler fh = null;
+	    try {  
+	        // This block configure the logger with handler and formatter  
+	        fh = new FileHandler("src/MyLogFile.log");  
+	        SimpleFormatter formatter = new SimpleFormatter();  
+	        fh.setFormatter(formatter);  
+	    } catch (SecurityException e) {  
+	        e.printStackTrace();  
+	    } catch (IOException e) {  
+	        e.printStackTrace();  
+	    }
+	    return fh;
+  }
+  
   public void writeProperties(String key, String value) {
     OutputStream out = null;
     try {

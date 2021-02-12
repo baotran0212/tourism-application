@@ -5,7 +5,6 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
-import com.tourism.DAL.TourRepository;
 import com.tourism.DAL.TouristGroupRepository;
 import com.tourism.DTO.Customer;
 import com.tourism.DTO.Employee;
