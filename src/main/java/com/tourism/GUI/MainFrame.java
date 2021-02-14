@@ -16,7 +16,7 @@ import javax.swing.JLayeredPane;
 import javax.swing.JPanel;
 
 import com.tourism.DTO.User;
-import com.tourism.GUI.frames.analysis.AnalysisFrame;
+import com.tourism.GUI.frames.analysis.AnalysisMainPanel;
 import com.tourism.GUI.frames.tour.TourFrame;
 import com.tourism.GUI.frames.touristgroup.TouristGroupMainPanel;
 import com.tourism.GUI.util.IconUtil;
@@ -102,7 +102,7 @@ public class MainFrame extends JFrame {
 		// Init main content panel
 		pnlTourManager = new TourFrame();
 		pnlTouristGroupManager = new TouristGroupMainPanel();
-		pnlAnalysis = new AnalysisFrame();
+		pnlAnalysis = new AnalysisMainPanel();
 
 		this.pnlMainContents = new JPanel[] { pnlAnalysis, pnlTourManager, pnlTouristGroupManager };
 

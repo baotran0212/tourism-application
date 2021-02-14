@@ -91,6 +91,8 @@ public class TypeRepository implements Repositories<Type, Long> {
 
 	@Override
 	public List<Type> findAllById(Iterable<Long> ids) {
+		if(!ids.iterator().hasNext())
+			return new ArrayList<Type>();
 		List<Type> types = new ArrayList<Type>();
 		ids.forEach(id -> {
 			ResultSet rsType = this.connector.executeQuery(

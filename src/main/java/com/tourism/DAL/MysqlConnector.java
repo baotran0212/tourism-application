@@ -54,7 +54,7 @@ public class MysqlConnector extends Connector {
     }
     return res;
   }
-
+  
   public ResultSet executeQuery(String query) {
 	ResultSet rs = this.resultSet;
     try {

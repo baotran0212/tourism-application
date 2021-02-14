@@ -1,32 +1,20 @@
 package com.tourism.GUI.frames.touristgroup.management;
 
-import java.awt.Component;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
 import java.text.SimpleDateFormat;
 import java.util.logging.Logger;
 
-import javax.swing.DefaultCellEditor;
-import javax.swing.JButton;
-import javax.swing.JCheckBox;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
-import javax.swing.event.TableModelEvent;
-import javax.swing.event.TableModelListener;
 import javax.swing.table.DefaultTableModel;
-import javax.swing.table.TableCellRenderer;
 
-import com.mysql.cj.protocol.x.ReusableOutputStream;
 import com.tourism.DTO.TouristGroup;
-import com.tourism.GUI.frames.touristgroup.Resources;
+import com.tourism.GUI.Resources;
 import com.tourism.GUI.frames.touristgroup.TouristGroupMainPanel;
 
-public class TouristGroupManagerTablePanel extends JPanel {
+public class TouristGroupTablePanel extends JPanel {
 	private static final long serialVersionUID = 1L;
 	Logger logger = Logger.getLogger(getClass().getName());
 	SimpleDateFormat sDateFormat = new SimpleDateFormat("dd-MM-yyyy");
@@ -34,7 +22,7 @@ public class TouristGroupManagerTablePanel extends JPanel {
 	DefaultTableModel model;
 	JScrollPane scroller;
 
-	public TouristGroupManagerTablePanel() {
+	public TouristGroupTablePanel() {
 		initData();
 		initComp();
 	}
@@ -48,7 +36,7 @@ public class TouristGroupManagerTablePanel extends JPanel {
 		
 		TouristGroupMainPanel.touristGroups.forEach(TG -> {
 			model.addRow(new Object[] { TG.getId(), TG.getName(), TG.getDepatureDate(), TG.getEndDate(),
-					TG.getOtherPrice(), TG.getStatus()});
+					TG.getFoodPrice() + TG.getTransportPrice() + TG.getHotelPrice() + TG.getOtherPrice(), TG.getStatus()});
 		});
 	}
 
@@ -61,7 +49,6 @@ public class TouristGroupManagerTablePanel extends JPanel {
 				
 				for(TouristGroup obj : TouristGroupMainPanel.touristGroups) {
 					if(obj.getId() == selectedId) {
-						logger.info(obj.toString());
 						TouristGroupMainPanel.selectedTouristGroup=obj;
 					}
 				}

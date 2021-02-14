@@ -4,8 +4,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Optional;
 
 import javax.swing.GroupLayout;
@@ -19,17 +17,21 @@ import javax.swing.table.DefaultTableModel;
 
 import com.tourism.BUS.PositionController;
 import com.tourism.BUS.TouristGroupController;
-import com.tourism.DTO.Position;
 import com.tourism.DTO.TourPosition;
 import com.tourism.DTO.TouristGroup;
-import com.tourism.GUI.frames.touristgroup.Resources;
+import com.tourism.GUI.Resources;
 import com.tourism.GUI.frames.touristgroup.TouristGroupMainPanel;
 import com.tourism.GUI.util.ConfirmDialog;
 import com.tourism.GUI.util.MessageDialog;
 
 public class TouristGroupEmployeeTable extends JPanel{
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	PositionController positionController = new PositionController();
 	TouristGroupController touristGroupController = new TouristGroupController();
+	TouristGroup TG;
 	
 	GroupLayout layout;
 	JLabel lblEmployeeList;
@@ -50,6 +52,7 @@ public class TouristGroupEmployeeTable extends JPanel{
 	DefaultTableModel model;
 	
 	public TouristGroupEmployeeTable() {
+		TG = TouristGroupMainPanel.selectedTouristGroup;
 		initData();
 		initComp();
 	}
@@ -82,7 +85,6 @@ public class TouristGroupEmployeeTable extends JPanel{
 	public void initComp() {
 		btnAdd.addMouseListener(new MouseAdapter() {
 			public void mousePressed(MouseEvent evt) {
-				TouristGroup TG = TouristGroupMainPanel.selectedTouristGroup;
 				Optional<TourPosition> opt = new AddEmployeeToTouristGroupDialog(TG).addEmployeeToTouristGroup();
 				opt.ifPresent(tourPosition -> {
 					for(TourPosition obj: TG.getTourPositions()) {
@@ -102,7 +104,7 @@ public class TouristGroupEmployeeTable extends JPanel{
 			public void actionPerformed(ActionEvent e) {
 				loadTable();
 			}
-		});	
+		});
 		
 		pnlSelectedEmployee.add(lblSelectedEmployee);
 		pnlSelectedEmployee.add(lblSelectedEmployeeId);
@@ -142,7 +144,7 @@ public class TouristGroupEmployeeTable extends JPanel{
 				.addGroup(layout.createSequentialGroup()
 						.addComponent(lblEmployeeList))
 				.addGroup(layout.createSequentialGroup()
-						.addComponent(btnAdd)
+						.addComponent(btnAdd, Resources.SQUARE_EDGE_XXS, Resources.SQUARE_EDGE_XXS, Resources.SQUARE_EDGE_XXS)
 						.addComponent(cbxPosition)
 						.addComponent(pnlSelectedEmployee))
 				.addComponent(scroller));
@@ -150,7 +152,7 @@ public class TouristGroupEmployeeTable extends JPanel{
 		layout.setVerticalGroup(layout.createSequentialGroup()
 				.addComponent(lblEmployeeList)
 				.addGroup(layout.createParallelGroup()
-						.addComponent(btnAdd)
+						.addComponent(btnAdd, Resources.SQUARE_EDGE_XXS, Resources.SQUARE_EDGE_XXS, Resources.SQUARE_EDGE_XXS)
 						.addComponent(cbxPosition)
 						.addComponent(pnlSelectedEmployee))
 				.addComponent(scroller));
@@ -161,13 +163,14 @@ public class TouristGroupEmployeeTable extends JPanel{
 		String selectedString = cbxPosition.getSelectedItem().toString();
 		Long positionId = Long.valueOf(selectedString.substring(0, selectedString.indexOf(".")));
 		model.setRowCount(0);
-		touristGroupController.groupAllTourPositionByTourPositionId(TouristGroupMainPanel.selectedTouristGroup, positionId).forEach(tourPosition ->{
-			model.addRow(new Object[] {
-							tourPosition.getEmployeeId(), 
-							tourPosition.getEmployee().getName(), 
-							tourPosition.getEmployee().getPhoneNumber(), 
-							tourPosition.getPositionId()
-							});
-		}); 
+		if(TouristGroupMainPanel.selectedTouristGroup.getTourPositions() != null)
+			touristGroupController.groupAllTourPositionByTourPositionId(TouristGroupMainPanel.selectedTouristGroup, positionId).forEach(tourPosition ->{
+				model.addRow(new Object[] {
+						tourPosition.getEmployeeId(), 
+						tourPosition.getEmployee().getName(), 
+						tourPosition.getEmployee().getPhoneNumber(), 
+						tourPosition.getPositionId()
+				});
+			}); 
 	}
 }

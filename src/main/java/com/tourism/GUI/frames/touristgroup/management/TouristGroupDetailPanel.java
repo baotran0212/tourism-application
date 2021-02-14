@@ -1,12 +1,8 @@
 package com.tourism.GUI.frames.touristgroup.management;
 
-import java.awt.Color;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.image.ImageObserver;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.logging.Logger;
 
 import javax.swing.GroupLayout;
@@ -16,10 +12,11 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
+import com.tourism.BUS.TouristGroupController;
 import com.tourism.DTO.TouristGroup;
-import com.tourism.GUI.frames.touristgroup.Resources;
+import com.tourism.GUI.Resources;
 import com.tourism.GUI.frames.touristgroup.TouristGroupMainPanel;
-import com.tourism.GUI.frames.touristgroup.modify.TouristGroupModify;
+import com.tourism.GUI.util.ConfirmDialog;
 
 public class TouristGroupDetailPanel extends JPanel {
 	private static final long serialVersionUID = 1L;
@@ -65,12 +62,14 @@ public class TouristGroupDetailPanel extends JPanel {
 	JButton btnModify;
 	JButton btnDelete;
 	
+	TouristGroupController touristGroupController;
 	public TouristGroupDetailPanel() {
 		initData();
 		initComp();
 	}
 	
 	public void initData() {
+		touristGroupController = new TouristGroupController();
 		layout = new GroupLayout(this);
 		lblId = new JLabel("Mã đoàn");
 		txtId = new JTextField();
@@ -113,7 +112,27 @@ public class TouristGroupDetailPanel extends JPanel {
 	}
 	
 	public void initComp() {
-		btnModify.addActionListener(new BtnModifyAction());
+		JTextField[] txtField = new JTextField[] {txtId, txtName, txtDepatureDate, txtEndDate, txtFoodPrice, txtTransportPrice, txtHotelPrice, txtOtherPrice, txtTour, txtStatus, txtCustomerCount, txtEmployeeCount};
+		for(JTextField txt: txtField) {
+			txt.setEditable(false);
+		}
+		
+		btnModify.addMouseListener(new MouseAdapter() {
+			public void mousePressed(MouseEvent evt) {
+				if(TouristGroupMainPanel.selectedTouristGroup != null && TouristGroupMainPanel.selectedTouristGroup.getId() != null)
+					TouristGroupMainPanel.initModifyPanel();
+			}
+		});
+		btnDelete.addMouseListener(new MouseAdapter() {
+			public void mousePressed(MouseEvent evt) {
+				if(TouristGroupMainPanel.selectedTouristGroup != null && TouristGroupMainPanel.selectedTouristGroup.getId() != null) {
+					if(new ConfirmDialog("Xác nhận xóa").confirm())
+						touristGroupController.changeStatusToDeleted(TouristGroupMainPanel.selectedTouristGroup);
+					TouristGroupMainPanel.initManagerPanel();
+				}
+			}
+		});
+		
 		this.setLayout(layout);
 		layout.setAutoCreateContainerGaps(true);
 		layout.setAutoCreateGaps(true);
@@ -211,19 +230,5 @@ public class TouristGroupDetailPanel extends JPanel {
 		detailPanel.txtStatus.setText(TG.getStatus());
 		detailPanel.txtCustomerCount.setText(TG.getCustomers().size()+"");
 		detailPanel.txtEmployeeCount.setText(TG.getTourPositions().size()+"");
-	}
-}
-class BtnModifyAction implements ActionListener{
-	@Override
-	public void actionPerformed(ActionEvent e) {
-		if(TouristGroupMainPanel.selectedTouristGroup != null && TouristGroupMainPanel.selectedTouristGroup.getId() != null)
-			TouristGroupMainPanel.loadModifyPanel();
-	}
-}
-
-class BtnDeleteAction implements ActionListener {
-	@Override
-	public void actionPerformed(ActionEvent e) {
-		// TODO Auto-generated method stub
 	}
 }

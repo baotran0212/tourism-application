@@ -10,7 +10,7 @@ public class TGModifyResource {
 	public static Dimension MODIFY_PANEL = new Dimension(MODIFY_PANEL_WIDTH, MOFIDY_PANEL_HEIGHT);
 	
 	public static int MODIFY_BASIC_PANEL_WIDTH = 1000;
-	public static int MODIFY_BASIC_PANEL_HEIGHT = 200;
+	public static int MODIFY_BASIC_PANEL_HEIGHT = 300;
 	public static Dimension MODIFY_BASIC_PANEL = new Dimension(MODIFY_BASIC_PANEL_WIDTH, MODIFY_BASIC_PANEL_HEIGHT);
 	
 	public static int MODIFY_CUSTOMER_PANEL_WIDTH = 300;

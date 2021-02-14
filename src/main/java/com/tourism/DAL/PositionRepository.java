@@ -42,38 +42,20 @@ public class PositionRepository implements Repositories<Position, Long> {
 
 	@Override
 	public List<Position> findAll() {
-		List<Position> positions = new ArrayList<Position>();
 			ResultSet rsPosition = this.connector.executeQuery("SELECT * FROM position ;");
-			try {
-				while(rsPosition != null && rsPosition.next()) {
-					Position position = new Position();
-					position.setId(Long.valueOf(rsPosition.getLong("id")));
-					position.setName(rsPosition.getString("name"));
-					positions.add(position);
-				}
-			} catch (Exception e) {
-				// TODO: handle exception
-			}
-		return positions;
+			return extractResultSet(rsPosition);
 	}
 
 	@Override
 	public List<Position> findAllById(Iterable<Long> ids) {
-		List<Position> positions = new ArrayList<Position>();
+		if(!ids.iterator().hasNext())
+			return new ArrayList<Position>();
+		StringBuilder query = new StringBuilder("SELECT * FROM position WHERE ");
 		ids.forEach(id -> {
-			ResultSet rsPosition = this.connector.executeQuery("SELECT * FROM position WHERE id = \"" + id + "\" ;");
-			try {
-				while(rsPosition != null && rsPosition.next()) {
-					Position position = new Position();
-					position.setId(Long.valueOf(rsPosition.getLong("id")));
-					position.setName(rsPosition.getString("name"));
-					positions.add(position);
-				}
-			} catch (Exception e) {
-				// TODO: handle exception
-			}
+		query.append("id= \"" + id+"\" OR ");	
+
 		});
-		return positions;
+		return extractResultSet(connector.executeQuery(query.substring(0, query.lastIndexOf("OR"))));
 	}
 
 	@Override
@@ -111,5 +93,19 @@ public class PositionRepository implements Repositories<Position, Long> {
 		// TODO Auto-generated method stub
 		
 	}
-
+	
+	public List<Position> extractResultSet(ResultSet rs){
+		List<Position> positions = new ArrayList<Position>();
+		try {
+			while(rs != null && rs.next()) {
+				Position position = new Position();
+				position.setId(Long.valueOf(rs.getLong("id")));
+				position.setName(rs.getString("name"));
+				positions.add(position);
+			}
+		} catch (Exception e) {
+			// TODO: handle exception
+		}
+		return positions;
+	}
 }

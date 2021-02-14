@@ -184,10 +184,10 @@ public class DatePicker {
 		dialog.add(p2, BorderLayout.SOUTH);
 		dialog.pack();
 		displayDate();
+		dialog.setLocationRelativeTo(null);
 		dialog.setVisible(true);
 	}
 	public void displayDate() {
-		logger.info("display");
 		for (int x = 7; x < button.length; x++)
 			button[x].setText("");
 		java.text.SimpleDateFormat sdf = new java.text.SimpleDateFormat("MMMM yyyy");
@@ -198,7 +198,6 @@ public class DatePicker {
 		for (int x = 6 + dayOfWeek, day = 1; day <= daysInMonth; x++, day++) {
 			button[x].setText(day + "");
 		}
-
 		l.setText(sdf.format(cal.getTime()));
 		dialog.setTitle("Date Picker");
 	}
@@ -209,18 +208,24 @@ public class DatePicker {
 		java.text.SimpleDateFormat sdf = new java.text.SimpleDateFormat("dd-MM-yyyy");
 		java.util.Calendar cal = java.util.Calendar.getInstance();
 		cal.set(year, month, Integer.parseInt(day));
-
 		return sdf.format(cal.getTime());
 	}
-
+	
+	public String getPickedDate(String pattern) {
+		if (day.equals(""))
+			return day;
+		java.text.SimpleDateFormat sdf = new java.text.SimpleDateFormat(pattern);
+		java.util.Calendar cal = java.util.Calendar.getInstance();
+		cal.set(year, month, Integer.parseInt(day));
+		return sdf.format(cal.getTime());
+	}
+	
 	public String setPickedDateYearMonthDate() {
-		logger.info("called method");
 		if (day.equals(""))
 			return day;
 		java.text.SimpleDateFormat sdf = new java.text.SimpleDateFormat("yyyy-MM-dd");
 		java.util.Calendar cal = java.util.Calendar.getInstance();
 		cal.set(year, month, Integer.parseInt(day));
-		logger.info("will return");
 		return sdf.format(cal.getTime());
 	}
 	

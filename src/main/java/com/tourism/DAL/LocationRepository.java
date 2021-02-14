@@ -72,19 +72,20 @@ public class LocationRepository implements Repositories<Location, Long> {
 	@Override
 	public List<Location> findAll() {
 		ResultSet rsLocation = connector.executeQuery("SELECT * FROM location ;");
-		return loadFromResultSet(rsLocation);
+		return extractResultSet(rsLocation);
 	}
 
 	@Override
-	public List<Location> findAllById(Iterable<Long> ids) {
-		List<Location> locations = new ArrayList<Location>();
+	public List<Location> findAllById(Iterable<Long> ids){
+		if(!ids.iterator().hasNext())
+			return new ArrayList<Location>();
 		StringBuilder query = new StringBuilder(
 				"SELECT * FROM location WHERE ");
 		ids.forEach(id->{
 			query.append("id = \"" + id + "\" OR ");
 		});
 		ResultSet rs = connector.executeQuery(query.substring(0, query.lastIndexOf("OR")));
-		return loadFromResultSet(rs);
+		return extractResultSet(rs);
 	}
 
 	@Override
@@ -123,7 +124,7 @@ public class LocationRepository implements Repositories<Location, Long> {
 		
 	}
 	
-	public List<Location> loadFromResultSet(ResultSet rs){
+	public List<Location> extractResultSet(ResultSet rs){
 		List<Location> locations = new ArrayList<Location>();
 		try {
 			while(rs!=null && rs.next()) {
@@ -157,6 +158,6 @@ public class LocationRepository implements Repositories<Location, Long> {
 		StringBuilder query = new StringBuilder("SELECT * FROM location l, tour_location temp WHERE temp.location_id=l.id AND temp.tour_id=\"");
 		query.append(id+"\"; ");
 		ResultSet rs = connector.executeQuery(query.toString());
-		return loadFromResultSet(rs);
+		return extractResultSet(rs);
 	}
 }

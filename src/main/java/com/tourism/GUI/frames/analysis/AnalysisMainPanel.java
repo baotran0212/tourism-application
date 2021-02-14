@@ -6,9 +6,9 @@ import java.awt.Dimension;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
-public class AnalysisFrame extends JPanel{
+public class AnalysisMainPanel extends JPanel{
 	private static final long serialVersionUID = 1L;
-	public AnalysisFrame() {
+	public AnalysisMainPanel() {
 		initComp();
 	}
 	

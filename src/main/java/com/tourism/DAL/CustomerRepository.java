@@ -93,6 +93,8 @@ public class CustomerRepository implements Repositories<Customer, Long> {
 
 	@Override
 	public List<Customer> findAllById(Iterable<Long> ids) {
+		if(!ids.iterator().hasNext())
+			return new ArrayList<Customer>();
 		StringBuilder query = new StringBuilder("SELECT * FROM customer WHERE ");
 		ids.forEach(id->{
 			query.append("id = \"" + id + "\" OR ");
@@ -132,7 +134,6 @@ public class CustomerRepository implements Repositories<Customer, Long> {
 		  query.append(" id = "+id+" OR");
 	  });
 	  this.connector.executeUpdate(query.substring(0, query.length()-2));
-	  System.out.println(query.substring(0, query.length()-2));
 	}
 
 	@Override

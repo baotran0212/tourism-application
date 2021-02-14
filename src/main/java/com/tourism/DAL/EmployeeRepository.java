@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.logging.Logger;
 
+import com.tourism.DTO.Customer;
 import com.tourism.DTO.Employee;
 import com.tourism.DTO.TouristGroup;
 
@@ -83,76 +84,19 @@ public class EmployeeRepository implements Repositories<Employee, Long> {
 
 	@Override
 	public List<Employee> findAll() {
-		List<Employee> employees = new ArrayList<Employee>();
 		ResultSet rsEmp = this.connector.executeQuery("SELECT * FROM employee ;");
-		try {
-			while (rsEmp!=null && rsEmp.next()) {
-				Employee emp = new Employee();
-				emp.setId(Long.valueOf(rsEmp.getLong("id")));
-				emp.setName(rsEmp.getString("name"));
-				emp.setIdentityCard(rsEmp.getString("identity_card"));
-				emp.setAddress1(rsEmp.getString("address1"));
-				emp.setAddress2(rsEmp.getString("address2"));
-				emp.setAddress3(rsEmp.getString("address3"));
-				emp.setStreet(rsEmp.getString("street"));
-				emp.setGender(rsEmp.getString("gender"));
-				emp.setPhoneNumber(rsEmp.getString("phone_number"));
-				emp.setStatus(rsEmp.getString("status"));
-//				// Set position_in_tour
-//				if (emp.getTourPositions() == null) {
-//					ResultSet rsTourPosition = this.connector.executeQuery(
-//							"SELECT temp.position_id as id FROM position_in_tour temp WHERE temp.employee_id="
-//									+ emp.getId() + " GROUP BY temp.position_id");
-//					List<Long> idTourPositions = new ArrayList<Long>();
-//					while (rsTourPosition != null && rsTourPosition.next()) {
-//						idTourPositions.add(Long.valueOf(rsTourPosition.getString("id")));
-//					}
-//					emp.setTourPositions(new TourPositionRepository().findAllById(idTourPositions));
-//				}
-				employees.add(emp);
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		return employees;
+		return extractResultSet(rsEmp);
 	}
 
 	@Override
 	public List<Employee> findAllById(Iterable<Long> ids) {
-		List<Employee> employees = new ArrayList<Employee>();
+		if(!ids.iterator().hasNext())
+			return new ArrayList<Employee>();
+		StringBuilder query = new StringBuilder("SELECT * FROM employee WHERE ");
 		ids.forEach(id -> {
-			ResultSet rsEmp = this.connector.executeQuery("SELECT * FROM employee WHERE id = \"" + id + "\" ;");
-			try {
-				while (rsEmp!=null && rsEmp.next()) {
-					Employee emp = new Employee();
-					emp.setId(Long.valueOf(rsEmp.getLong("id")));
-					emp.setName(rsEmp.getString("name"));
-					emp.setIdentityCard(rsEmp.getString("identity_card"));
-					emp.setAddress1(rsEmp.getString("address1"));
-					emp.setAddress2(rsEmp.getString("address2"));
-					emp.setAddress3(rsEmp.getString("address3"));
-					emp.setStreet(rsEmp.getString("street"));
-					emp.setGender(rsEmp.getString("gender"));
-					emp.setPhoneNumber(rsEmp.getString("phone_number"));
-					emp.setStatus(rsEmp.getString("status"));
-//					// Set position_in_tour
-//					if (emp.getTourPositions() == null) {
-//						ResultSet rsTourPosition = this.connector.executeQuery(
-//								"SELECT temp.position_id as id FROM position_in_tour temp WHERE temp.employee_id="
-//										+ emp.getId() + " GROUP BY temp.position_id");
-//						List<Long> idTourPositions = new ArrayList<Long>();
-//						while (rsTourPosition != null && rsTourPosition.next()) {
-//							idTourPositions.add(Long.valueOf(rsTourPosition.getString("id")));
-//						}
-//						emp.setTourPositions(new TourPositionRepository().findAllById(idTourPositions));
-//					}
-					employees.add(emp);
-				}
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
+			query.append(" id=\"" + id + "\" OR ");
 		});
-		return employees;
+		return extractResultSet(connector.executeQuery(query.substring(0, query.lastIndexOf("OR"))));
 	}
 
 	@Override
@@ -190,5 +134,37 @@ public class EmployeeRepository implements Repositories<Employee, Long> {
 		// TODO Auto-generated method stub
 
 	}
-
+	public List<Employee> extractResultSet(ResultSet rsEmp){
+		List<Employee> employees = new ArrayList<Employee>();
+		try {
+			while (rsEmp!=null && rsEmp.next()) {
+				Employee emp = new Employee();
+				emp.setId(Long.valueOf(rsEmp.getLong("id")));
+				emp.setName(rsEmp.getString("name"));
+				emp.setIdentityCard(rsEmp.getString("identity_card"));
+				emp.setAddress1(rsEmp.getString("address1"));
+				emp.setAddress2(rsEmp.getString("address2"));
+				emp.setAddress3(rsEmp.getString("address3"));
+				emp.setStreet(rsEmp.getString("street"));
+				emp.setGender(rsEmp.getString("gender"));
+				emp.setPhoneNumber(rsEmp.getString("phone_number"));
+				emp.setStatus(rsEmp.getString("status"));
+//				// Set position_in_tour
+//				if (emp.getTourPositions() == null) {
+//					ResultSet rsTourPosition = this.connector.executeQuery(
+//							"SELECT temp.position_id as id FROM position_in_tour temp WHERE temp.employee_id="
+//									+ emp.getId() + " GROUP BY temp.position_id");
+//					List<Long> idTourPositions = new ArrayList<Long>();
+//					while (rsTourPosition != null && rsTourPosition.next()) {
+//						idTourPositions.add(Long.valueOf(rsTourPosition.getString("id")));
+//					}
+//					emp.setTourPositions(new TourPositionRepository().findAllById(idTourPositions));
+//				}
+				employees.add(emp);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return employees;
+	}
 }

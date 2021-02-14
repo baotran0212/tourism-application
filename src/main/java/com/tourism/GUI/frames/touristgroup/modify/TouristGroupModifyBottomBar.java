@@ -14,6 +14,7 @@ import javax.swing.LayoutStyle.ComponentPlacement;
 
 import com.tourism.BUS.TouristGroupController;
 import com.tourism.GUI.frames.touristgroup.TouristGroupMainPanel;
+import com.tourism.GUI.util.ConfirmDialog;
 
 public class TouristGroupModifyBottomBar extends JPanel {
 	private static final long serialVersionUID = 1L;
@@ -40,26 +41,29 @@ public class TouristGroupModifyBottomBar extends JPanel {
 		btnCancel.addActionListener(new ActionListener() {	
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				TouristGroupMainPanel.loadManagerPanel();
+				TouristGroupMainPanel.initManagerPanel();
 			}
 		});
 		
 		btnSave.addMouseListener(new MouseAdapter() {
 			public void mousePressed(MouseEvent evt) {
-				touristGroupController.saveWithCustomerAndTourPositionAndTour(TouristGroupMainPanel.selectedTouristGroup);
-				TouristGroupMainPanel.loadManagerPanel();
+				TouristGroupBasicModifyPanel.commitToSelectedTouristGroup();
+				touristGroupController.saveWithRelationships(TouristGroupMainPanel.selectedTouristGroup);
+				TouristGroupMainPanel.initManagerPanel();
 			}
 		});
 		
 		btnDelete.addMouseListener(new MouseAdapter() {
 			public void mousePressed(MouseEvent evt) {
-				touristGroupController.changeStatusToDeleted(TouristGroupMainPanel.selectedTouristGroup);
-				TouristGroupMainPanel.loadManagerPanel();
+				if(TouristGroupMainPanel.selectedTouristGroup != null && TouristGroupMainPanel.selectedTouristGroup.getId() != null) {
+					if(new ConfirmDialog("Xác nhận xóa").confirm())
+						touristGroupController.changeStatusToDeleted(TouristGroupMainPanel.selectedTouristGroup);
+					TouristGroupMainPanel.initManagerPanel();
+				}
 			}
 		});
 		
 		layout.setAutoCreateContainerGaps(true);
-		
 		layout.setHorizontalGroup(layout.createParallelGroup(Alignment.LEADING)
 				.addGroup(Alignment.TRAILING,layout.createSequentialGroup()
 						.addContainerGap(0, Short.MAX_VALUE)

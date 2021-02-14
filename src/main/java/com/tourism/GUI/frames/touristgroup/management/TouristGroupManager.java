@@ -6,16 +6,15 @@ import java.awt.Dimension;
 import javax.swing.GroupLayout;
 import javax.swing.JPanel;
 
-import com.tourism.DAL.TourPositionRepository;
-import com.tourism.DAL.TouristGroupRepository;
-import com.tourism.GUI.frames.touristgroup.Resources;
+import com.tourism.GUI.Resources;
 
 public class TouristGroupManager extends JPanel {
 	private static final long serialVersionUID = 1L;
 	static TouristGroupDetailPanel detailPanel;
-	TouristGroupSearchPanel searchPanel;
-	TouristGroupManagerTablePanel touristGroupManagerTable;
-	GroupLayout layout;
+	static TouristGroupSearchPanel searchPanel;
+	static TouristGroupTablePanel managerTable;
+	static JPanel mainContent;
+	static GroupLayout layout;
 	
 	public TouristGroupManager() {
 		initData();
@@ -25,7 +24,7 @@ public class TouristGroupManager extends JPanel {
 	public void initData() {
 		detailPanel = new TouristGroupDetailPanel();
 		searchPanel = new TouristGroupSearchPanel();
-		touristGroupManagerTable = new TouristGroupManagerTablePanel();
+		managerTable = new TouristGroupTablePanel();
 		layout = new GroupLayout(this);
 	}
 	
@@ -36,14 +35,22 @@ public class TouristGroupManager extends JPanel {
 		layout.setHorizontalGroup(layout.createParallelGroup()
 				.addComponent(detailPanel)
 				.addComponent(searchPanel)
-				.addComponent(touristGroupManagerTable));
+				.addComponent(managerTable));
 		layout.setVerticalGroup(layout.createSequentialGroup()
 				.addComponent(detailPanel, 100, Resources.DETAIL_HEIGHT, Resources.DETAIL_HEIGHT)
 				.addComponent(searchPanel)
-				.addComponent(touristGroupManagerTable));
+				.addComponent(managerTable));
 		
 		this.setLayout(layout);
 		this.setPreferredSize(new Dimension(1110,700));
 		this.setBackground(Color.CYAN);
+	}
+	
+	public static void reloadManagerTable() {
+		TouristGroupTablePanel temp = new TouristGroupTablePanel();
+		layout.replace(managerTable, temp);
+		managerTable = temp;
+;		managerTable.getParent().revalidate();
+		managerTable.repaint();
 	}
 }

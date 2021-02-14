@@ -1,6 +1,5 @@
 package com.tourism.GUI.frames.touristgroup.modify;
 
-import java.awt.Color;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.Optional;
@@ -17,12 +16,16 @@ import com.tourism.BUS.CustomerController;
 import com.tourism.BUS.TouristGroupController;
 import com.tourism.DTO.Customer;
 import com.tourism.DTO.TouristGroup;
-import com.tourism.GUI.frames.touristgroup.Resources;
+import com.tourism.GUI.Resources;
 import com.tourism.GUI.frames.touristgroup.TouristGroupMainPanel;
 import com.tourism.GUI.util.ConfirmDialog;
 import com.tourism.GUI.util.MessageDialog;
 
 public class TouristGroupCustomerTable extends JPanel {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	TouristGroupController touristGroupController = new TouristGroupController();
 	CustomerController customerController = new CustomerController();
 	
@@ -39,8 +42,9 @@ public class TouristGroupCustomerTable extends JPanel {
 	JScrollPane scroller;
 	JTable tbl;
 	DefaultTableModel model;
-	
+	TouristGroup TG;
 	public TouristGroupCustomerTable() {
+		TG = TouristGroupMainPanel.selectedTouristGroup;
 		initData();
 		initComp();
 	}
@@ -64,9 +68,9 @@ public class TouristGroupCustomerTable extends JPanel {
 	}
 	
 	public void initComp() {
+		btnAdd.setPreferredSize(Resources.SQUARE_XXS);
 		btnAdd.addMouseListener(new MouseAdapter() {
 			public void mousePressed(MouseEvent evt) {
-				TouristGroup TG = TouristGroupMainPanel.selectedTouristGroup;
 				Optional<Customer> opt = new AddCustomerToTouristGroupDialog(TG).addCustomerToTouristGroup();
 				opt.ifPresent(customer -> {
 					for(Customer obj: TG.getCustomers()) {
@@ -111,7 +115,7 @@ public class TouristGroupCustomerTable extends JPanel {
 				.addGroup(layout.createSequentialGroup()
 						.addComponent(lblCustomerList))
 				.addGroup(layout.createSequentialGroup()
-						.addComponent(btnAdd)
+						.addComponent(btnAdd, Resources.SQUARE_EDGE_XXS, Resources.SQUARE_EDGE_XXS, Resources.SQUARE_EDGE_XXS)
 						.addContainerGap()
 						.addComponent(pnlSelectedCustomer))
 				.addComponent(scroller));
@@ -119,7 +123,7 @@ public class TouristGroupCustomerTable extends JPanel {
 		layout.setVerticalGroup(layout.createSequentialGroup()
 				.addComponent(lblCustomerList)
 				.addGroup(layout.createParallelGroup()
-						.addComponent(btnAdd)
+						.addComponent(btnAdd, Resources.SQUARE_EDGE_XXS, Resources.SQUARE_EDGE_XXS, Resources.SQUARE_EDGE_XXS)
 						.addComponent(pnlSelectedCustomer))
 				.addComponent(scroller));
 		this.setLayout(layout);
@@ -127,12 +131,13 @@ public class TouristGroupCustomerTable extends JPanel {
 	
 	private void loadTable() {
 		model.setRowCount(0);
-		TouristGroupMainPanel.selectedTouristGroup.getCustomers().forEach(customer ->{
-			model.addRow(new Object[] {
-					customer.getId(),
-					customer.getName(),
-					customer.getPhoneNumber()
+		if(TouristGroupMainPanel.selectedTouristGroup.getCustomers()!=null)
+			TouristGroupMainPanel.selectedTouristGroup.getCustomers().forEach(customer ->{
+				model.addRow(new Object[] {
+						customer.getId(),
+						customer.getName(),
+						customer.getPhoneNumber()
+				});
 			});
-		});
 	}
 }

@@ -25,23 +25,11 @@ public class TourPositionRepository implements Repositories<TourPosition, Long>{
 	public List<TourPosition> saveAll(Iterable<TourPosition> entities) {
 		List<Long> ids = new ArrayList<Long>();
 		entities.forEach(e -> {
-//			//Save tourist group
-//			e.getTouristGroup().setTourPositions(new ArrayList<TourPosition>());
-//			e.setTouristGroup(new TouristGroupRepository().save(e.getTouristGroup()));
-//			e.setTouristGroupId(e.getTouristGroup().getId());
-//			//Save position
-//			e.setPosition(new PositionRepository().save(e.getPosition()));
-//			e.setPositionId(e.getPosition().getId());
-//			//Save employee
-//			e.getEmployee().setTourPositions(new ArrayList<TourPosition>());
-//			e.setEmployee(new EmployeeRepository().save(e.getEmployee()));
-//			e.setEmployeeId(e.getEmployee().getId());
-			
 			if (findById(e.getId()).isPresent()) {
 				StringBuilder updateQuery = new StringBuilder("UPDATE position_in_tour SET ");
-				updateQuery.append("tourist_group_id = \"" + e.getTouristGroupId() + "\" ");
+				updateQuery.append("tourist_group_id = \"" + e.getTouristGroupId() + "\", ");
 				updateQuery.append("position_id = \"" + e.getPositionId() + "\", ");
-				updateQuery.append("employee_id = \"" + e.getEmployeeId() + "\", ");
+				updateQuery.append("employee_id = \"" + e.getEmployeeId() + "\" ");
 				updateQuery.append("WHERE id = \"" + e.getId() + "\" ;");
 				this.connector.executeUpdate(updateQuery.toString());
 			} else {
@@ -77,17 +65,19 @@ public class TourPositionRepository implements Repositories<TourPosition, Long>{
 	@Override
 	public List<TourPosition> findAll() {
 		ResultSet rsTourPosition = this.connector.executeQuery("SELECT * FROM position_in_tour ;");
-		return loadFromResultSet(rsTourPosition);
+		return extractResultSet(rsTourPosition);
 	}
 
 	@Override
 	public List<TourPosition> findAllById(Iterable<Long> ids) {
+		if(!ids.iterator().hasNext())
+			return new ArrayList<TourPosition>();
 		StringBuilder query = new StringBuilder("SELECT * FROM position_in_tour WHERE ");
 		ids.forEach(id->{
 			query.append("id = \"" + id + "\" OR ");
 		});
 		ResultSet rs = this.connector.executeQuery(query.substring(0, query.lastIndexOf("OR")));
-		return loadFromResultSet(rs);
+		return extractResultSet(rs);
 	}
 
 	@Override
@@ -130,10 +120,10 @@ public class TourPositionRepository implements Repositories<TourPosition, Long>{
 				"SELECT * FROM position_in_tour WHERE tourist_group_id = \"");
 		query.append(id + "\" ;");
 		ResultSet rs = this.connector.executeQuery(query.toString());
-		return loadFromResultSet(rs);
+		return extractResultSet(rs);
 	}
 
-	public List<TourPosition> loadFromResultSet(ResultSet rs){
+	public List<TourPosition> extractResultSet(ResultSet rs){
 		List<TourPosition> tourPositions = new ArrayList<TourPosition>();
 		try {
 			while(rs!=null && rs.next()) {

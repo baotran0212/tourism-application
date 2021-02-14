@@ -1,8 +1,9 @@
 package com.tourism.GUI.frames.touristgroup.management;
 
-import java.awt.Color;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.awt.image.ImageObserver;
-import java.util.List;
+import java.text.ParseException;
 
 import javax.swing.GroupLayout;
 import javax.swing.GroupLayout.Alignment;
@@ -13,10 +14,12 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
+import com.tourism.BUS.TourController;
+import com.tourism.BUS.TouristGroupController;
 import com.tourism.DTO.TouristGroup;
-import com.tourism.GUI.frames.touristgroup.Resources;
+import com.tourism.GUI.Resources;
+import com.tourism.GUI.frames.touristgroup.TouristGroupMainPanel;
 import com.tourism.GUI.util.DatePicker;
-import com.tourism.GUI.util.IconUtil;
 
 public class TouristGroupSearchPanel extends JPanel {
 	private static final long serialVersionUID = 1L;
@@ -50,6 +53,8 @@ public class TouristGroupSearchPanel extends JPanel {
 	JButton btnCreate;
 	JButton btnSearch;
 	
+	TouristGroupController touristGroupController = new TouristGroupController();
+	TourController tourController = new TourController();
 	public TouristGroupSearchPanel() {
 		initData();
 		initComp();
@@ -66,7 +71,7 @@ public class TouristGroupSearchPanel extends JPanel {
 		pnlName = new JPanel();
 		
 		lblTourName = new JLabel("Tên tour");
-		cbxTourName = new JComboBox<String>(new String[] {});
+		cbxTourName = new JComboBox<String>();
 		pnlTourName = new JPanel();
 		
 		lblDepatureDate = new JLabel("Ngày khởi hành");
@@ -80,7 +85,7 @@ public class TouristGroupSearchPanel extends JPanel {
 		pnlEndDate = new JPanel();
 		
 		lblStatus = new JLabel("Trạng thái");
-		cbxStatus = new JComboBox<String>(new String[] {"active", "deleted"});
+		cbxStatus = new JComboBox<String>(Resources.TOURIST_GROUP_STATUSES);
 		pnlStatus = new JPanel();
 
 		btnCreate = new JButton("Thêm đoàn");
@@ -88,33 +93,59 @@ public class TouristGroupSearchPanel extends JPanel {
 	}
 	
 	public void initComp() {
-		btnDepatureDate.setPreferredSize(Resources.CLENDAR_BUTTON);
+		
+		cbxTourName.addItem("");
+		cbxTourName.setSelectedItem("");
+		tourController.getAll().forEach(tour -> {
+			cbxTourName.addItem(tour.getId() + ". " + tour.getName());
+		});
+		
+		cbxStatus.addItem("");
+		cbxStatus.setSelectedItem("");
 		
 		JComponent[] compInputs = {txtId, txtName,cbxTourName, txtDepatureDate, txtEndDate, cbxStatus};
 		for (JComponent comp : compInputs) {
 			comp.setPreferredSize(Resources.INPUT_SEARCH_TEXTFIELD);
 		}
 		
-//		pnlId.add(lblId);
-//		pnlId.add(txtId);
-//		
-//		pnlName.add(lblName);
-//		pnlName.add(txtName);
-//		
-//		pnlTourName.add(lblTourName);
-//		pnlTourName.add(cbxTourName);
-//		
-//		pnlDepatureDate.add(lblDepatureDate);
-//		pnlDepatureDate.add(txtDepatureDate);
-//		pnlDepatureDate.add(btnDepatureDate);
-//		
-//		pnlEndDate.add(lblEndDate);
-//		pnlEndDate.add(txtEndDate);
-//		pnlEndDate.add(btnEndDate);
-//		
-//		pnlStatus.add(lblStatus);
-//		pnlStatus.add(cbxStatus);
+		btnDepatureDate.addMouseListener(new MouseAdapter() {
+			public void mousePressed(MouseEvent evt) {
+				txtDepatureDate.setText(new DatePicker().getPickedDate("yyyy-MM-dd"));
+			}
+		});
 		
+		btnEndDate.addMouseListener(new MouseAdapter() {
+			public void mousePressed(MouseEvent evt) {
+				txtEndDate.setText(new DatePicker().getPickedDate("yyyy-MM-dd"));
+			}
+		});
+		
+		
+		btnSearch.addMouseListener(new MouseAdapter() {
+			public void mousePressed(MouseEvent evt) {
+				TouristGroup search= new TouristGroup();
+				search.setId(txtId.getText().equals("") ? null : Long.valueOf(txtId.getText()));
+				search.setName(txtName.getText());
+				String tourName = cbxTourName.getSelectedItem().toString();
+				search.setTourId(tourName.equals("") ? null : Long.valueOf(tourName.substring(0, tourName.indexOf("."))));
+				try {
+					search.setDepatureDate(txtDepatureDate.getText().equals("") ? null : Resources.simpleDateFormat.parse( txtDepatureDate.getText()));
+					search.setEndDate(txtEndDate.getText().equals("") ? null : Resources.simpleDateFormat.parse(txtEndDate.getText()) );
+				} catch (ParseException e) {
+					e.printStackTrace();
+				}
+				String status = cbxStatus.getSelectedItem().toString();
+				search.setStatus(status.equals("") ? null : status);
+				TouristGroupMainPanel.touristGroups = touristGroupController.search(search);
+				TouristGroupManager.reloadManagerTable();
+			}
+		});
+		
+		btnCreate.addMouseListener(new MouseAdapter() {
+			public void mousePressed(MouseEvent evt) {
+				TouristGroupMainPanel.initCreatorPanel();
+			}
+		});
 		this.setLayout(layout);
 		layout.setAutoCreateGaps(true);
 		layout.setAutoCreateContainerGaps(true);
@@ -139,8 +170,8 @@ public class TouristGroupSearchPanel extends JPanel {
 										.addComponent(txtDepatureDate)
 										.addComponent(txtEndDate))
 								.addGroup(layout.createParallelGroup()
-										.addComponent(btnDepatureDate)
-										.addComponent(btnEndDate)))
+										.addComponent(btnDepatureDate, Resources.SQUARE_EDGE_XXS, Resources.SQUARE_EDGE_XXS, Resources.SQUARE_EDGE_XXS)
+										.addComponent(btnEndDate, Resources.SQUARE_EDGE_XXS, Resources.SQUARE_EDGE_XXS, Resources.SQUARE_EDGE_XXS)))
 						.addComponent(cbxStatus))
 				.addGap(ImageObserver.FRAMEBITS)
 				.addGroup(layout.createParallelGroup()

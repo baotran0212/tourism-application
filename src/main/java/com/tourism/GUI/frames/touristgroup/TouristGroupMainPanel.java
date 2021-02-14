@@ -20,7 +20,7 @@ import com.tourism.GUI.frames.touristgroup.modify.TouristGroupModify;
 public class TouristGroupMainPanel extends JPanel {
 	private static final long serialVersionUID = 1L;
 	Logger logger = Logger.getLogger(getClass().getName());
-	private static TouristGroupController touristGroupCntroller = new TouristGroupController();
+	private static TouristGroupController touristGroupController = new TouristGroupController();
 	public static List<TouristGroup> touristGroups;
 	public static TouristGroup selectedTouristGroup;
 	public static JPanel mainContent;
@@ -29,13 +29,14 @@ public class TouristGroupMainPanel extends JPanel {
 	public TouristGroupMainPanel() {
 		super(new FlowLayout(0,0,0));
 		mainContent = new JPanel();
-		touristGroups = touristGroupCntroller.getAll();
+		touristGroups = touristGroupController.getAllNotDeleted();
 		selectedTouristGroup = new TouristGroup();
 		mainContent.add(new TouristGroupManager());
 		this.add(mainContent);
 	}
 	
-	public static void loadManagerPanel() {
+	public static void initManagerPanel() {
+		touristGroups = touristGroupController.getAllNotDeleted();
 		selectedTouristGroup = new TouristGroup();
 		mainContent.removeAll();
 		mainContent.add(new TouristGroupManager());
@@ -43,8 +44,8 @@ public class TouristGroupMainPanel extends JPanel {
 		mainContent.repaint();
 	}
 	
-	public static void loadModifyPanel() {
-		touristGroups = touristGroupCntroller.getAll();
+	public static void initModifyPanel() {
+		touristGroups = touristGroupController.getAllNotDeleted();
 		mainContent.removeAll();
 		mainContent.add(new TouristGroupModify(selectedTouristGroup.getId()));
 		mainContent.getParent().revalidate();
@@ -52,7 +53,7 @@ public class TouristGroupMainPanel extends JPanel {
 	}
 
 	public static void initCreatorPanel() {
-		touristGroups = touristGroupCntroller.getAll();
+		touristGroups = touristGroupController.getAllNotDeleted();
 		selectedTouristGroup = new TouristGroup();
 		mainContent.removeAll();
 		mainContent.add(new TouristGroupModify());

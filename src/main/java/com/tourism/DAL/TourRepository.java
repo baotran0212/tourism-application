@@ -27,7 +27,7 @@ public class TourRepository implements Repositories<Tour, Long> {
 	public List<Tour> saveAll(Iterable<Tour> entities) {
 		List<Long> ids = new ArrayList<Long>();
 		entities.forEach(e -> {
-			if(e.getType().getId()!=null)
+			if(e.getType() !=null &&  e.getType().getId()!=null)
 				e.setTypeId(e.getType().getId());
 			if (findById(e.getId()).isPresent()) {
 				StringBuilder updateQuery = new StringBuilder("UPDATE tour SET ");
@@ -91,25 +91,26 @@ public class TourRepository implements Repositories<Tour, Long> {
 		List<Long> ids = new ArrayList<Long>();
 		ids.add(id);
 		List<Tour> objs = findAllById(ids);
-		objs.forEach(System.out::println);
 		return objs.isEmpty() ? Optional.empty() : Optional.ofNullable(objs.get(0));
 	}
 
 	@Override
 	public List<Tour> findAll() {
 		ResultSet rsTour = this.connector.executeQuery("SELECT * FROM tour  ;");
-		return loadFromResultSet(rsTour);
+		return extractResultSet(rsTour);
 	}
 
 	@Override
 	public List<Tour> findAllById(Iterable<Long> ids) {
+		if(!ids.iterator().hasNext())
+			return new ArrayList<Tour>();
 		List<Tour> tours = new ArrayList<Tour>();
 		StringBuilder query = new StringBuilder("SELECT * FROM tour WHERE ");
 		ids.forEach(id -> {
 			query.append("id = \"" + id + "\" OR ");
 		});
 		ResultSet rs = connector.executeQuery(query.substring(0,query.lastIndexOf("OR")));
-		return loadFromResultSet(rs);
+		return extractResultSet(rs);
 	}
 
 	@Override
@@ -148,7 +149,7 @@ public class TourRepository implements Repositories<Tour, Long> {
 
 	}
 	
-	public List<Tour> loadFromResultSet(ResultSet rs){
+	public List<Tour> extractResultSet(ResultSet rs){
 		List<Tour> tours = new ArrayList<Tour>();
 		try {
 			while (rs!=null && rs.next()) {

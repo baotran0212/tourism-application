@@ -30,7 +30,7 @@ public class HotelRepository implements Repositories<Hotel, Long>{
 				updateQuery.append("address1 = \""+e.getAddress1() + "\", ");
 				updateQuery.append("address2 = \"" +e.getAddress2() + "\", ");
 				updateQuery.append("address3 = \"" + e.getAddress3() + "\", ");
-				updateQuery.append("street = \"" + e.getStreet() + "\", ");
+				updateQuery.append("street = \"" + e.getStreet() + "\" ");
 				updateQuery.append("WHERE id = \"" + e.getId() + "\" ;");
 				this.connector.executeUpdate(updateQuery.toString());
 			} else {
@@ -77,18 +77,19 @@ public class HotelRepository implements Repositories<Hotel, Long>{
 	public List<Hotel> findAll() {
 		ResultSet rsHotel = this.connector.executeQuery(
 				"SELECT * FROM hotel  ;");
-		return loadAllFromResultSet(rsHotel);
+		return extractResultSet(rsHotel);
 	}
 
 	@Override
 	public List<Hotel> findAllById(Iterable<Long> ids) {
-		List<Hotel> hotels = new ArrayList<Hotel>();
+		if(!ids.iterator().hasNext())
+			return new ArrayList<Hotel>();
 		StringBuilder query = new StringBuilder("SELECT * FROM hotel WHERE ");
 		ids.forEach(id -> {
 			query.append("id = \""+ id + "\" OR ");
 		});
 		ResultSet rs = this.connector.executeQuery(query.substring(0, query.lastIndexOf("OR")));
-		return loadAllFromResultSet(rs);
+		return extractResultSet(rs);
 	}
 
 	@Override
@@ -127,7 +128,7 @@ public class HotelRepository implements Repositories<Hotel, Long>{
 		
 	}
 	
-	public List<Hotel> loadAllFromResultSet(ResultSet rs){
+	public List<Hotel> extractResultSet(ResultSet rs){
 		List<Hotel> hotels = new ArrayList<Hotel>();
 		try {
 		while (rs!=null && rs.next()) {
@@ -162,8 +163,7 @@ public class HotelRepository implements Repositories<Hotel, Long>{
 		StringBuilder query = new StringBuilder(
 				"SELECT * FROM hotel h, tourist_group_hotel temp WHERE temp.hotel_id=h.id AND temp.tourist_group_id = \"");
 		query.append(id+"\"; ");
-		logger.info(query.toString());
 		ResultSet rs = this.connector.executeQuery(query.toString());
-		return loadAllFromResultSet(rs);
+		return extractResultSet(rs);
 	}
 }
