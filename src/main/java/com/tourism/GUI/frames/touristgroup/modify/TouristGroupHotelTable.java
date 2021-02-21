@@ -15,6 +15,7 @@ import javax.swing.table.DefaultTableModel;
 import com.tourism.BUS.TouristGroupController;
 import com.tourism.DTO.Hotel;
 import com.tourism.DTO.TouristGroup;
+import com.tourism.GUI.CustomTable;
 import com.tourism.GUI.Resources;
 import com.tourism.GUI.frames.touristgroup.TouristGroupMainPanel;
 import com.tourism.GUI.util.ConfirmDialog;
@@ -37,7 +38,7 @@ public class TouristGroupHotelTable extends JPanel{
 	JLabel lblSelectedHotelId;
 	JLabel lblSeletecHotel;
 	
-	JButton btnHotelRemove;
+	JButton btnRemove;
 	
 	JScrollPane scroller;
 	JTable tbl;
@@ -62,13 +63,14 @@ public class TouristGroupHotelTable extends JPanel{
 		lblSeletecHotel = new JLabel("Khách sạn:");
 		lblSelectedHotelId = new JLabel();
 		
-		btnHotelRemove = new JButton("Xóa");
+		btnRemove = new JButton("Xóa");
 		
-		tbl = new JTable(model);
+		tbl = new CustomTable(model);
 		scroller = new JScrollPane(tbl);
 	}
 	
 	public void initComp() {
+		btnAdd.setBackground(Resources.PRIMARY);
 		btnAdd.addMouseListener(new MouseAdapter() {
 			public void mousePressed(MouseEvent evt) {
 				Optional<Hotel> opt = new AddHotelToTouristGroupDialog(TG).addHotelToTouristGroup();
@@ -89,7 +91,8 @@ public class TouristGroupHotelTable extends JPanel{
 		pnlSelectedHotel.add(lblSeletecHotel);
 		pnlSelectedHotel.add(lblSelectedHotelId);
 		
-		btnHotelRemove.addMouseListener(new MouseAdapter() {
+		btnRemove.setBackground(Resources.PRIMARY_DARK);
+		btnRemove.addMouseListener(new MouseAdapter() {
 			public void mousePressed(MouseEvent evt) {
 				if(new ConfirmDialog("Xóa khách sạn khỏi danh sách?").confirm()) {
 					Long hotelId = Long.valueOf(lblSelectedHotelId.getText());
@@ -109,6 +112,7 @@ public class TouristGroupHotelTable extends JPanel{
 				lblSelectedHotelId.setText(hotelId);
 			}
 		});
+		tbl.setBackground(Resources.PRIMARY);
 		
 		layout.setAutoCreateContainerGaps(true);
 		layout.setAutoCreateGaps(true);
@@ -117,8 +121,9 @@ public class TouristGroupHotelTable extends JPanel{
 						.addComponent(lblHotelList))
 				.addGroup(layout.createSequentialGroup()
 						.addComponent(btnAdd, Resources.SQUARE_EDGE_XXS ,Resources.SQUARE_EDGE_XXS, Resources.SQUARE_EDGE_XXS)
+						.addContainerGap()
 						.addComponent(pnlSelectedHotel)
-						.addComponent(btnHotelRemove))
+						.addComponent(btnRemove))
 				.addComponent(scroller));
 		
 		layout.setVerticalGroup(layout.createSequentialGroup()
@@ -126,7 +131,7 @@ public class TouristGroupHotelTable extends JPanel{
 				.addGroup(layout.createParallelGroup()
 						.addComponent(btnAdd, Resources.SQUARE_EDGE_XXS, Resources.SQUARE_EDGE_XXS, Resources.SQUARE_EDGE_XXS)
 						.addComponent(pnlSelectedHotel)
-						.addComponent(btnHotelRemove))
+						.addComponent(btnRemove))
 				.addComponent(scroller));
 		this.setLayout(layout);
 	}

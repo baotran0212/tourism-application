@@ -3,6 +3,7 @@ package com.tourism.GUI.frames.touristgroup.modify;
 import java.awt.FlowLayout;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.logging.Logger;
 
@@ -21,6 +22,7 @@ import com.tourism.GUI.Resources;
 import com.tourism.GUI.frames.touristgroup.TestFrame;
 import com.tourism.GUI.frames.touristgroup.TouristGroupMainPanel;
 import com.tourism.GUI.util.DatePicker;
+import com.tourism.service.Validation;
 
 public class TouristGroupBasicModifyPanel extends JPanel {
 	private static final long serialVersionUID = 1L;
@@ -119,26 +121,32 @@ public class TouristGroupBasicModifyPanel extends JPanel {
 	
 	public void initComp() {
 		txtId.setEditable(false);
+		txtId.setBackground(Resources.PRIMARY);
 		txtHotelPrice.setEditable(false);
+		txtHotelPrice.setBackground(Resources.PRIMARY);
 		
 		txtDepatureDate.setPreferredSize(Resources.INPUT_TYPE_DATE);
 		btnDepatureDate.setPreferredSize(Resources.SQUARE_XXS);
+		btnDepatureDate.setBackground(Resources.PRIMARY_DARK);
 		btnDepatureDate.addMouseListener(new MouseAdapter() {
 			public void mousePressed(MouseEvent evt) {
 				txtDepatureDate.setText(new DatePicker().getPickedDate("yyyy-MM-dd"));
 			}
 		});
+		pnlDepatureDate.setBackground(Resources.PRIMARY);
 		pnlDepatureDate.add(txtDepatureDate);
 		pnlDepatureDate.add(btnDepatureDate);
 		
 		
 		txtEndDate.setPreferredSize(Resources.INPUT_TYPE_DATE);
 		btnEndDate.setPreferredSize(Resources.SQUARE_XXS);
+		btnEndDate.setBackground(Resources.PRIMARY_DARK);
 		btnEndDate.addMouseListener(new MouseAdapter() {
 			public void mousePressed(MouseEvent evt) {
 				txtEndDate.setText(new DatePicker().getPickedDate("yyyy-MM-dd"));
 			}
 		});
+		pnlEndDate.setBackground(Resources.PRIMARY);
 		pnlEndDate.add(txtEndDate);
 		pnlEndDate.add(btnEndDate);
 		
@@ -201,10 +209,33 @@ public class TouristGroupBasicModifyPanel extends JPanel {
 						.addComponent(txtOtherPrice, 10, Resources.INPUT_HEIGHT_M, Resources.INPUT_HEIGHT_M))
 				);
 		this.setLayout(layout);
+		this.setBackground(Resources.PRIMARY);
 	}
 	
-	public static void commitToSelectedTouristGroup() {
+	public static Boolean commitToSelectedTouristGroup() {
 		TouristGroup TG=TouristGroupMainPanel.selectedTouristGroup;
+		if(txtName.getText().equals(""))
+			return false;
+		if(!Validation.checkDate(txtDepatureDate.getText()))
+			return false;
+		if(!Validation.checkDate(txtEndDate.getText()))
+			return false;
+		if(Validation.checkDigit(txtFoodPrice.getText()))
+			return false;
+		if(Validation.checkDigit(txtFoodPrice.getText()))
+			return false;
+		if(Validation.checkDigit(txtOtherPrice.getText()))
+			return false;
+		try {
+			if( Resources.simpleDateFormat.parse(txtDepatureDate.getText())
+					.after(Resources.simpleDateFormat.parse(txtEndDate.getText())))
+				return false;
+		} catch (ParseException e1) {
+			e1.printStackTrace();
+		}
+		if(cbxStatus.getSelectedItem().toString().equals(""))
+			return false;
+		
 		TG.setName(txtName.getText());
 		try {
 			TG.setDepatureDate(Resources.simpleDateFormat.parse(txtDepatureDate.getText()));
@@ -219,6 +250,7 @@ public class TouristGroupBasicModifyPanel extends JPanel {
 		TG.setStatus(cbxStatus.getSelectedItem().toString());
 		String tourName = cbxTourName.getSelectedItem().toString();
 		TG.setTourId(Long.valueOf(tourName.substring(0, tourName.lastIndexOf("."))));
+		return true;
 	}
 	
 	public static void updateHotelPriceTextField() {

@@ -16,6 +16,7 @@ import com.tourism.BUS.CustomerController;
 import com.tourism.BUS.TouristGroupController;
 import com.tourism.DTO.Customer;
 import com.tourism.DTO.TouristGroup;
+import com.tourism.GUI.CustomTable;
 import com.tourism.GUI.Resources;
 import com.tourism.GUI.frames.touristgroup.TouristGroupMainPanel;
 import com.tourism.GUI.util.ConfirmDialog;
@@ -62,12 +63,13 @@ public class TouristGroupCustomerTable extends JPanel {
 		lblSelectedCustomerId = new JLabel();
 		btnRemove = new JButton("Xóa");
 		
-		tbl = new JTable(model);	
+		tbl = new CustomTable(model);	
 		scroller = new JScrollPane(tbl);
 		
 	}
 	
 	public void initComp() {
+		btnAdd.setBackground(Resources.PRIMARY_DARK);
 		btnAdd.setPreferredSize(Resources.SQUARE_XXS);
 		btnAdd.addMouseListener(new MouseAdapter() {
 			public void mousePressed(MouseEvent evt) {
@@ -87,8 +89,8 @@ public class TouristGroupCustomerTable extends JPanel {
 		
 		pnlSelectedCustomer.add(lblSelectedCustomer);
 		pnlSelectedCustomer.add(lblSelectedCustomerId);
-		pnlSelectedCustomer.add(btnRemove);
 		
+		btnRemove.setBackground(Resources.PRIMARY_DARK);
 		btnRemove.addMouseListener(new MouseAdapter() {
 			public void mousePressed(MouseEvent evt) {
 				if(new ConfirmDialog("Xóa khách hàng khỏi danh sách").confirm()) {
@@ -107,6 +109,7 @@ public class TouristGroupCustomerTable extends JPanel {
 				lblSelectedCustomerId.setText(customerId);
 			}
 		});
+		tbl.setBackground(Resources.PRIMARY);
 		
 		layout.setAutoCreateContainerGaps(true);
 		layout.setAutoCreateGaps(true);
@@ -117,14 +120,16 @@ public class TouristGroupCustomerTable extends JPanel {
 				.addGroup(layout.createSequentialGroup()
 						.addComponent(btnAdd, Resources.SQUARE_EDGE_XXS, Resources.SQUARE_EDGE_XXS, Resources.SQUARE_EDGE_XXS)
 						.addContainerGap()
-						.addComponent(pnlSelectedCustomer))
+						.addComponent(pnlSelectedCustomer)
+						.addComponent(btnRemove))
 				.addComponent(scroller));
 		
 		layout.setVerticalGroup(layout.createSequentialGroup()
 				.addComponent(lblCustomerList)
 				.addGroup(layout.createParallelGroup()
 						.addComponent(btnAdd, Resources.SQUARE_EDGE_XXS, Resources.SQUARE_EDGE_XXS, Resources.SQUARE_EDGE_XXS)
-						.addComponent(pnlSelectedCustomer))
+						.addComponent(pnlSelectedCustomer)
+						.addComponent(btnRemove))
 				.addComponent(scroller));
 		this.setLayout(layout);
 	}

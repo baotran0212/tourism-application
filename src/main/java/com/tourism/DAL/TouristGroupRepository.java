@@ -297,6 +297,28 @@ public class TouristGroupRepository implements Repositories<TouristGroup, Long> 
 		}
 		return findAllById(ids);
 	}
+	
+	public List<TouristGroup> findAllByEmployeeId(Long id){
+		List<Long> ids = new ArrayList<>();
+		ids.add(id);
+		return findAllByEmployeeIds(ids);
+	}
+	public List<TouristGroup> findAllByEmployeeIds(Iterable<Long> ids){
+		List<Long> idTGs = new ArrayList<Long>();
+		StringBuilder query = new StringBuilder("SELECT temp.tourist_group_id as id FROM position_in_tour temp WHERE ");
+		ids.forEach(empId ->{
+			query.append(" temp.employee_id = \"" + empId + "\" OR ");
+		});
+		ResultSet rs = this.connector.executeQuery(query.substring(0, query.lastIndexOf("OR")));
+		try {
+			while(rs.next()) {
+				idTGs.add(Long.valueOf(rs.getLong("id")));
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return findAllById(idTGs);
+	}
 	public List<TouristGroup> findAllLike(TouristGroup TG){
 		StringBuilder query = new StringBuilder("SELECT * FROM tourist_group WHERE status <> \"deleted\" AND ");
 		if( TG.getId() !=null )

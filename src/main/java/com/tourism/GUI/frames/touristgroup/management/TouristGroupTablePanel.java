@@ -11,6 +11,7 @@ import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 
 import com.tourism.DTO.TouristGroup;
+import com.tourism.GUI.CustomTable;
 import com.tourism.GUI.Resources;
 import com.tourism.GUI.frames.touristgroup.TouristGroupMainPanel;
 
@@ -31,7 +32,7 @@ public class TouristGroupTablePanel extends JPanel {
 
 		model = new DefaultTableModel(new Object[] { "Mã", "Tên đoàn", "Ngày khởi hành",
 				"Ngày kết thúc", "Tổng thu", "Trạng thái"}, 0);
-		tbl = new JTable(model);
+		tbl = new CustomTable(model);
 		scroller = new JScrollPane(tbl);
 		
 		TouristGroupMainPanel.touristGroups.forEach(TG -> {
@@ -81,5 +82,6 @@ public class TouristGroupTablePanel extends JPanel {
 		tbl.setPreferredSize(Resources.MANAGER_TABLE);
 		scroller.setPreferredSize(Resources.MANAGER_TABLE_SCROLLER);
 		add(scroller);
+		setBackground(Resources.PRIMARY);
 	}
 }

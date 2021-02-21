@@ -3,8 +3,11 @@ package com.tourism.GUI;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
+import java.awt.GridLayout;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
@@ -21,20 +24,21 @@ import com.tourism.GUI.frames.tour.TourFrame;
 import com.tourism.GUI.frames.touristgroup.TouristGroupMainPanel;
 import com.tourism.GUI.util.IconUtil;
 
+import lombok.Data;
+
 /**
  * MainFrame
  */
 public class MainFrame extends JFrame {
 	static final long serialVersionUID = 4L;
-	private SimpleDateFormat dateFormatter = new SimpleDateFormat("dd-MM-yyyy");
-	private User user = new User(null, "Long", "09456345", "password");
+	private User user;
 	// Left side menu
-	private JPanel pnlLeftSideMenu = new JPanel(new FlowLayout(FlowLayout.CENTER, -2, -2));
-	private JPanel pnlTopBar = new JPanel(null);
-	JLabel functionSelected = new JLabel("--------\\/--------");
-	List<String> titleMenuItems;
-	JPanel pnlMenuItems[];
-	JLabel lblMenuItems[];
+	private JPanel pnlLeftSideMenu;
+	private JPanel pnlTopBar;
+	JLabel functionSelected;
+	String titleMenuItems[];
+	ImageIcon iconMenuItems[];
+	MenuItem pnlMenuItems[];
 
 	// Array Jpanel nội dung chính
 	JPanel[] pnlMainContents;
@@ -43,30 +47,43 @@ public class MainFrame extends JFrame {
 	public static JPanel pnlAnalysis;
 	JLayeredPane layeredContent = new JLayeredPane();
 
-	public MainFrame() {
+	public MainFrame(User user) {
+		super();
+		this.user = user; 
+		initData();
 		initComp();
 	}
-
+	
+	public void initData() {
+		user = new User(null, "Long", "09456345", "password");
+		// Left side menu
+		pnlLeftSideMenu = new JPanel(new FlowLayout(FlowLayout.CENTER, -2, -2));
+		pnlTopBar = new JPanel(null);
+		functionSelected = new JLabel("--------\\/--------");
+		
+		titleMenuItems = new String[] {"Thống kê", "Quản lý tour", "Quản lý đoàn"};
+		iconMenuItems = new ImageIcon[] {Resources.DASHBOARD, Resources.TRAVEL, Resources.NETWORK};
+		pnlMenuItems = new MenuItem[titleMenuItems.length];
+		// Array Jpanel nội dung chính
+		pnlTourManager = new TourFrame();
+		pnlTouristGroupManager = new TouristGroupMainPanel();
+		pnlAnalysis = new AnalysisMainPanel();
+		pnlMainContents = new JPanel[] { pnlAnalysis, pnlTourManager, pnlTouristGroupManager };
+		layeredContent = new JLayeredPane();
+	}
+	
 	public void initComp() {
-		this.titleMenuItems = new ArrayList<String>();
 		setLayout(new BorderLayout());
 
 		// Left side menu
 		pnlLeftSideMenu.setPreferredSize(new Dimension(200, 600));
+		pnlLeftSideMenu.setBackground(Resources.PRIMARY_DARK);
 		Dimension dimensionMenuItem = new Dimension(204, 50);
 
-		this.titleMenuItems.add("Thống kê");
-		this.titleMenuItems.add("Quản lý tour");
-		this.titleMenuItems.add("Quản lý đoàn");
-
-		pnlMenuItems = new JPanel[titleMenuItems.size()];
-		lblMenuItems = new JLabel[titleMenuItems.size()];
-
-		for (int i = 0; i < titleMenuItems.size(); i++) {
-			pnlMenuItems[i] = new JPanel(new FlowLayout(FlowLayout.CENTER, 10, 12));
-			lblMenuItems[i] = new JLabel(titleMenuItems.get(i));
-
-			pnlMenuItems[i].add(lblMenuItems[i]);
+		
+		for (int i = 0; i < titleMenuItems.length; i++) {
+			pnlMenuItems[i] = new MenuItem(titleMenuItems[i], iconMenuItems[i]);
+			pnlMenuItems[i].setBackground(Resources.PRIMARY_DARK);
 			pnlMenuItems[i].setPreferredSize(dimensionMenuItem);
 			int selectedPanelIndex = i;
 			pnlMenuItems[i].addMouseListener(new MouseAdapter() {
@@ -77,7 +94,7 @@ public class MainFrame extends JFrame {
 			pnlLeftSideMenu.add(pnlMenuItems[i]);
 		}
 		// Top mennu
-		ImageIcon iconApp = IconUtil.loadIcon("src/images/app_logo.png", 160, 50);
+		ImageIcon iconApp = Resources.TOURISM_LOGO; 
 		JLabel lblLogo = new JLabel(iconApp);
 		lblLogo.setBounds(20, 0, 160, 50);
 
@@ -91,6 +108,7 @@ public class MainFrame extends JFrame {
 		pnlTopBar.add(lblLogo);
 		pnlTopBar.add(functionSelected);
 		pnlTopBar.add(lblUser);
+		pnlTopBar.setBackground(Resources.PRIMARY_DARK);
 		pnlTopBar.setPreferredSize(new Dimension(1100, 50));
 
 		this.add(pnlLeftSideMenu, BorderLayout.WEST);
@@ -99,17 +117,11 @@ public class MainFrame extends JFrame {
 		layeredContent.setLayout(new FlowLayout(FlowLayout.CENTER, 0, 0));
 		layeredContent.setPreferredSize(new Dimension(1110, 700));
 
-		// Init main content panel
-		pnlTourManager = new TourFrame();
-		pnlTouristGroupManager = new TouristGroupMainPanel();
-		pnlAnalysis = new AnalysisMainPanel();
-
-		this.pnlMainContents = new JPanel[] { pnlAnalysis, pnlTourManager, pnlTouristGroupManager };
-
 		for (int i = 0; i < pnlMainContents.length; i++) {
 			this.layeredContent.add(pnlMainContents[i], pnlMainContents.length - i, 0);
 		}
-
+		
+		this.setResizable(false);
 		this.add(layeredContent, BorderLayout.CENTER);
 		this.pack();
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -118,15 +130,14 @@ public class MainFrame extends JFrame {
 	}
 
 	public void switchPanel(int selectPanelIndex) {
+		
 		for (int i = 0; i < pnlMenuItems.length; i++) {
 			if (i == selectPanelIndex) {
-				// lblMenuItems[selectPanelIndex].setForeground(Cl.colorBlue);
-				// pnlMenuItems[selectPanelIndex].setBorder(Cl.blueLine);
-				functionSelected.setText(titleMenuItems.get(i));
+				pnlMenuItems[i].setSelectedState();
+				functionSelected.setText(pnlMenuItems[i].getTitle());
 				continue;
 			}
-			// pnlMenuItem[i].setBorder(Cl.whiteLine);
-			// lblMenuItem[i].setForeground(Color.white);
+			pnlMenuItems[i].setUnselectedState();
 		}
 
 		layeredContent.removeAll();
@@ -136,6 +147,34 @@ public class MainFrame extends JFrame {
 	}
 
 	public static void main(String[] args) {
-		MainFrame main = new MainFrame();
+		MainFrame main = new MainFrame(new User(Long.valueOf(1), "Long", "094545", "123456"));
+	}
+}
+
+@Data
+class MenuItem extends JPanel{
+	String title;
+	ImageIcon icon;
+	JLabel label;
+	
+	public MenuItem(String title, ImageIcon icon) {
+		super(new GridLayout());
+		this.title = title;
+		this.icon = icon;
+		initComp();
+	}
+	
+	public void initComp() {
+		label = new JLabel(this.title, this.icon, JLabel.CENTER);
+		label.setForeground(Resources.SECONDARY_LIGHT);
+		this.add(label);
+	}
+	
+	public void setSelectedState() {
+		label.setForeground(Resources.SECONDARY_DARK);
+	}
+	
+	public void setUnselectedState() {
+		label.setForeground(Resources.SECONDARY_LIGHT);
 	}
 }

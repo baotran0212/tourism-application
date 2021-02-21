@@ -16,6 +16,7 @@ import com.tourism.BUS.HotelController;
 import com.tourism.BUS.TouristGroupController;
 import com.tourism.DTO.Hotel;
 import com.tourism.DTO.TouristGroup;
+import com.tourism.GUI.CustomTable;
 
 public class AddHotelToTouristGroupDialog {
 	JDialog dialog;
@@ -46,7 +47,7 @@ public class AddHotelToTouristGroupDialog {
 		layout = new GroupLayout(pnl);
 		
 		model = new DefaultTableModel(new Object[] {"Mã", "Tên", "Phí", "Địa chỉ"}, 0);
-		tbl = new JTable(model);
+		tbl = new CustomTable(model);
 		scroller = new JScrollPane(tbl);
 		
 		btnAdd = new JButton("Thêm");

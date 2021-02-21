@@ -54,8 +54,6 @@ public class TouristGroupModify extends JPanel {
 	}
 	
 	public void initComp() {
-		setBackground(Color.GREEN);
-		
 		layout.setAutoCreateContainerGaps(true);
 		layout.setAutoCreateGaps(true);
 		layout.setHorizontalGroup(layout.createParallelGroup()
@@ -78,7 +76,8 @@ public class TouristGroupModify extends JPanel {
 						)
 				);
 		this.setLayout(layout);
-		setPreferredSize(new Dimension(1110,700));
+		this.setBackground(Resources.PRIMARY_DARK);
+		setPreferredSize(Resources.MAIN_CONTENT);
 	}
 	
 	public static void main(String[] args) {

@@ -18,6 +18,7 @@ import com.tourism.BUS.PositionController;
 import com.tourism.BUS.TourPositionController;
 import com.tourism.DTO.TourPosition;
 import com.tourism.DTO.TouristGroup;
+import com.tourism.GUI.CustomTable;
 
 public class AddEmployeeToTouristGroupDialog {
 	JDialog dialog;
@@ -56,7 +57,7 @@ public class AddEmployeeToTouristGroupDialog {
 		cbxPosition = new JComboBox<String>();
 		
 		model = new DefaultTableModel(new Object[] {"Mã", "Tên", "Sđt", "Cmnd", "Giới tính", "Địa chỉ"}, 0);
-		tbl = new JTable(model);
+		tbl = new CustomTable(model);
 		scroller = new JScrollPane(tbl);
 		
 		btnAdd = new JButton("Thêm");

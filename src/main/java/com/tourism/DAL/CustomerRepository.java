@@ -88,7 +88,7 @@ public class CustomerRepository implements Repositories<Customer, Long> {
 	@Override
 	public List<Customer> findAll() {
 		ResultSet rs = connector.executeQuery("SELECT * FROM customer");
-		return loadFromResultSet(rs);
+		return extractResultSet(rs);
 	}
 
 	@Override
@@ -100,7 +100,7 @@ public class CustomerRepository implements Repositories<Customer, Long> {
 			query.append("id = \"" + id + "\" OR ");
 		});
 		ResultSet rs = this.connector.executeQuery(query.substring(0, query.lastIndexOf("OR")));
-		return loadFromResultSet(rs);
+		return extractResultSet(rs);
 	}
 
 	@Override
@@ -150,10 +150,10 @@ public class CustomerRepository implements Repositories<Customer, Long> {
 				"SELECT * FROM customer c, tourist_group_customer temp WHERE temp.customer_id=c.id AND temp.tourist_group_id= \"");
 		query.append(id + "\";" );
 		ResultSet rs = this.connector.executeQuery(query.toString());
-		return loadFromResultSet(rs);
+		return extractResultSet(rs);
 	}
 	
-	public List<Customer> loadFromResultSet(ResultSet rs){
+	public List<Customer> extractResultSet(ResultSet rs){
 		List<Customer> customers = new ArrayList<Customer>();
 		try {
 			while (rs!=null && rs.next()) {
