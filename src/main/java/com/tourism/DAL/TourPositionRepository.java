@@ -151,4 +151,10 @@ public class TourPositionRepository implements Repositories<TourPosition, Long>{
 		}
 		return tourPositions;
 	}
+
+	@Override
+	public boolean testPrimaryKey(String id) {
+		// TODO Auto-generated method stub
+		return false;
+	}
 }

@@ -160,4 +160,10 @@ public class LocationRepository implements Repositories<Location, Long> {
 		ResultSet rs = connector.executeQuery(query.toString());
 		return extractResultSet(rs);
 	}
+
+	@Override
+	public boolean testPrimaryKey(String id) {
+		// TODO Auto-generated method stub
+		return false;
+	}
 }

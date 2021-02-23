@@ -166,4 +166,10 @@ public class HotelRepository implements Repositories<Hotel, Long>{
 		ResultSet rs = this.connector.executeQuery(query.toString());
 		return extractResultSet(rs);
 	}
+
+	@Override
+	public boolean testPrimaryKey(String id) {
+		// TODO Auto-generated method stub
+		return false;
+	}
 }

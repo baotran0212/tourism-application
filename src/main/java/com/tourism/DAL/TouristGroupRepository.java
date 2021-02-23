@@ -319,4 +319,10 @@ public class TouristGroupRepository implements Repositories<TouristGroup, Long> 
 	public static void main(String[] args) {
 
 	}
+
+	@Override
+	public boolean testPrimaryKey(String id) {
+		// TODO Auto-generated method stub
+		return false;
+	}
 }

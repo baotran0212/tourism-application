@@ -189,4 +189,10 @@ public class CustomerRepository implements Repositories<Customer, Long> {
 	public static void main(String[] args) {
 		CustomerRepository customerRepository = new CustomerRepository();
 	}
+
+	@Override
+	public boolean testPrimaryKey(String id) {
+		// TODO Auto-generated method stub
+		return false;
+	}
 }

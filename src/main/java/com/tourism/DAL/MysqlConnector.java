@@ -16,14 +16,18 @@ public class MysqlConnector extends Connector {
 
   public MysqlConnector() {
 	super();
-    this.host = ProjectProperties.getProperties("mysql.host");
-    this.userName = ProjectProperties.getProperties("mysql.user");
-    this.password = ProjectProperties.getProperties("mysql.password");
-    this.database = ProjectProperties.getProperties("mysql.database");
+    //this.host = ProjectProperties.getProperties("localhost");
+   // this.userName = ProjectProperties.getProperties("root");
+   // this.password = ProjectProperties.getProperties("");
+    //this.database = ProjectProperties.getProperties("tourism");
+    this.host = "localhost";
+    this.userName = "root";
+    this.password = "";
+    this.database = "tourism";
   }
 
   public void getConnect() {
-    	String url = "jdbc:mysql://" + this.host + ":3306/" + this.database;
+    	String url = "jdbc:mysql://" + this.host + "/" + this.database;
         try {
           connection = DriverManager.getConnection(url, this.userName, this.password);
           logger.info("Connect success!!! count = " + ++count);
@@ -88,5 +92,6 @@ public class MysqlConnector extends Connector {
   
   public static void main(String[] args) {
     Connector connector = new MysqlConnector();
+    connector.getConnect();
   }
 }

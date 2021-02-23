@@ -32,6 +32,7 @@ public class Tour {
 	@NonNull
 	protected String status;
 	protected Type type ;
+	protected String picture;
 	List<TouristGroup> touristGroups ;
 	List<Location> locations;
 }

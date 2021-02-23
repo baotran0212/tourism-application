@@ -28,5 +28,7 @@ public interface Repositories<T, ID> {
   void deleteAllById(Iterable<? extends ID> ids);
 
   void deleteAll(Iterable<? extends T> entities);
+  
+  boolean testPrimaryKey(String id);
 
 }

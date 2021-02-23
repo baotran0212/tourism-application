@@ -38,7 +38,7 @@ public class MainFrame extends JFrame {
 
 	// Array Jpanel nội dung chính
 	JPanel[] pnlMainContents;
-	public static JPanel pnlTourManager;
+	public static TourFrame pnlTourManager;
 	public static JPanel pnlTouristGroupManager;
 	public static JPanel pnlAnalysis;
 	JLayeredPane layeredContent = new JLayeredPane();
