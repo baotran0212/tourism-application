@@ -34,7 +34,6 @@ public class TourRepository implements Repositories<Tour, Long> {
 				updateQuery.append("type_id = \"" + e.getTypeId() + "\", ");
 				updateQuery.append("name = \"" + e.getName() + "\", ");
 				updateQuery.append("description = \"" + e.getDescription() + "\", ");
-				updateQuery.append("price = \"" + e.getPrice() + "\", ");
 				updateQuery.append("status = \"" + e.getStatus() + "\" ");
 				updateQuery.append("WHERE id = \"" + e.getId() + "\" ;");
 				logger.info(updateQuery.toString());
@@ -51,7 +50,6 @@ public class TourRepository implements Repositories<Tour, Long> {
 				insertQuery.append("( \"" + e.getTypeId() + "\", ");
 				insertQuery.append("\"" + e.getName() + "\", ");
 				insertQuery.append("\"" + e.getDescription() + "\", ");
-				insertQuery.append("\"" + e.getPrice() + "\", ");
 				insertQuery.append("\"" + e.getStatus() + "\" );");
 				connector.executeUpdate(insertQuery.toString());
 				ResultSet returnedResultSet = connector
@@ -158,7 +156,6 @@ public class TourRepository implements Repositories<Tour, Long> {
 				tour.setTypeId(Long.valueOf(rs.getString("type_id")));
 				tour.setName(rs.getString("name"));
 				tour.setDescription(rs.getString("description"));
-				tour.setPrice(Double.valueOf(rs.getDouble("price")));
 				tour.setStatus(rs.getString("status"));
 //				// Set tourist groups
 //				if (tour.getTouristGroups() == null) {

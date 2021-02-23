@@ -40,6 +40,7 @@ public class Employee {
 	@NonNull
 	protected String status;
 	protected List<TourPosition> tourPositions;
+	protected List<TouristGroup> touristGroups;
 	public static void main(String[] args) {
 	}
 }

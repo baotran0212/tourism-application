@@ -1,5 +1,7 @@
 package com.tourism.GUI.frames.analysis;
 
-public class AnalysisTour {
+import javax.swing.JPanel;
+
+public class AnalysisTour extends JPanel {
 
 }

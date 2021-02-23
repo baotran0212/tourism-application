@@ -18,8 +18,8 @@ import lombok.ToString;
 @AllArgsConstructor
 @NoArgsConstructor
 @ToString
-@RequiredArgsConstructor
 public class Tour {
+<<<<<<< HEAD
 
 	protected Long id;
 	protected Long typeId;
@@ -33,6 +33,16 @@ public class Tour {
 	protected String status;
 	protected Type type ;
 	protected String picture;
+=======
+	Long id;
+	Long typeId;
+	String name;
+	String description;
+	String status;
+	String image;
+	Type type ;
+>>>>>>> 1710f019e689fb3ee19e89c9b0807a74eac7c986
 	List<TouristGroup> touristGroups ;
 	List<Location> locations;
+	List<TourCost> tourCosts;
 }

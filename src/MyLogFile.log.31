@@ -1,2 +1,0 @@
-Feb 13, 2021 7:21:03 PM com.tourism.DAL.TouristGroupRepository lambda$0
-INFO: UPDATE tourist_group SET tour_id = "1", name = "name tour", depature_date = "2020/01/01", end_date = "2020/01/05", description = "this is description", food_price = 300.0, transport_price = 400.0, hotel_price = 500.0, other_price = 800.0, status = "active" WHERE id = "1" ;

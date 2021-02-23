@@ -113,14 +113,16 @@ public class TouristGroupSearchPanel extends JPanel {
 				txtDepatureDate.setText(new DatePicker().getPickedDate("yyyy-MM-dd"));
 			}
 		});
+		btnDepatureDate.setBackground(Resources.PRIMARY_DARK);
 		
 		btnEndDate.addMouseListener(new MouseAdapter() {
 			public void mousePressed(MouseEvent evt) {
 				txtEndDate.setText(new DatePicker().getPickedDate("yyyy-MM-dd"));
 			}
 		});
+		btnEndDate.setBackground(Resources.PRIMARY_DARK);
 		
-		
+		btnSearch.setBackground(Resources.PRIMARY_DARK);
 		btnSearch.addMouseListener(new MouseAdapter() {
 			public void mousePressed(MouseEvent evt) {
 				TouristGroup search= new TouristGroup();
@@ -141,12 +143,14 @@ public class TouristGroupSearchPanel extends JPanel {
 			}
 		});
 		
+		btnCreate.setBackground(Resources.PRIMARY_DARK);
 		btnCreate.addMouseListener(new MouseAdapter() {
 			public void mousePressed(MouseEvent evt) {
 				TouristGroupMainPanel.initCreatorPanel();
 			}
 		});
 		this.setLayout(layout);
+		this.setBackground(Resources.PRIMARY);
 		layout.setAutoCreateGaps(true);
 		layout.setAutoCreateContainerGaps(true);
 		

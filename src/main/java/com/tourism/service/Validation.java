@@ -18,4 +18,16 @@ public class Validation {
 			return true;
 		return false;
 	}
+	
+	public static boolean checkDate(String dateString) {
+		if (dateString.matches("^\\d{4}\\-(0[1-9]|1[0-2])\\-(0[1-9]|[12][0-9]|3[01])$"))
+			return true;
+		return false;
+	}
+	
+	public static boolean checkDigit(String digitString) {
+		if(digitString.matches("(\\d+)"))
+			return true;
+		return false;
+	}
 }

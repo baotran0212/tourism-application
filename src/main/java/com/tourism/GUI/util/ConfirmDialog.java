@@ -23,8 +23,8 @@ public class ConfirmDialog {
 		dialog.setModal(true);
 		
 		lblMessage = new JLabel(message);
-		btnYes = new JButton("C");
-		btnNo = new JButton("Khng");
+		btnYes = new JButton("Có");
+		btnNo = new JButton("Không");
 		answer = false; 
 		
 		lblMessage.setBounds(10, 0, 200, 50);

@@ -24,16 +24,11 @@ public class TouristGroup {
 	protected String name;
 	protected Date depatureDate;
 	protected Date endDate;
-	protected String description;
-	protected Double foodPrice;
-	protected Double transportPrice;
-	protected Double hotelPrice;
-	protected Double otherPrice;
 	protected String status;
 	protected List<Customer> customers;
 	protected Tour tour;
 	protected List<TourPosition> tourPositions;
-	protected List<Hotel> hotels;
+	protected List<TouristGroupCost> touristGroupCosts;
 
 	public static void main(String[] args) {
 	}

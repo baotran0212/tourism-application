@@ -12,9 +12,8 @@ import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 
-import com.tourism.BUS.CustomerController;
 import com.tourism.BUS.TouristGroupController;
-import com.tourism.DTO.Customer;
+import com.tourism.DTO.TouristGroupCost;
 import com.tourism.DTO.TouristGroup;
 import com.tourism.GUI.CustomTable;
 import com.tourism.GUI.Resources;
@@ -22,127 +21,119 @@ import com.tourism.GUI.frames.touristgroup.TouristGroupMainPanel;
 import com.tourism.GUI.util.ConfirmDialog;
 import com.tourism.GUI.util.MessageDialog;
 
-public class TouristGroupCustomerTable extends JPanel {
+public class TouristGroupCostTable extends JPanel{
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-	TouristGroupController touristGroupController = new TouristGroupController();
-	CustomerController customerController = new CustomerController();
+
+	TouristGroup TG;
 	
 	GroupLayout layout;
-	JLabel lblCustomerList;
+	JLabel lblHotelList;
 	
 	JButton btnAdd;
 	
-	JPanel pnlSelectedCustomer;
-	JLabel lblSelectedCustomer;
-	JLabel lblSelectedCustomerId;
+	JPanel pnlSelectedHotel;
+	JLabel lblSelectedHotelId;
+	JLabel lblSeletecHotel;
+	
 	JButton btnRemove;
 	
 	JScrollPane scroller;
 	JTable tbl;
 	DefaultTableModel model;
-	TouristGroup TG;
-	public TouristGroupCustomerTable() {
+	TouristGroupController touristGroupController;
+	public TouristGroupCostTable() {
 		TG = TouristGroupMainPanel.selectedTouristGroup;
 		initData();
 		initComp();
 	}
 	
 	public void initData() {
-		layout  = new GroupLayout(this);
-		model = new DefaultTableModel(new Object[] {"Mã", "Tên", "Số điện thoại"}, 0);
+		touristGroupController = new TouristGroupController();
+		layout = new GroupLayout(this);
+		model = new DefaultTableModel(new Object[] {"Mã", "Tên", "Giá", "Địa chỉ"} , 0);
 		
-		lblCustomerList = new JLabel("Danh sách khách hàng");
+		lblHotelList = new JLabel("Danh sách khách sạn");
 		
 		btnAdd = new JButton(Resources.ADD_ICON);
 		
-		pnlSelectedCustomer = new JPanel();
-		lblSelectedCustomer = new JLabel("Khách hàng");
-		lblSelectedCustomerId = new JLabel();
+		pnlSelectedHotel = new JPanel();
+		lblSeletecHotel = new JLabel("Khách sạn:");
+		lblSelectedHotelId = new JLabel();
+		
 		btnRemove = new JButton("Xóa");
 		
-		tbl = new CustomTable(model);	
+		tbl = new CustomTable(model);
 		scroller = new JScrollPane(tbl);
-		
 	}
 	
 	public void initComp() {
-		btnAdd.setBackground(Resources.PRIMARY_DARK);
-		btnAdd.setPreferredSize(Resources.SQUARE_XXS);
+		btnAdd.setBackground(Resources.PRIMARY);
 		btnAdd.addMouseListener(new MouseAdapter() {
 			public void mousePressed(MouseEvent evt) {
-				Optional<Customer> opt = new AddCustomerToTouristGroupDialog(TG).addCustomerToTouristGroup();
-				opt.ifPresent(customer -> {
-					for(Customer obj: TG.getCustomers()) {
-						if(obj.getId() == customer.getId()) {
-							new MessageDialog("Khách hàng đã có trong danh sách");
-							return;
-						}
-					}
-					TG.getCustomers().add(customer);
+				Optional<TouristGroupCost> opt = new AddTouristGroupCostToTouristGroupDialog(TG).addHotelToTouristGroup();
+				opt.ifPresent(hotel -> {
+					TG.getTouristGroupCosts().add(hotel);
 				});
 				loadTable();
 			}
 		});
 		
-		pnlSelectedCustomer.add(lblSelectedCustomer);
-		pnlSelectedCustomer.add(lblSelectedCustomerId);
+		pnlSelectedHotel.add(lblSeletecHotel);
+		pnlSelectedHotel.add(lblSelectedHotelId);
 		
 		btnRemove.setBackground(Resources.PRIMARY_DARK);
 		btnRemove.addMouseListener(new MouseAdapter() {
 			public void mousePressed(MouseEvent evt) {
-				if(new ConfirmDialog("Xóa khách hàng khỏi danh sách").confirm()) {
-					Long customerId = Long.valueOf(lblSelectedCustomerId.getText());
-					TouristGroupMainPanel.selectedTouristGroup.getCustomers().removeIf(
-							customer->(customer.getId()==customerId));
+				if(new ConfirmDialog("Xóa khách sạn khỏi danh sách?").confirm()) {
+					Long hotelId = Long.valueOf(lblSelectedHotelId.getText());
+					TouristGroupMainPanel.selectedTouristGroup.getTouristGroupCosts().removeIf(
+							hotel->(hotel.getId() == hotelId ));
 					loadTable();
 				}
 			}
 		});
 		
 		loadTable();
+		
 		tbl.addMouseListener(new MouseAdapter() {
 			public void mousePressed(MouseEvent evt) {
-				String customerId = tbl.getValueAt(tbl.getSelectedRow(), 0).toString();
-				lblSelectedCustomerId.setText(customerId);
+				String hotelId = tbl.getValueAt(tbl.getSelectedRow(), 0).toString();
+				lblSelectedHotelId.setText(hotelId);
 			}
 		});
 		tbl.setBackground(Resources.PRIMARY);
 		
 		layout.setAutoCreateContainerGaps(true);
 		layout.setAutoCreateGaps(true);
-		
 		layout.setHorizontalGroup(layout.createParallelGroup()
 				.addGroup(layout.createSequentialGroup()
-						.addComponent(lblCustomerList))
+						.addComponent(lblHotelList))
 				.addGroup(layout.createSequentialGroup()
-						.addComponent(btnAdd, Resources.SQUARE_EDGE_XXS, Resources.SQUARE_EDGE_XXS, Resources.SQUARE_EDGE_XXS)
+						.addComponent(btnAdd, Resources.SQUARE_EDGE_XXS ,Resources.SQUARE_EDGE_XXS, Resources.SQUARE_EDGE_XXS)
 						.addContainerGap()
-						.addComponent(pnlSelectedCustomer)
+						.addComponent(pnlSelectedHotel)
 						.addComponent(btnRemove))
 				.addComponent(scroller));
 		
 		layout.setVerticalGroup(layout.createSequentialGroup()
-				.addComponent(lblCustomerList)
+				.addComponent(lblHotelList)
 				.addGroup(layout.createParallelGroup()
 						.addComponent(btnAdd, Resources.SQUARE_EDGE_XXS, Resources.SQUARE_EDGE_XXS, Resources.SQUARE_EDGE_XXS)
-						.addComponent(pnlSelectedCustomer)
+						.addComponent(pnlSelectedHotel)
 						.addComponent(btnRemove))
 				.addComponent(scroller));
 		this.setLayout(layout);
 	}
 	
-	private void loadTable() {
+	public void loadTable() {
 		model.setRowCount(0);
-		if(TouristGroupMainPanel.selectedTouristGroup.getCustomers()!=null)
-			TouristGroupMainPanel.selectedTouristGroup.getCustomers().forEach(customer ->{
+		if(TouristGroupMainPanel.selectedTouristGroup.getTouristGroupCosts() != null )
+			TouristGroupMainPanel.selectedTouristGroup.getTouristGroupCosts().forEach(hotel ->{
 				model.addRow(new Object[] {
-						customer.getId(),
-						customer.getName(),
-						customer.getPhoneNumber()
 				});
-			});
+			});;
 	}
 }

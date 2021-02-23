@@ -11,6 +11,7 @@ import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 
 import com.tourism.DTO.TouristGroup;
+import com.tourism.GUI.CustomTable;
 import com.tourism.GUI.Resources;
 import com.tourism.GUI.frames.touristgroup.TouristGroupMainPanel;
 
@@ -31,18 +32,16 @@ public class TouristGroupTablePanel extends JPanel {
 
 		model = new DefaultTableModel(new Object[] { "Mã", "Tên đoàn", "Ngày khởi hành",
 				"Ngày kết thúc", "Tổng thu", "Trạng thái"}, 0);
-		tbl = new JTable(model);
+		tbl = new CustomTable(model);
 		scroller = new JScrollPane(tbl);
 		
 		TouristGroupMainPanel.touristGroups.forEach(TG -> {
-			model.addRow(new Object[] { TG.getId(), TG.getName(), TG.getDepatureDate(), TG.getEndDate(),
-					TG.getFoodPrice() + TG.getTransportPrice() + TG.getHotelPrice() + TG.getOtherPrice(), TG.getStatus()});
+			model.addRow(new Object[] { TG.getId(), TG.getName(), TG.getDepatureDate(), TG.getEndDate(), TG.getStatus()});
 		});
 	}
 
 
 	public void initComp() {
-		
 		tbl.addMouseListener(new MouseAdapter() {
 			public void mousePressed(MouseEvent e) {
 				Long selectedId = (Long) tbl.getValueAt(tbl.getSelectedRow() , 0);
@@ -55,31 +54,10 @@ public class TouristGroupTablePanel extends JPanel {
 				TouristGroupDetailPanel.reload();
 			}
 		});
-//		tbl.addMouseListener(new MouseListener() {
-//			@Override
-//			public void mouseReleased(MouseEvent e) {
-//			}
-//			@Override
-//			public void mousePressed(MouseEvent e) {
-//				Long selectedId = (Long) tbl.getValueAt(tbl.getSelectedRow() , 0);
-//				TouristGroupManager.detailPanel = new DetailTouristGroupPanel(selectedId);
-//				TouristGroupManager.detailPanel.initData(selectedId);
-//				TouristGroupManager.detailPanel.repaint();
-//				logger.info(selectedId + "");
-//			}
-//			@Override
-//			public void mouseExited(MouseEvent e) {
-//			}
-//			@Override
-//			public void mouseEntered(MouseEvent e) {
-//			}
-//			@Override
-//			public void mouseClicked(MouseEvent e) {
-//			}
-//		});
 		
 		tbl.setPreferredSize(Resources.MANAGER_TABLE);
 		scroller.setPreferredSize(Resources.MANAGER_TABLE_SCROLLER);
 		add(scroller);
+		setBackground(Resources.PRIMARY);
 	}
 }

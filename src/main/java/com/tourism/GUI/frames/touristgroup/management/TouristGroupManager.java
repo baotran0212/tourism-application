@@ -42,8 +42,8 @@ public class TouristGroupManager extends JPanel {
 				.addComponent(managerTable));
 		
 		this.setLayout(layout);
-		this.setPreferredSize(new Dimension(1110,700));
-		this.setBackground(Color.CYAN);
+		this.setPreferredSize(Resources.MAIN_CONTENT);
+		this.setBackground(Resources.PRIMARY_DARK);
 	}
 	
 	public static void reloadManagerTable() {

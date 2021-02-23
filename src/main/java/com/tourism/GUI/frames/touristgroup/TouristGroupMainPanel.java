@@ -3,6 +3,7 @@ package com.tourism.GUI.frames.touristgroup;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
 
@@ -11,6 +12,8 @@ import javax.swing.*;
 import com.tourism.BUS.TouristGroupController;
 import com.tourism.DAL.TourPositionRepository;
 import com.tourism.DAL.TouristGroupRepository;
+import com.tourism.DTO.Customer;
+import com.tourism.DTO.TouristGroupCost;
 import com.tourism.DTO.TourPosition;
 import com.tourism.DTO.TouristGroup;
 import com.tourism.GUI.MainFrame;
@@ -28,7 +31,7 @@ public class TouristGroupMainPanel extends JPanel {
 
 	public TouristGroupMainPanel() {
 		super(new FlowLayout(0,0,0));
-		mainContent = new JPanel();
+		mainContent = new JPanel(new FlowLayout(0,0,0));
 		touristGroups = touristGroupController.getAllNotDeleted();
 		selectedTouristGroup = new TouristGroup();
 		mainContent.add(new TouristGroupManager());
@@ -55,6 +58,9 @@ public class TouristGroupMainPanel extends JPanel {
 	public static void initCreatorPanel() {
 		touristGroups = touristGroupController.getAllNotDeleted();
 		selectedTouristGroup = new TouristGroup();
+		selectedTouristGroup.setCustomers(new ArrayList<Customer>());
+		selectedTouristGroup.setTouristGroupCosts(new ArrayList<TouristGroupCost>());
+		selectedTouristGroup.setTourPositions(new ArrayList<TourPosition>());
 		mainContent.removeAll();
 		mainContent.add(new TouristGroupModify());
 		mainContent.getParent().revalidate();

@@ -19,6 +19,7 @@ import com.tourism.BUS.PositionController;
 import com.tourism.BUS.TouristGroupController;
 import com.tourism.DTO.TourPosition;
 import com.tourism.DTO.TouristGroup;
+import com.tourism.GUI.CustomTable;
 import com.tourism.GUI.Resources;
 import com.tourism.GUI.frames.touristgroup.TouristGroupMainPanel;
 import com.tourism.GUI.util.ConfirmDialog;
@@ -45,7 +46,7 @@ public class TouristGroupEmployeeTable extends JPanel{
 	JLabel lblSelectedPosition;
 	JLabel lblSelectedPositionId;
 	
-	JButton btnEmployeeRemove;
+	JButton btnRemove;
 	
 	JScrollPane scroller;
 	JTable tbl;
@@ -71,9 +72,9 @@ public class TouristGroupEmployeeTable extends JPanel{
 		lblSelectedPosition = new JLabel("Vị trí");
 		lblSelectedPositionId = new JLabel();
 		
-		btnEmployeeRemove = new JButton("Xóa");
+		btnRemove = new JButton("Xóa");
 		
-		tbl = new JTable(model);	
+		tbl = new CustomTable(model);	
 		scroller = new JScrollPane(tbl);
 		
 		cbxPosition.addItem("0. Tất cả");
@@ -83,6 +84,7 @@ public class TouristGroupEmployeeTable extends JPanel{
 	}
 	
 	public void initComp() {
+		btnAdd.setBackground(Resources.PRIMARY_DARK);
 		btnAdd.addMouseListener(new MouseAdapter() {
 			public void mousePressed(MouseEvent evt) {
 				Optional<TourPosition> opt = new AddEmployeeToTouristGroupDialog(TG).addEmployeeToTouristGroup();
@@ -110,9 +112,10 @@ public class TouristGroupEmployeeTable extends JPanel{
 		pnlSelectedEmployee.add(lblSelectedEmployeeId);
 		pnlSelectedEmployee.add(lblSelectedPosition);
 		pnlSelectedEmployee.add(lblSelectedPositionId);
-		pnlSelectedEmployee.add(btnEmployeeRemove);
+		pnlSelectedEmployee.add(btnRemove);
 		
-		btnEmployeeRemove.addMouseListener(new MouseAdapter() {
+		btnRemove.setBackground(Resources.PRIMARY_DARK);
+		btnRemove.addMouseListener(new MouseAdapter() {
 			public void mousePressed(MouseEvent evt) {
 				if(new ConfirmDialog("Xóa nhân viên khỏi danh sách?").confirm()) {
 					Long employeeId = Long.valueOf(lblSelectedEmployeeId.getText());
@@ -136,6 +139,7 @@ public class TouristGroupEmployeeTable extends JPanel{
 				lblSelectedPositionId.setText(positionId);
 			}
 		});
+		tbl.setBackground(Resources.PRIMARY);
 		
 		layout.setAutoCreateContainerGaps(true);
 		layout.setAutoCreateGaps(true);

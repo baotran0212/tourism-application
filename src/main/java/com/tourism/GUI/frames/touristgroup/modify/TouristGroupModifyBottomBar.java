@@ -13,8 +13,10 @@ import javax.swing.JPanel;
 import javax.swing.LayoutStyle.ComponentPlacement;
 
 import com.tourism.BUS.TouristGroupController;
+import com.tourism.GUI.Resources;
 import com.tourism.GUI.frames.touristgroup.TouristGroupMainPanel;
 import com.tourism.GUI.util.ConfirmDialog;
+import com.tourism.GUI.util.MessageDialog;
 
 public class TouristGroupModifyBottomBar extends JPanel {
 	private static final long serialVersionUID = 1L;
@@ -44,14 +46,20 @@ public class TouristGroupModifyBottomBar extends JPanel {
 				TouristGroupMainPanel.initManagerPanel();
 			}
 		});
+		btnCancel.setBackground(Resources.SECONDARY);
+		btnCancel.setForeground(Resources.PRIMARY);
 		
 		btnSave.addMouseListener(new MouseAdapter() {
 			public void mousePressed(MouseEvent evt) {
-				TouristGroupBasicModifyPanel.commitToSelectedTouristGroup();
+				if(!TouristGroupBasicModifyPanel.commitToSelectedTouristGroup()) {
+					new MessageDialog("ThÔng tin không đúng");
+					return;}
 				touristGroupController.saveWithRelationships(TouristGroupMainPanel.selectedTouristGroup);
 				TouristGroupMainPanel.initManagerPanel();
 			}
 		});
+		btnSave.setBackground(Resources.SECONDARY);
+		btnSave.setForeground(Resources.PRIMARY);
 		
 		btnDelete.addMouseListener(new MouseAdapter() {
 			public void mousePressed(MouseEvent evt) {
@@ -62,22 +70,23 @@ public class TouristGroupModifyBottomBar extends JPanel {
 				}
 			}
 		});
+		btnDelete.setBackground(Resources.PRIMARY_DARK);
 		
 		layout.setAutoCreateContainerGaps(true);
 		layout.setHorizontalGroup(layout.createParallelGroup(Alignment.LEADING)
 				.addGroup(Alignment.TRAILING,layout.createSequentialGroup()
 						.addContainerGap(0, Short.MAX_VALUE)
-						.addComponent(btnSave)
+						.addComponent(btnSave, Resources.INPUT_WIDTH_XS, Resources.INPUT_WIDTH_XS, Resources.INPUT_WIDTH_XS)
 						.addPreferredGap(ComponentPlacement.UNRELATED)
-						.addComponent(btnCancel)
+						.addComponent(btnCancel, Resources.INPUT_WIDTH_XS, Resources.INPUT_WIDTH_XS, Resources.INPUT_WIDTH_XS )
 						.addGap(0, 0, Short.MAX_VALUE)
 						.addComponent(btnDelete)));
 		
 		layout.setVerticalGroup(layout.createSequentialGroup()
 				.addGroup(layout.createParallelGroup()
-						.addComponent(btnSave)
-						.addComponent(btnCancel)
-						.addComponent(btnDelete)
+						.addComponent(btnSave, Resources.SQUARE_EDGE_XS, Resources.SQUARE_EDGE_XS, Resources.SQUARE_EDGE_XS)
+						.addComponent(btnCancel, Resources.SQUARE_EDGE_XS, Resources.SQUARE_EDGE_XS, Resources.SQUARE_EDGE_XS)
+						.addComponent(btnDelete, Resources.SQUARE_EDGE_XS, Resources.SQUARE_EDGE_XS, Resources.SQUARE_EDGE_XS)
 						));
 		this.setLayout(layout);
 	}

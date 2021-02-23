@@ -12,13 +12,13 @@ import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 
-import com.tourism.BUS.CustomerController;
+import com.tourism.BUS.TouristGroupCostController;
 import com.tourism.BUS.TouristGroupController;
-import com.tourism.DTO.Customer;
+import com.tourism.DTO.TouristGroupCost;
 import com.tourism.DTO.TouristGroup;
 import com.tourism.GUI.CustomTable;
 
-public class AddCustomerToTouristGroupDialog {
+public class AddTouristGroupCostToTouristGroupDialog {
 	JDialog dialog;
 	JPanel pnl;
 	GroupLayout layout;
@@ -30,12 +30,12 @@ public class AddCustomerToTouristGroupDialog {
 	JButton btnAdd;
 	JButton btnCancel;
 	
-	CustomerController customerController;
+	TouristGroupCostController touristGroupCostController;
 	TouristGroupController touristGroupController;
 	TouristGroup TG;
-	Customer selectedCustomer;
+	TouristGroupCost selectedHotel;
 	
-	public AddCustomerToTouristGroupDialog(TouristGroup TG) {
+	public AddTouristGroupCostToTouristGroupDialog(TouristGroup TG) {
 		this.TG = TG;
 		initData();
 		initComp();
@@ -46,24 +46,19 @@ public class AddCustomerToTouristGroupDialog {
 		pnl = new JPanel();
 		layout = new GroupLayout(pnl);
 		
-		model = new DefaultTableModel(new Object[] {"Mã", "Tên", "Sđt", "Căn cước", "Giới tính", "Địa chỉ"}, 0);
+		model = new DefaultTableModel(new Object[] {"Mã", "Tên", "Phí", "Địa chỉ"}, 0);
 		tbl = new CustomTable(model);
 		scroller = new JScrollPane(tbl);
 		
 		btnAdd = new JButton("Thêm");
-		btnCancel = new JButton("Xóa");
+		btnCancel = new JButton("Hủy");
 		
-		customerController = new CustomerController();
+		touristGroupCostController = new TouristGroupCostController();
 		touristGroupController = new TouristGroupController();
 		
-		customerController.getAll().forEach(customer->{
+		touristGroupCostController.getAll().forEach(hotel -> {
 			model.addRow(new Object[] {
-					customer.getId(),
-					customer.getName(),
-					customer.getPhoneNumber(),
-					customer.getIdentityCard(),
-					customer.getGender(),
-					customer.getStreet() + ", " + customer.getAddress3() + ", " + customer.getAddress2() +", " + customer.getAddress1()
+
 			});
 		});
 	}
@@ -71,15 +66,15 @@ public class AddCustomerToTouristGroupDialog {
 	private void initComp() {
 		btnAdd.addMouseListener(new MouseAdapter() {
 			public void mousePressed(MouseEvent evt) {
-				Long customerId = Long.valueOf(tbl.getValueAt(tbl.getSelectedRow(), 0).toString());
-				selectedCustomer = customerController.getById(customerId);
+				Long hotelId = Long.valueOf(tbl.getValueAt(tbl.getSelectedRow(), 0).toString());
+				selectedHotel = touristGroupCostController.getById(hotelId);
 				dialog.dispose();
 			}
 		});
 		
 		btnCancel.addMouseListener(new MouseAdapter() {
 			public void mousePressed(MouseEvent evt) {
-				selectedCustomer = null;
+				selectedHotel = null;
 				dialog.dispose();
 			}
 		});
@@ -91,7 +86,6 @@ public class AddCustomerToTouristGroupDialog {
 				.addGroup(layout.createSequentialGroup()
 						.addComponent(btnAdd)
 						.addComponent(btnCancel)));
-		
 		layout.setVerticalGroup(layout.createSequentialGroup()
 				.addComponent(scroller)
 				.addGroup(layout.createParallelGroup()
@@ -106,7 +100,7 @@ public class AddCustomerToTouristGroupDialog {
 		dialog.setVisible(true);
 	}
 	
-	public Optional<Customer> addCustomerToTouristGroup(){
-		return selectedCustomer!= null ? Optional.of(selectedCustomer) : Optional.empty();
+	public Optional<TouristGroupCost> addHotelToTouristGroup(){
+		return selectedHotel!=null ? Optional.of(selectedHotel) : Optional.empty();
 	}
 }

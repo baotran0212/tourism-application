@@ -5,6 +5,7 @@ import java.awt.event.MouseEvent;
 import java.awt.image.ImageObserver;
 import java.util.logging.Logger;
 
+import javax.swing.BorderFactory;
 import javax.swing.GroupLayout;
 import javax.swing.GroupLayout.Alignment;
 import javax.swing.JButton;
@@ -115,14 +116,18 @@ public class TouristGroupDetailPanel extends JPanel {
 		JTextField[] txtField = new JTextField[] {txtId, txtName, txtDepatureDate, txtEndDate, txtFoodPrice, txtTransportPrice, txtHotelPrice, txtOtherPrice, txtTour, txtStatus, txtCustomerCount, txtEmployeeCount};
 		for(JTextField txt: txtField) {
 			txt.setEditable(false);
+			txt.setBackground(Resources.PRIMARY);
+			txt.setBorder(BorderFactory.createLineBorder(Resources.PRIMARY_DARK, 1, true));
 		}
 		
+		btnModify.setBackground(Resources.PRIMARY_DARK);
 		btnModify.addMouseListener(new MouseAdapter() {
 			public void mousePressed(MouseEvent evt) {
 				if(TouristGroupMainPanel.selectedTouristGroup != null && TouristGroupMainPanel.selectedTouristGroup.getId() != null)
 					TouristGroupMainPanel.initModifyPanel();
 			}
 		});
+		btnDelete.setBackground(Resources.PRIMARY_DARK);
 		btnDelete.addMouseListener(new MouseAdapter() {
 			public void mousePressed(MouseEvent evt) {
 				if(TouristGroupMainPanel.selectedTouristGroup != null && TouristGroupMainPanel.selectedTouristGroup.getId() != null) {
@@ -134,6 +139,7 @@ public class TouristGroupDetailPanel extends JPanel {
 		});
 		
 		this.setLayout(layout);
+		this.setBackground(Resources.PRIMARY);
 		layout.setAutoCreateContainerGaps(true);
 		layout.setAutoCreateGaps(true);
 		
@@ -222,10 +228,6 @@ public class TouristGroupDetailPanel extends JPanel {
 		detailPanel.txtId.setText(TG.getId().toString());
 		detailPanel.txtDepatureDate.setText(Resources.simpleDateFormat.format(TG.getDepatureDate()));
 		detailPanel.txtEndDate.setText(Resources.simpleDateFormat.format(TG.getEndDate()));
-		detailPanel.txtFoodPrice.setText(TG.getFoodPrice().toString());
-		detailPanel.txtTransportPrice.setText(TG.getTransportPrice().toString());
-		detailPanel.txtHotelPrice.setText(TG.getHotelPrice().toString());
-		detailPanel.txtOtherPrice.setText(TG.getOtherPrice().toString());
 		detailPanel.txtTour.setText(TG.getTour().getName());
 		detailPanel.txtStatus.setText(TG.getStatus());
 		detailPanel.txtCustomerCount.setText(TG.getCustomers().size()+"");

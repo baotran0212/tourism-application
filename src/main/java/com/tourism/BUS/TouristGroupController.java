@@ -6,13 +6,13 @@ import java.util.List;
 import java.util.logging.Logger;
 
 import com.tourism.DAL.CustomerRepository;
-import com.tourism.DAL.HotelRepository;
 import com.tourism.DAL.TourPositionRepository;
 import com.tourism.DAL.TourRepository;
+import com.tourism.DAL.TouristGroupCostRepository;
 import com.tourism.DAL.TouristGroupRepository;
 import com.tourism.DTO.Customer;
 import com.tourism.DTO.Employee;
-import com.tourism.DTO.Hotel;
+import com.tourism.DTO.TouristGroupCost;
 import com.tourism.DTO.Position;
 import com.tourism.DTO.Tour;
 import com.tourism.DTO.TourPosition;
@@ -25,14 +25,14 @@ public class TouristGroupController {
 	CustomerRepository customerRepository;
 	TourPositionRepository tourPositionRepository;
 	TourRepository tourRepository;
-	HotelRepository hotelRepository ;
+	TouristGroupCostRepository touristGroupCostRepository ;
 	
 	public TouristGroupController() {
 		TGRepository = new TouristGroupRepository();
 		customerRepository = new CustomerRepository();
 		tourPositionRepository = new TourPositionRepository();
 		tourRepository = new TourRepository();
-		hotelRepository = new HotelRepository();
+		touristGroupCostRepository = new TouristGroupCostRepository();
 	}
 	
 	public List<TouristGroup> getAllNotDeleted(){
@@ -43,7 +43,7 @@ public class TouristGroupController {
 			TG.setCustomers(customerRepository.findAllByTouristGroupId(TG.getId()));
 			TG.setTourPositions(tourPositionRepository.findAllByTouristGroupId(TG.getId()));
 			TG.setTour(tourRepository.findById(TG.getTourId()).orElse(null));
-			TG.setHotels(hotelRepository.findAllByTouristGroupId(TG.getId()));
+			TG.setTouristGroupCosts(touristGroupCostRepository.findAllByTouristGroupId(TG.getId()));
 		});
 		return TGs;
 	}
@@ -56,7 +56,7 @@ public class TouristGroupController {
 			TG.setCustomers(customerRepository.findAllByTouristGroupId(TG.getId()));
 			TG.setTourPositions(tourPositionRepository.findAllByTouristGroupId(TG.getId()));
 			TG.setTour(tourRepository.findById(TG.getTourId()).orElse(null));
-			TG.setHotels(hotelRepository.findAllByTouristGroupId(TG.getId()));
+			TG.setTouristGroupCosts(touristGroupCostRepository.findAllByTouristGroupId(TG.getId()));
 		});
 		return TGs;
 	}
@@ -67,7 +67,7 @@ public class TouristGroupController {
 		if(TG.getId() == null) {
 			return TG;
 		}
-		TG.setHotels(hotelRepository.findAllByTouristGroupId(id));
+		TG.setTouristGroupCosts(touristGroupCostRepository.findAllByTouristGroupId(id));
 		TG.setCustomers(customerRepository.findAllByTouristGroupId(id));
 		TG.setTourPositions(tourPositionRepository.findAllByTouristGroupId(id));
 		TG.setTour(tourRepository.findById(TG.getTourId()).orElse(null));
@@ -80,7 +80,7 @@ public class TouristGroupController {
 		if(TG.getId() == null) {
 			return TG;
 		}
-		TG.setHotels(hotelRepository.findAllByTouristGroupId(id));
+		TG.setTouristGroupCosts(touristGroupCostRepository.findAllByTouristGroupId(id));
 		TG.setCustomers(customerRepository.findAllByTouristGroupId(id));
 		TG.setTourPositions(tourPositionRepository.findAllByTouristGroupId(id));
 		TG.setTour(tourRepository.findById(TG.getTourId()).orElse(null));
@@ -102,7 +102,6 @@ public class TouristGroupController {
 	}
 	
 	public void saveAllWithRelationShips(Iterable<TouristGroup> touristGroups){
-		List<TouristGroup> TGs = new ArrayList<TouristGroup>();
 		List<TouristGroup> savedTGs = new ArrayList<TouristGroup>();
 		savedTGs = TGRepository.saveAll(touristGroups);
 		Iterator<TouristGroup> touristGroupsIterator = touristGroups.iterator();
@@ -111,9 +110,8 @@ public class TouristGroupController {
 			TouristGroup TG = touristGroupsIterator.next();
 			savedTGs.get(i).setCustomers(TG.getCustomers());
 			savedTGs.get(i).setTourPositions(TG.getTourPositions());
-			savedTGs.get(i).setHotels(TG.getHotels());
+			savedTGs.get(i).setTouristGroupCosts(TG.getTouristGroupCosts());
 		}
-		System.out.println(savedTGs);
 		TGRepository.saveAllRelationShip(savedTGs);
 	}
 	
@@ -135,7 +133,7 @@ public class TouristGroupController {
 			TG.setCustomers(customerRepository.findAllByTouristGroupId(TG.getId()));
 			TG.setTourPositions(tourPositionRepository.findAllByTouristGroupId(TG.getId()));
 			TG.setTour(tourRepository.findById(TG.getTourId()).orElse(null));
-			TG.setHotels(hotelRepository.findAllByTouristGroupId(TG.getId()));
+			TG.setTouristGroupCosts(touristGroupCostRepository.findAllByTouristGroupId(TG.getId()));
 		});
 		return TGs;
 	}
