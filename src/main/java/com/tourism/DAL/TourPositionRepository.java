@@ -115,6 +115,18 @@ public class TourPositionRepository implements Repositories<TourPosition, Long>{
 		// TODO Auto-generated method stub
 	}	
 	
+	public void deleteAllByTouristGroupNot(TouristGroup TG) {
+		StringBuilder query = new StringBuilder("DELETE FROM position_in_tour WHERE "
+				+ " tourist_group_id = \"" + TG.getId() + "\" ");
+		if(TG.getTourPositions().isEmpty()) {
+			TG.getTourPositions().forEach(tourPosition ->{
+				query.append(" AND id <> \"" + tourPosition.getId() + "\" ");
+			});
+		}
+		query.append("; ");
+		connector.executeUpdate(query.toString());
+	}
+	
 	public List<TourPosition> findAllByTouristGroupId(Long id) {
 		StringBuilder query = new StringBuilder(
 				"SELECT * FROM position_in_tour WHERE tourist_group_id = \"");

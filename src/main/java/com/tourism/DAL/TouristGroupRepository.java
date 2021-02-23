@@ -14,7 +14,7 @@ import java.util.logging.Logger;
 import com.tourism.ProjectProperties;
 import com.tourism.DTO.Customer;
 import com.tourism.DTO.Employee;
-import com.tourism.DTO.Hotel;
+import com.tourism.DTO.TouristGroupCost;
 import com.tourism.DTO.TourPosition;
 import com.tourism.DTO.Tour;
 import com.tourism.DTO.TouristGroup;
@@ -24,13 +24,13 @@ import com.tourism.GUI.Resources;
  * TouristGroupDAL
  */
 public class TouristGroupRepository implements Repositories<TouristGroup, Long> {
+	Logger logger = Logger.getLogger(this.getClass().getName());
 	Connector connector = new MysqlConnector();
 	TourPositionRepository tourPositionRepos =  new TourPositionRepository();
 	CustomerRepository customerRepos = new CustomerRepository();
-	HotelRepository hotelRepos = new HotelRepository();
+	TouristGroupCostRepository touristGroupCostRepos = new TouristGroupCostRepository();
 	TourRepository tourRepos = new TourRepository();
 	
-	Logger logger = Logger.getLogger(this.getClass().getName());
 	
 	@Override
 	public TouristGroup save(TouristGroup entity) {
@@ -49,11 +49,6 @@ public class TouristGroupRepository implements Repositories<TouristGroup, Long> 
 				updateQuery.append("name = \"" + e.getName() + "\", ");
 				updateQuery.append("depature_date = \"" + Resources.simpleDateFormat.format(e.getDepatureDate()) + "\", ");
 				updateQuery.append("end_date = \"" + Resources.simpleDateFormat.format(e.getEndDate()) + "\", ");
-				updateQuery.append("description = \"" + e.getDescription() + "\", ");
-				updateQuery.append("food_price = " + e.getFoodPrice() + ", ");
-				updateQuery.append("transport_price = " + e.getTransportPrice() + ", ");
-				updateQuery.append("hotel_price = " + e.getHotelPrice() + ", ");
-				updateQuery.append("other_price = " + e.getOtherPrice() + ", ");
 				updateQuery.append("status = \"" + e.getStatus() + "\" ");
 				updateQuery.append("WHERE id = \"" + e.getId() + "\" ;");
 				logger.info(updateQuery.toString());
@@ -65,11 +60,6 @@ public class TouristGroupRepository implements Repositories<TouristGroup, Long> 
 				insertQuery.append("\"" + e.getName() + "\", ");
 				insertQuery.append("\"" + Resources.simpleDateFormat.format(e.getDepatureDate()) + "\", ");
 				insertQuery.append("\"" + Resources.simpleDateFormat.format(e.getEndDate()) + "\", ");
-				insertQuery.append("\"" + e.getDescription() + "\", ");
-				insertQuery.append("\"" + e.getFoodPrice() + "\", ");
-				insertQuery.append("\"" + e.getTransportPrice() + "\", ");
-				insertQuery.append("\"" + e.getHotelPrice() + "\", ");
-				insertQuery.append("\"" + e.getOtherPrice() + "\", ");
 				insertQuery.append("\"" + e.getStatus() + "\"); ");
 				connector.executeUpdate(insertQuery.toString());
 				ResultSet returnedResultSet = connector
@@ -89,11 +79,7 @@ public class TouristGroupRepository implements Repositories<TouristGroup, Long> 
 	public void saveAllRelationShip(Iterable<TouristGroup> touristGroups) {
 		List<String> insertTouristGroupCustomer = new ArrayList<String>();
 		StringBuilder deleteTouristGroupCustomer = new StringBuilder(); 
-		List<String> insertTouristGroupHotel = new ArrayList<String>();
-		StringBuilder deleteTouristGroupHotel = new StringBuilder();
-		StringBuilder deleteTourPosition = new StringBuilder();
 		touristGroups.forEach(touristGroup->{
-//			if(touristGroup.getCustomers() != null && !touristGroup.getCustomers().isEmpty()) {
 				deleteTouristGroupCustomer.append("DELETE FROM tourist_group_customer WHERE"
 						+" tourist_group_id = \""+ touristGroup.getId() + "\" ");
 				touristGroup.getCustomers().forEach(customer->{
@@ -103,30 +89,12 @@ public class TouristGroupRepository implements Repositories<TouristGroup, Long> 
 				deleteTouristGroupCustomer.append("; ");
 				insertTouristGroupCustomer.forEach(query->connector.executeUpdate(query));
 				connector.executeUpdate(deleteTouristGroupCustomer.toString());
-//			}
-			
-//			if(touristGroup.getHotels() != null && !touristGroup.getHotels().isEmpty()) {
-				deleteTouristGroupHotel.append("DELETE FROM tourist_group_hotel WHERE"
-						+ " tourist_group_id = \"" + touristGroup.getId() +"\" ");
-				touristGroup.getHotels().forEach(hotel ->{
-					insertTouristGroupHotel.add(" INSERT INTO tourist_group_hotel(tourist_group_id, hotel_id) VALUES ( \""+ touristGroup.getId() +"\", \"" + hotel.getId() +"\" ); ");
-					deleteTouristGroupHotel.append(" AND hotel_id <> \"" + hotel.getId() + "\" ");
-				});
-				deleteTouristGroupHotel.append(";");
-				insertTouristGroupHotel.forEach(query->connector.executeUpdate(query));
-				connector.executeUpdate(deleteTouristGroupHotel.toString());
-//			}
-			
-//			if(touristGroup.getTourPositions() != null && !touristGroup.getTourPositions().isEmpty()) {
-				deleteTourPosition.append("DELETE FROM position_in_tour WHERE "
-						+ " tourist_group_id = \"" + touristGroup.getId() + "\" ");
-				touristGroup.getTourPositions().forEach(tourPosition ->{
-					deleteTourPosition.append(" AND id <> \"" + tourPosition.getId() + "\" ");
-				});
-				deleteTourPosition.append("; ");
+
 				tourPositionRepos.saveAll(touristGroup.getTourPositions());
-				connector.executeUpdate(deleteTourPosition.toString());
-//			}
+				tourPositionRepos.deleteAllByTouristGroupNot(touristGroup);
+				
+				touristGroupCostRepos.saveAll(touristGroup.getTouristGroupCosts());
+				touristGroupCostRepos.deleteAllByTouristGroupNot(touristGroup);
 		});
 	}
 	
@@ -231,11 +199,6 @@ public class TouristGroupRepository implements Repositories<TouristGroup, Long> 
 				tg.setName(rs.getString("name"));
 				tg.setDepatureDate(rs.getDate("depature_date"));
 				tg.setEndDate(rs.getDate("end_date"));
-				tg.setDescription(rs.getString("description"));
-				tg.setFoodPrice(Double.valueOf(rs.getDouble("food_price")));
-				tg.setTransportPrice(Double.valueOf(rs.getDouble("transport_price")));
-				tg.setHotelPrice(Double.valueOf(rs.getDouble("hotel_price")));
-				tg.setOtherPrice(Double.valueOf(rs.getDouble("other_price")));
 				tg.setStatus(rs.getString("status"));
 				touristGroups.add(tg);
 			}

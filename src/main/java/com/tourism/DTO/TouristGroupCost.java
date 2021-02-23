@@ -16,20 +16,11 @@ import lombok.ToString;
 @AllArgsConstructor
 @NoArgsConstructor
 @ToString
-public class Hotel {
+public class TouristGroupCost {
 
   protected Long id;
-  @NonNull
-  protected String name;
-  @NonNull
-  protected Double price;
-  @NonNull
-  protected String address1;
-  @NonNull
-  protected String address2;
-  @NonNull
-  protected String address3;
-  @NonNull
-	protected String street;
-  protected List<TouristGroup> touristGroups;
+  Long touristGroupId;
+  Double totalPrice;
+  String description;
+  TouristGroup touristGroups;
 }

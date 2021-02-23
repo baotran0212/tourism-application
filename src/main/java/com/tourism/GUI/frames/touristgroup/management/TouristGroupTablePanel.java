@@ -36,14 +36,12 @@ public class TouristGroupTablePanel extends JPanel {
 		scroller = new JScrollPane(tbl);
 		
 		TouristGroupMainPanel.touristGroups.forEach(TG -> {
-			model.addRow(new Object[] { TG.getId(), TG.getName(), TG.getDepatureDate(), TG.getEndDate(),
-					TG.getFoodPrice() + TG.getTransportPrice() + TG.getHotelPrice() + TG.getOtherPrice(), TG.getStatus()});
+			model.addRow(new Object[] { TG.getId(), TG.getName(), TG.getDepatureDate(), TG.getEndDate(), TG.getStatus()});
 		});
 	}
 
 
 	public void initComp() {
-		
 		tbl.addMouseListener(new MouseAdapter() {
 			public void mousePressed(MouseEvent e) {
 				Long selectedId = (Long) tbl.getValueAt(tbl.getSelectedRow() , 0);
@@ -56,28 +54,6 @@ public class TouristGroupTablePanel extends JPanel {
 				TouristGroupDetailPanel.reload();
 			}
 		});
-//		tbl.addMouseListener(new MouseListener() {
-//			@Override
-//			public void mouseReleased(MouseEvent e) {
-//			}
-//			@Override
-//			public void mousePressed(MouseEvent e) {
-//				Long selectedId = (Long) tbl.getValueAt(tbl.getSelectedRow() , 0);
-//				TouristGroupManager.detailPanel = new DetailTouristGroupPanel(selectedId);
-//				TouristGroupManager.detailPanel.initData(selectedId);
-//				TouristGroupManager.detailPanel.repaint();
-//				logger.info(selectedId + "");
-//			}
-//			@Override
-//			public void mouseExited(MouseEvent e) {
-//			}
-//			@Override
-//			public void mouseEntered(MouseEvent e) {
-//			}
-//			@Override
-//			public void mouseClicked(MouseEvent e) {
-//			}
-//		});
 		
 		tbl.setPreferredSize(Resources.MANAGER_TABLE);
 		scroller.setPreferredSize(Resources.MANAGER_TABLE_SCROLLER);

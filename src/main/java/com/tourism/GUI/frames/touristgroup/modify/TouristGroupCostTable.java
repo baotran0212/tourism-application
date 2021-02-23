@@ -13,7 +13,7 @@ import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 
 import com.tourism.BUS.TouristGroupController;
-import com.tourism.DTO.Hotel;
+import com.tourism.DTO.TouristGroupCost;
 import com.tourism.DTO.TouristGroup;
 import com.tourism.GUI.CustomTable;
 import com.tourism.GUI.Resources;
@@ -21,7 +21,7 @@ import com.tourism.GUI.frames.touristgroup.TouristGroupMainPanel;
 import com.tourism.GUI.util.ConfirmDialog;
 import com.tourism.GUI.util.MessageDialog;
 
-public class TouristGroupHotelTable extends JPanel{
+public class TouristGroupCostTable extends JPanel{
 	/**
 	 * 
 	 */
@@ -44,7 +44,7 @@ public class TouristGroupHotelTable extends JPanel{
 	JTable tbl;
 	DefaultTableModel model;
 	TouristGroupController touristGroupController;
-	public TouristGroupHotelTable() {
+	public TouristGroupCostTable() {
 		TG = TouristGroupMainPanel.selectedTouristGroup;
 		initData();
 		initComp();
@@ -73,17 +73,10 @@ public class TouristGroupHotelTable extends JPanel{
 		btnAdd.setBackground(Resources.PRIMARY);
 		btnAdd.addMouseListener(new MouseAdapter() {
 			public void mousePressed(MouseEvent evt) {
-				Optional<Hotel> opt = new AddHotelToTouristGroupDialog(TG).addHotelToTouristGroup();
+				Optional<TouristGroupCost> opt = new AddTouristGroupCostToTouristGroupDialog(TG).addHotelToTouristGroup();
 				opt.ifPresent(hotel -> {
-					for(Hotel obj : TG.getHotels()) {
-						if(hotel.getId() == obj.getId()) {
-							new MessageDialog("Khách sạn đã có trong danh sách");
-							return;
-						}
-					}
-					TG.getHotels().add(hotel);
+					TG.getTouristGroupCosts().add(hotel);
 				});
-				TouristGroupBasicModifyPanel.updateHotelPriceTextField();
 				loadTable();
 			}
 		});
@@ -96,9 +89,8 @@ public class TouristGroupHotelTable extends JPanel{
 			public void mousePressed(MouseEvent evt) {
 				if(new ConfirmDialog("Xóa khách sạn khỏi danh sách?").confirm()) {
 					Long hotelId = Long.valueOf(lblSelectedHotelId.getText());
-					TouristGroupMainPanel.selectedTouristGroup.getHotels().removeIf(
+					TouristGroupMainPanel.selectedTouristGroup.getTouristGroupCosts().removeIf(
 							hotel->(hotel.getId() == hotelId ));
-					TouristGroupBasicModifyPanel.updateHotelPriceTextField();
 					loadTable();
 				}
 			}
@@ -138,13 +130,9 @@ public class TouristGroupHotelTable extends JPanel{
 	
 	public void loadTable() {
 		model.setRowCount(0);
-		if(TouristGroupMainPanel.selectedTouristGroup.getHotels() != null )
-			TouristGroupMainPanel.selectedTouristGroup.getHotels().forEach(hotel ->{
+		if(TouristGroupMainPanel.selectedTouristGroup.getTouristGroupCosts() != null )
+			TouristGroupMainPanel.selectedTouristGroup.getTouristGroupCosts().forEach(hotel ->{
 				model.addRow(new Object[] {
-						hotel.getId(),
-						hotel.getName(),
-						hotel.getPrice(),
-						hotel.getStreet() + hotel.getAddress3() + hotel.getAddress2() + hotel.getAddress1()
 				});
 			});;
 	}

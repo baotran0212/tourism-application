@@ -16,7 +16,7 @@ import javax.swing.GroupLayout.Alignment;
 import javax.swing.JButton;
 
 import com.tourism.BUS.TourController;
-import com.tourism.DTO.Hotel;
+import com.tourism.DTO.TouristGroupCost;
 import com.tourism.DTO.TouristGroup;
 import com.tourism.GUI.Resources;
 import com.tourism.GUI.frames.touristgroup.TestFrame;
@@ -93,18 +93,6 @@ public class TouristGroupBasicModifyPanel extends JPanel {
 		btnEndDate = new JButton(Resources.CALENDAR_ICON);
 		pnlEndDate = new JPanel(new FlowLayout(0,0,0));
 		
-		lblFoodPrice = new JLabel("Phí thức ăn");
-		txtFoodPrice= new JTextField(TG.getFoodPrice() !=null ? TG.getFoodPrice().toString() : "");
-
-		lblTransportPrice = new JLabel("Phí phương tiện");
-		txtTransportPrice= new JTextField( TG.getTransportPrice() != null ? TG.getTransportPrice().toString() : "");
-
-		lblHotelPrice = new JLabel("Phí khách sạn");
-		txtHotelPrice= new JTextField(TG.getHotelPrice() != null ? TG.getHotelPrice().toString() :"");
-
-		lblOtherPrice = new JLabel("Phí khác");
-		txtOtherPrice= new JTextField(TG.getOtherPrice() != null ? TG.getOtherPrice().toString() : "");
-
 		lblStatus = new JLabel("Trạng thái");
 		cbxStatus = new JComboBox<String>(Resources.TOURIST_GROUP_STATUSES);
 
@@ -243,24 +231,11 @@ public class TouristGroupBasicModifyPanel extends JPanel {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		TG.setFoodPrice(Double.valueOf(txtFoodPrice.getText()));
-		TG.setTransportPrice(Double.valueOf(txtTransportPrice.getText()));
-		TG.setHotelPrice(Double.valueOf(txtHotelPrice.getText()));
-		TG.setOtherPrice(Double.valueOf(txtOtherPrice.getText()));
 		TG.setStatus(cbxStatus.getSelectedItem().toString());
 		String tourName = cbxTourName.getSelectedItem().toString();
 		TG.setTourId(Long.valueOf(tourName.substring(0, tourName.lastIndexOf("."))));
 		return true;
 	}
-	
-	public static void updateHotelPriceTextField() {
-		Double price = Double.valueOf(0);
-		for(Hotel hotel : TouristGroupMainPanel.selectedTouristGroup.getHotels()) {
-			price += hotel.getPrice();
-		}
-		TouristGroupMainPanel.selectedTouristGroup.setHotelPrice(price);
-		txtHotelPrice.setText(price.toString());
-	}	
 	
 	public static void main(String[] args) {
 		new TestFrame(new TouristGroupModify());

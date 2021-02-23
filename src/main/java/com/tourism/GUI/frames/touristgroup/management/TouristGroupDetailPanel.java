@@ -228,10 +228,6 @@ public class TouristGroupDetailPanel extends JPanel {
 		detailPanel.txtId.setText(TG.getId().toString());
 		detailPanel.txtDepatureDate.setText(Resources.simpleDateFormat.format(TG.getDepatureDate()));
 		detailPanel.txtEndDate.setText(Resources.simpleDateFormat.format(TG.getEndDate()));
-		detailPanel.txtFoodPrice.setText(TG.getFoodPrice().toString());
-		detailPanel.txtTransportPrice.setText(TG.getTransportPrice().toString());
-		detailPanel.txtHotelPrice.setText(TG.getHotelPrice().toString());
-		detailPanel.txtOtherPrice.setText(TG.getOtherPrice().toString());
 		detailPanel.txtTour.setText(TG.getTour().getName());
 		detailPanel.txtStatus.setText(TG.getStatus());
 		detailPanel.txtCustomerCount.setText(TG.getCustomers().size()+"");

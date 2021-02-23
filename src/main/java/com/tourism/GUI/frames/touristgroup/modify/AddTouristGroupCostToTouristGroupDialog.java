@@ -12,13 +12,13 @@ import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 
-import com.tourism.BUS.HotelController;
+import com.tourism.BUS.TouristGroupCostController;
 import com.tourism.BUS.TouristGroupController;
-import com.tourism.DTO.Hotel;
+import com.tourism.DTO.TouristGroupCost;
 import com.tourism.DTO.TouristGroup;
 import com.tourism.GUI.CustomTable;
 
-public class AddHotelToTouristGroupDialog {
+public class AddTouristGroupCostToTouristGroupDialog {
 	JDialog dialog;
 	JPanel pnl;
 	GroupLayout layout;
@@ -30,12 +30,12 @@ public class AddHotelToTouristGroupDialog {
 	JButton btnAdd;
 	JButton btnCancel;
 	
-	HotelController hotelController;
+	TouristGroupCostController touristGroupCostController;
 	TouristGroupController touristGroupController;
 	TouristGroup TG;
-	Hotel selectedHotel;
+	TouristGroupCost selectedHotel;
 	
-	public AddHotelToTouristGroupDialog(TouristGroup TG) {
+	public AddTouristGroupCostToTouristGroupDialog(TouristGroup TG) {
 		this.TG = TG;
 		initData();
 		initComp();
@@ -53,15 +53,12 @@ public class AddHotelToTouristGroupDialog {
 		btnAdd = new JButton("Thêm");
 		btnCancel = new JButton("Hủy");
 		
-		hotelController = new HotelController();
+		touristGroupCostController = new TouristGroupCostController();
 		touristGroupController = new TouristGroupController();
 		
-		hotelController.getAll().forEach(hotel -> {
+		touristGroupCostController.getAll().forEach(hotel -> {
 			model.addRow(new Object[] {
-					hotel.getId(),
-					hotel.getName(),
-					hotel.getPrice(),
-					hotel.getStreet() + hotel.getAddress3() + hotel.getAddress2() + hotel.getAddress1()
+
 			});
 		});
 	}
@@ -70,7 +67,7 @@ public class AddHotelToTouristGroupDialog {
 		btnAdd.addMouseListener(new MouseAdapter() {
 			public void mousePressed(MouseEvent evt) {
 				Long hotelId = Long.valueOf(tbl.getValueAt(tbl.getSelectedRow(), 0).toString());
-				selectedHotel = hotelController.getById(hotelId);
+				selectedHotel = touristGroupCostController.getById(hotelId);
 				dialog.dispose();
 			}
 		});
@@ -103,7 +100,7 @@ public class AddHotelToTouristGroupDialog {
 		dialog.setVisible(true);
 	}
 	
-	public Optional<Hotel> addHotelToTouristGroup(){
+	public Optional<TouristGroupCost> addHotelToTouristGroup(){
 		return selectedHotel!=null ? Optional.of(selectedHotel) : Optional.empty();
 	}
 }

@@ -11,11 +11,11 @@ encoding//src/main/java/com/tourism/GUI/frames/touristgroup/management/TouristGr
 encoding//src/main/java/com/tourism/GUI/frames/touristgroup/management/TouristGroupTablePanel.java=UTF-8
 encoding//src/main/java/com/tourism/GUI/frames/touristgroup/modify/AddCustomerToTouristGroupDialog.java=UTF-8
 encoding//src/main/java/com/tourism/GUI/frames/touristgroup/modify/AddEmployeeToTouristGroupDialog.java=UTF-8
-encoding//src/main/java/com/tourism/GUI/frames/touristgroup/modify/AddHotelToTouristGroupDialog.java=UTF-8
+encoding//src/main/java/com/tourism/GUI/frames/touristgroup/modify/AddTouristGroupCostToTouristGroupDialog.java=UTF-8
 encoding//src/main/java/com/tourism/GUI/frames/touristgroup/modify/TouristGroupBasicModifyPanel.java=UTF-8
+encoding//src/main/java/com/tourism/GUI/frames/touristgroup/modify/TouristGroupCostTable.java=UTF-8
 encoding//src/main/java/com/tourism/GUI/frames/touristgroup/modify/TouristGroupCustomerTable.java=UTF-8
 encoding//src/main/java/com/tourism/GUI/frames/touristgroup/modify/TouristGroupEmployeeTable.java=UTF-8
-encoding//src/main/java/com/tourism/GUI/frames/touristgroup/modify/TouristGroupHotelTable.java=UTF-8
 encoding//src/main/java/com/tourism/GUI/frames/touristgroup/modify/TouristGroupModifyBottomBar.java=UTF-8
 encoding//src/main/java/com/tourism/GUI/util/IconUtil.java=UTF-8
 encoding//src/main/java/com/tourism/service/JsonAddress.java=UTF-8

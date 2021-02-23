@@ -13,7 +13,7 @@ import com.tourism.BUS.TouristGroupController;
 import com.tourism.DAL.TourPositionRepository;
 import com.tourism.DAL.TouristGroupRepository;
 import com.tourism.DTO.Customer;
-import com.tourism.DTO.Hotel;
+import com.tourism.DTO.TouristGroupCost;
 import com.tourism.DTO.TourPosition;
 import com.tourism.DTO.TouristGroup;
 import com.tourism.GUI.MainFrame;
@@ -59,7 +59,7 @@ public class TouristGroupMainPanel extends JPanel {
 		touristGroups = touristGroupController.getAllNotDeleted();
 		selectedTouristGroup = new TouristGroup();
 		selectedTouristGroup.setCustomers(new ArrayList<Customer>());
-		selectedTouristGroup.setHotels(new ArrayList<Hotel>());
+		selectedTouristGroup.setTouristGroupCosts(new ArrayList<TouristGroupCost>());
 		selectedTouristGroup.setTourPositions(new ArrayList<TourPosition>());
 		mainContent.removeAll();
 		mainContent.add(new TouristGroupModify());

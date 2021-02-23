@@ -18,20 +18,14 @@ import lombok.ToString;
 @AllArgsConstructor
 @NoArgsConstructor
 @ToString
-@RequiredArgsConstructor
 public class Tour {
-
 	protected Long id;
 	protected Long typeId;
-	@NonNull
 	protected String name;
-	@NonNull
 	protected String description;
-	@NonNull
-	protected Double price;
-	@NonNull
 	protected String status;
 	protected Type type ;
 	List<TouristGroup> touristGroups ;
 	List<Location> locations;
+	List<TourCost> tourCosts;
 }

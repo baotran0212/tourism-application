@@ -14,7 +14,7 @@ import javax.swing.JPanel;
 
 import com.tourism.BUS.TouristGroupController;
 import com.tourism.DTO.Customer;
-import com.tourism.DTO.Hotel;
+import com.tourism.DTO.TouristGroupCost;
 import com.tourism.DTO.Tour;
 import com.tourism.DTO.TourPosition;
 import com.tourism.DTO.TouristGroup;
@@ -28,7 +28,7 @@ public class TouristGroupModify extends JPanel {
 	TouristGroupBasicModifyPanel basicPanel;
 	TouristGroupCustomerTable customerPanel;
 	TouristGroupEmployeeTable employeePanel;
-	TouristGroupHotelTable hotelPanel;
+	TouristGroupCostTable hotelPanel;
 	TouristGroupModifyBottomBar bottomBar;
 	GroupLayout layout;
 	public static TouristGroup TG;
@@ -48,7 +48,7 @@ public class TouristGroupModify extends JPanel {
 		basicPanel = new TouristGroupBasicModifyPanel();
 		customerPanel = new TouristGroupCustomerTable();
 		employeePanel = new TouristGroupEmployeeTable();
-		hotelPanel = new TouristGroupHotelTable();
+		hotelPanel = new TouristGroupCostTable();
 		bottomBar = new TouristGroupModifyBottomBar();
 		layout = new GroupLayout(this);
 	}
@@ -84,7 +84,7 @@ public class TouristGroupModify extends JPanel {
 		TouristGroupMainPanel.selectedTouristGroup = new TouristGroup();
 		TouristGroup TG = TouristGroupMainPanel.selectedTouristGroup;
 		TG.setCustomers(new ArrayList<Customer>());
-		TG.setHotels(new ArrayList<Hotel>());
+		TG.setTouristGroupCosts(new ArrayList<TouristGroupCost>());
 		TG.setTourPositions(new ArrayList<TourPosition>());
 		TG.setTour(new Tour());
 		new TestFrame(new TouristGroupModify());
