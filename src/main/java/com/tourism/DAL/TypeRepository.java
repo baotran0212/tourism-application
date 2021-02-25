@@ -156,4 +156,10 @@ public class TypeRepository implements Repositories<Type, Long> {
 		// TODO Auto-generated method stub
 		
 	}
+
+	@Override
+	public boolean testPrimaryKey(String id) {
+		// TODO Auto-generated method stub
+		return false;
+	}
 }

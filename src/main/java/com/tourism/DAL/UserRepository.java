@@ -103,4 +103,10 @@ public Optional<User> findByPhone(String phoneNumber){
 		}
 		return users;
 	}
+
+	@Override
+	public boolean testPrimaryKey(String id) {
+		// TODO Auto-generated method stub
+		return false;
+	}
 }

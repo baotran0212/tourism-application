@@ -146,4 +146,9 @@ public class TouristGroupCostRepository implements Repositories<TouristGroupCost
 		}
 		return touristGroupCost;
 	}
+	@Override
+	public boolean testPrimaryKey(String id) {
+		// TODO Auto-generated method stub
+		return false;
+	}
 }

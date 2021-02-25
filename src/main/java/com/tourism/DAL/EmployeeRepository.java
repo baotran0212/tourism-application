@@ -170,4 +170,10 @@ public class EmployeeRepository implements Repositories<Employee, Long> {
 		}
 		return employees;
 	}
+
+	@Override
+	public boolean testPrimaryKey(String id) {
+		// TODO Auto-generated method stub
+		return false;
+	}
 }

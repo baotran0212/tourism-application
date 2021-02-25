@@ -189,4 +189,10 @@ public class TourRepository implements Repositories<Tour, Long> {
 		}
 		return tours;
 	}
+
+	@Override
+	public boolean testPrimaryKey(String id) {
+		
+		return false;
+	}
 }

@@ -19,6 +19,7 @@ import lombok.ToString;
 @NoArgsConstructor
 @ToString
 public class Tour {
+
 	Long id;
 	Long typeId;
 	String name;
@@ -26,6 +27,7 @@ public class Tour {
 	String status;
 	String image;
 	Type type ;
+
 	List<TouristGroup> touristGroups ;
 	List<Location> locations;
 	List<TourCost> tourCosts;

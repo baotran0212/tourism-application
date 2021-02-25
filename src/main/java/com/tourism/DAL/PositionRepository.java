@@ -108,4 +108,10 @@ public class PositionRepository implements Repositories<Position, Long> {
 		}
 		return positions;
 	}
+
+	@Override
+	public boolean testPrimaryKey(String id) {
+		// TODO Auto-generated method stub
+		return false;
+	}
 }

@@ -91,4 +91,9 @@ public class CostTypeRepository implements Repositories<CostType, Long> {
 		}
 		return costTypes;
 	}
+	@Override
+	public boolean testPrimaryKey(String id) {
+		// TODO Auto-generated method stub
+		return false;
+	}
 }
