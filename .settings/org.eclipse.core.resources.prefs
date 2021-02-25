@@ -5,6 +5,7 @@ encoding//src/main/java/com/tourism/GUI/MainFrame.java=UTF-8
 encoding//src/main/java/com/tourism/GUI/Resources.java=UTF-8
 encoding//src/main/java/com/tourism/GUI/frames/analysis/AnalysisEmployeeActivity.java=UTF-8
 encoding//src/main/java/com/tourism/GUI/frames/analysis/AnalysisMainPanel.java=UTF-8
+encoding//src/main/java/com/tourism/GUI/frames/employee/EmployeeMainPanel.java=UTF-8
 encoding//src/main/java/com/tourism/GUI/frames/touristgroup/TouristGroupMainPanel.java=UTF-8
 encoding//src/main/java/com/tourism/GUI/frames/touristgroup/management/TouristGroupDetailPanel.java=UTF-8
 encoding//src/main/java/com/tourism/GUI/frames/touristgroup/management/TouristGroupSearchPanel.java=UTF-8

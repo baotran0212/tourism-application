@@ -17,27 +17,17 @@ import lombok.ToString;
 @AllArgsConstructor
 @NoArgsConstructor
 @ToString
-@RequiredArgsConstructor
 public class Employee {
 
 	protected Long id;
-	@NonNull
 	protected String name;
-	@NonNull
 	protected String identityCard;
-	@NonNull
 	protected String address1;
-	@NonNull
 	protected String address2;
-	@NonNull
 	protected String address3;
-	@NonNull
 	protected String street;
-	@NonNull
 	protected String gender;
-	@NonNull
 	protected String phoneNumber;
-	@NonNull
 	protected String status;
 	protected List<TourPosition> tourPositions;
 	protected List<TouristGroup> touristGroups;

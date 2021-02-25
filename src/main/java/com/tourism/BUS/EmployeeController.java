@@ -15,4 +15,21 @@ public class EmployeeController {
 	public List<Employee> getAll(){
 		return employeeRepository.findAll();
 	}
+	
+	public Employee getById(Long id) {
+		return employeeRepository.findById(id).get();
+	}
+	
+	public void createEmployee(Employee employee) {
+		employee.setId(null);
+		employeeRepository.save(employee);
+	}
+
+	public void modifyEmployee(Employee employee) {
+		employeeRepository.save(employee);
+	}
+	public void deleteEmployee(Long id) {
+		employeeRepository.deleteById(id);
+	}
+	
 }

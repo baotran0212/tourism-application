@@ -53,14 +53,14 @@ public class TouristGroupCostTable extends JPanel{
 	public void initData() {
 		touristGroupController = new TouristGroupController();
 		layout = new GroupLayout(this);
-		model = new DefaultTableModel(new Object[] {"Mã", "Tên", "Giá", "Địa chỉ"} , 0);
+		model = new DefaultTableModel(new Object[] {"Mã", "Tổng", "Chi tiết"} , 0);
 		
-		lblHotelList = new JLabel("Danh sách khách sạn");
+		lblHotelList = new JLabel("Danh sách chi phí");
 		
 		btnAdd = new JButton(Resources.ADD_ICON);
 		
 		pnlSelectedHotel = new JPanel();
-		lblSeletecHotel = new JLabel("Khách sạn:");
+		lblSeletecHotel = new JLabel("Chi phí:");
 		lblSelectedHotelId = new JLabel();
 		
 		btnRemove = new JButton("Xóa");
@@ -87,7 +87,7 @@ public class TouristGroupCostTable extends JPanel{
 		btnRemove.setBackground(Resources.PRIMARY_DARK);
 		btnRemove.addMouseListener(new MouseAdapter() {
 			public void mousePressed(MouseEvent evt) {
-				if(new ConfirmDialog("Xóa khách sạn khỏi danh sách?").confirm()) {
+				if(new ConfirmDialog("Xóa khỏi danh sách?").confirm()) {
 					Long hotelId = Long.valueOf(lblSelectedHotelId.getText());
 					TouristGroupMainPanel.selectedTouristGroup.getTouristGroupCosts().removeIf(
 							hotel->(hotel.getId() == hotelId ));
@@ -133,6 +133,7 @@ public class TouristGroupCostTable extends JPanel{
 		if(TouristGroupMainPanel.selectedTouristGroup.getTouristGroupCosts() != null )
 			TouristGroupMainPanel.selectedTouristGroup.getTouristGroupCosts().forEach(hotel ->{
 				model.addRow(new Object[] {
+						hotel.getId(), hotel.getTotalPrice(), hotel.getDescription()
 				});
 			});;
 	}

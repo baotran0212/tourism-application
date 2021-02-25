@@ -29,11 +29,15 @@ public class TouristGroupBasicModifyPanel extends JPanel {
 	Logger logger = Logger.getLogger(getClass().getName());
 	SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 	GroupLayout layout;
+	
 	JLabel lblId;
 	JTextField txtId;
 	
 	JLabel lblName;
 	static JTextField txtName;
+	
+	static JLabel lblTourName;
+	static JComboBox<String> cbxTourName;
 	
 	JLabel lblDepatureDate;
 	static JTextField txtDepatureDate;
@@ -45,23 +49,8 @@ public class TouristGroupBasicModifyPanel extends JPanel {
 	JButton btnEndDate;
 	JPanel pnlEndDate;
 	
-	JLabel lblFoodPrice;
-	static JTextField txtFoodPrice;
-	
-	JLabel lblTransportPrice;
-	static JTextField txtTransportPrice;
-	
-	JLabel lblHotelPrice;
-	static JTextField txtHotelPrice;
-	
-	JLabel lblOtherPrice;
-	static JTextField txtOtherPrice;
-	
 	JLabel lblStatus;
 	static JComboBox<String> cbxStatus;
-	
-	static JLabel lblTourName;
-	static JComboBox<String> cbxTourName;
 	
 	TouristGroup TG;
 	TourController tourController;
@@ -103,15 +92,13 @@ public class TouristGroupBasicModifyPanel extends JPanel {
 			if(tour.getId() == TG.getTourId())
 				cbxTourName.setSelectedItem( tour.getId() + ". "  + tour.getName() );
 		});
-		
-		pnlHotelTable = new JPanel();
 	}
 	
 	public void initComp() {
 		txtId.setEditable(false);
 		txtId.setBackground(Resources.PRIMARY);
-		txtHotelPrice.setEditable(false);
-		txtHotelPrice.setBackground(Resources.PRIMARY);
+				
+		cbxStatus.setSelectedItem(TG.getStatus());
 		
 		txtDepatureDate.setPreferredSize(Resources.INPUT_TYPE_DATE);
 		btnDepatureDate.setPreferredSize(Resources.SQUARE_XXS);
@@ -137,64 +124,44 @@ public class TouristGroupBasicModifyPanel extends JPanel {
 		pnlEndDate.setBackground(Resources.PRIMARY);
 		pnlEndDate.add(txtEndDate);
 		pnlEndDate.add(btnEndDate);
-		
-		cbxStatus.setSelectedItem(TG.getStatus());
+
 		layout.setAutoCreateContainerGaps(true);
 		layout.setAutoCreateGaps(true);
-		
 		layout.setHorizontalGroup(layout.createSequentialGroup()
 				.addGroup(layout.createParallelGroup()
 						.addComponent(lblId)
+						.addComponent(lblTourName)
 						.addComponent(lblName)
 						.addComponent(lblDepatureDate)
-						.addComponent(lblEnDate))
+						.addComponent(lblEnDate)
+						.addComponent(lblStatus))
 				.addGroup(layout.createParallelGroup()
 						.addComponent(txtId, 100, Resources.INPUT_WIDTH_M, Resources.INPUT_WIDTH_L)
+						.addComponent(cbxTourName, 100, Resources.INPUT_WIDTH_M, Resources.INPUT_WIDTH_L)
 						.addComponent(txtName, 100, Resources.INPUT_WIDTH_M, Resources.INPUT_WIDTH_L)
 						.addComponent(pnlDepatureDate)
-						.addComponent(pnlEndDate))
-				.addGroup(layout.createParallelGroup()
-						.addComponent(lblFoodPrice)
-						.addComponent(lblTransportPrice)
-						.addComponent(lblHotelPrice)
-						.addComponent(lblOtherPrice))
-				.addGroup(layout.createParallelGroup()
-						.addComponent(txtFoodPrice, 100, Resources.INPUT_WIDTH_M, Resources.INPUT_WIDTH_L)
-						.addComponent(txtTransportPrice, 100, Resources.INPUT_WIDTH_M, Resources.INPUT_WIDTH_L)
-						.addComponent(txtHotelPrice, 100, Resources.INPUT_WIDTH_M, Resources.INPUT_WIDTH_L)
-						.addComponent(txtOtherPrice, 100, Resources.INPUT_WIDTH_M, Resources.INPUT_WIDTH_L))
-				.addGroup(layout.createParallelGroup()
-						.addComponent(lblStatus)
-						.addComponent(lblTourName))
-				.addGroup(layout.createParallelGroup()
-						.addComponent(cbxStatus)
-						.addComponent(cbxTourName))
+						.addComponent(pnlEndDate)
+						.addComponent(cbxStatus, 100, Resources.INPUT_WIDTH_M, Resources.INPUT_WIDTH_L))
 				);
 		layout.setVerticalGroup(layout.createSequentialGroup()
 				.addGroup(layout.createParallelGroup(Alignment.CENTER)
 						.addComponent(lblId)
-						.addComponent(txtId)
-						.addComponent(lblFoodPrice)
-						.addComponent(txtFoodPrice)
-						.addComponent(lblStatus)
-						.addComponent(cbxStatus))
-				.addGroup(layout.createParallelGroup(Alignment.CENTER)
-						.addComponent(lblName)
-						.addComponent(txtName)
-						.addComponent(lblTransportPrice)
-						.addComponent(txtTransportPrice)
+						.addComponent(txtId))
+				.addGroup(layout.createParallelGroup()
 						.addComponent(lblTourName)
 						.addComponent(cbxTourName))
 				.addGroup(layout.createParallelGroup(Alignment.CENTER)
+						.addComponent(lblName)
+						.addComponent(txtName))
+				.addGroup(layout.createParallelGroup(Alignment.CENTER)
 						.addComponent(lblDepatureDate)
-						.addComponent(pnlDepatureDate)
-						.addComponent(lblHotelPrice)
-						.addComponent(txtHotelPrice, 10, Resources.INPUT_HEIGHT_M, Resources.INPUT_HEIGHT_M))
+						.addComponent(pnlDepatureDate))
 				.addGroup(layout.createParallelGroup(Alignment.CENTER)
 						.addComponent(lblEnDate)
-						.addComponent(pnlEndDate)
-						.addComponent(lblOtherPrice)
-						.addComponent(txtOtherPrice, 10, Resources.INPUT_HEIGHT_M, Resources.INPUT_HEIGHT_M))
+						.addComponent(pnlEndDate))
+				.addGroup(layout.createParallelGroup()
+						.addComponent(lblStatus)
+						.addComponent(cbxStatus))
 				);
 		this.setLayout(layout);
 		this.setBackground(Resources.PRIMARY);
@@ -207,12 +174,6 @@ public class TouristGroupBasicModifyPanel extends JPanel {
 		if(!Validation.checkDate(txtDepatureDate.getText()))
 			return false;
 		if(!Validation.checkDate(txtEndDate.getText()))
-			return false;
-		if(Validation.checkDigit(txtFoodPrice.getText()))
-			return false;
-		if(Validation.checkDigit(txtFoodPrice.getText()))
-			return false;
-		if(Validation.checkDigit(txtOtherPrice.getText()))
 			return false;
 		try {
 			if( Resources.simpleDateFormat.parse(txtDepatureDate.getText())

@@ -15,6 +15,7 @@ import javax.swing.JTextField;
 
 import com.tourism.BUS.TouristGroupController;
 import com.tourism.DTO.TouristGroup;
+import com.tourism.DTO.TouristGroupCost;
 import com.tourism.GUI.Resources;
 import com.tourism.GUI.frames.touristgroup.TouristGroupMainPanel;
 import com.tourism.GUI.util.ConfirmDialog;
@@ -26,7 +27,10 @@ public class TouristGroupDetailPanel extends JPanel {
 	
 	JLabel lblId;
 	JTextField txtId;
-
+	
+	JLabel lblTour;
+	JTextField txtTour;
+	
 	JLabel lblName;
 	JTextField txtName;
 
@@ -36,23 +40,13 @@ public class TouristGroupDetailPanel extends JPanel {
 	JLabel lblEndDate;
 	JTextField txtEndDate;
 
-	JLabel lblFoodPrice;
-	JTextField txtFoodPrice;
 
-	JLabel lblTransportPrice;
-	JTextField txtTransportPrice;
-
-	JLabel lblHotelPrice;
-	JTextField txtHotelPrice;
-	
-	JLabel lblOtherPrice;
-	JTextField txtOtherPrice;
-	
-	JLabel lblTour;
-	JTextField txtTour;
 	
 	JLabel lblStatus;
 	JTextField txtStatus;
+	
+		JLabel lblTotalCost;
+	JTextField txtTotalCost;
 	
 	JLabel lblCustomerCount;
 	JTextField txtCustomerCount;
@@ -75,6 +69,9 @@ public class TouristGroupDetailPanel extends JPanel {
 		lblId = new JLabel("Mã đoàn");
 		txtId = new JTextField();
 		
+		lblTour = new JLabel("Tour");
+		txtTour = new JTextField();
+		
 		lblName = new JLabel("Tên đoàn");
 		txtName = new JTextField();
 
@@ -84,23 +81,11 @@ public class TouristGroupDetailPanel extends JPanel {
 		lblEndDate = new JLabel("Ngày kết thúc");
 		txtEndDate = new JTextField();
 
-		lblFoodPrice = new JLabel("Phí ăn uống");
-		txtFoodPrice = new JTextField();
-
-		lblTransportPrice = new JLabel("Phí phương tiện");
-		txtTransportPrice = new JTextField();
-
-		lblHotelPrice = new JLabel("Phí khách sạn");
-		txtHotelPrice = new JTextField();
-
-		lblOtherPrice = new JLabel("Chi phí khác");
-		txtOtherPrice = new JTextField();
-
-		lblTour = new JLabel("Tour");
-		txtTour = new JTextField();
-
 		lblStatus= new JLabel("Trạng thái");
 		txtStatus = new JTextField();
+		
+		lblTotalCost= new JLabel("Tổng chi phí");
+		txtTotalCost = new JTextField();
 
 		lblCustomerCount= new JLabel("Số khách");
 		txtCustomerCount = new JTextField();
@@ -113,7 +98,7 @@ public class TouristGroupDetailPanel extends JPanel {
 	}
 	
 	public void initComp() {
-		JTextField[] txtField = new JTextField[] {txtId, txtName, txtDepatureDate, txtEndDate, txtFoodPrice, txtTransportPrice, txtHotelPrice, txtOtherPrice, txtTour, txtStatus, txtCustomerCount, txtEmployeeCount};
+		JTextField[] txtField = new JTextField[] {txtId, txtName, txtDepatureDate, txtEndDate, txtTotalCost, txtTour, txtStatus, txtCustomerCount, txtEmployeeCount};
 		for(JTextField txt: txtField) {
 			txt.setEditable(false);
 			txt.setBackground(Resources.PRIMARY);
@@ -146,33 +131,27 @@ public class TouristGroupDetailPanel extends JPanel {
 		layout.setHorizontalGroup(layout.createSequentialGroup()
 				.addGroup(layout.createParallelGroup()
 						.addComponent(lblId)
-						.addComponent(lblName)
-						.addComponent(lblDepatureDate)
-						.addComponent(lblEndDate))
+						.addComponent(lblTour)
+						.addComponent(lblName))
 				.addGroup(layout.createParallelGroup()
 						.addComponent(txtId)
-						.addComponent(txtName)
+						.addComponent(txtTour)
+						.addComponent(txtName))
+				.addGroup(layout.createParallelGroup()
+						.addComponent(lblDepatureDate)
+						.addComponent(lblEndDate)
+						.addComponent(lblStatus))
+				.addGroup(layout.createParallelGroup()
 						.addComponent(txtDepatureDate)
-						.addComponent(txtEndDate))
+						.addComponent(txtEndDate)
+						.addComponent(txtStatus))
 				.addGroup(layout.createParallelGroup()
-						.addComponent(lblFoodPrice)
-						.addComponent(lblTransportPrice)
-						.addComponent(lblHotelPrice)
-						.addComponent(lblOtherPrice))
-				.addGroup(layout.createParallelGroup()
-						.addComponent(txtFoodPrice)
-						.addComponent(txtTransportPrice)
-						.addComponent(txtHotelPrice)
-						.addComponent(txtOtherPrice))
-				.addGroup(layout.createParallelGroup()
-						.addComponent(lblTour)
-						.addComponent(lblStatus)
+						.addComponent(lblTotalCost)
 						.addComponent(lblCustomerCount)
 						.addComponent(lblEmployeeCount)
 						)
 				.addGroup(layout.createParallelGroup()
-						.addComponent(txtTour)
-						.addComponent(txtStatus)
+						.addComponent(txtTotalCost)
 						.addComponent(txtCustomerCount)
 						.addComponent(txtEmployeeCount)
 						)
@@ -187,30 +166,23 @@ public class TouristGroupDetailPanel extends JPanel {
 						.addGroup(layout.createParallelGroup(Alignment.CENTER)
 								.addComponent(lblId)
 								.addComponent(txtId)
-								.addComponent(lblFoodPrice)
-								.addComponent(txtFoodPrice)
-								.addComponent(lblTour)
-								.addComponent(txtTour)
-								)
-						.addGroup(layout.createParallelGroup(Alignment.CENTER)
-								.addComponent(lblName)
-								.addComponent(txtName)
-								.addComponent(lblTransportPrice)
-								.addComponent(txtTransportPrice)
-								.addComponent(lblStatus)
-								.addComponent(txtStatus))
-						.addGroup(layout.createParallelGroup(Alignment.CENTER)
 								.addComponent(lblDepatureDate)
 								.addComponent(txtDepatureDate)
-								.addComponent(lblHotelPrice)
-								.addComponent(txtHotelPrice)
+								.addComponent(lblTotalCost)
+								.addComponent(txtTotalCost)
+								)
+						.addGroup(layout.createParallelGroup(Alignment.CENTER)
+								.addComponent(lblTour)
+								.addComponent(txtTour)
+								.addComponent(lblEndDate)
+								.addComponent(txtEndDate)
 								.addComponent(lblCustomerCount)
 								.addComponent(txtCustomerCount))
 						.addGroup(layout.createParallelGroup(Alignment.CENTER)
-								.addComponent(lblEndDate)
-								.addComponent(txtEndDate)
-								.addComponent(lblOtherPrice)
-								.addComponent(txtOtherPrice)
+								.addComponent(lblName)
+								.addComponent(txtName)
+								.addComponent(lblStatus)
+								.addComponent(txtStatus)
 								.addComponent(lblEmployeeCount)
 								.addComponent(txtEmployeeCount))
 						)
@@ -224,12 +196,18 @@ public class TouristGroupDetailPanel extends JPanel {
 	static public void reload() {
 		TouristGroup TG = TouristGroupMainPanel.selectedTouristGroup;
 		TouristGroupDetailPanel detailPanel = TouristGroupManager.detailPanel; 
-		detailPanel.txtName.setText(TG.getName());
 		detailPanel.txtId.setText(TG.getId().toString());
+		detailPanel.txtTour.setText(TG.getTour().getName());
+		detailPanel.txtName.setText(TG.getName());
 		detailPanel.txtDepatureDate.setText(Resources.simpleDateFormat.format(TG.getDepatureDate()));
 		detailPanel.txtEndDate.setText(Resources.simpleDateFormat.format(TG.getEndDate()));
-		detailPanel.txtTour.setText(TG.getTour().getName());
 		detailPanel.txtStatus.setText(TG.getStatus());
+		Double totalCost = Double.valueOf(0);
+		if(!TG.getTouristGroupCosts().isEmpty())
+			for(TouristGroupCost TGCost: TG.getTouristGroupCosts()) {
+				totalCost += TGCost.getTotalPrice();
+			}
+		detailPanel.txtTotalCost.setText(totalCost.toString());
 		detailPanel.txtCustomerCount.setText(TG.getCustomers().size()+"");
 		detailPanel.txtEmployeeCount.setText(TG.getTourPositions().size()+"");
 	}

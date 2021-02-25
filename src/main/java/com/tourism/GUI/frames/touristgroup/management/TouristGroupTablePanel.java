@@ -11,6 +11,7 @@ import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 
 import com.tourism.DTO.TouristGroup;
+import com.tourism.DTO.TouristGroupCost;
 import com.tourism.GUI.CustomTable;
 import com.tourism.GUI.Resources;
 import com.tourism.GUI.frames.touristgroup.TouristGroupMainPanel;
@@ -31,12 +32,17 @@ public class TouristGroupTablePanel extends JPanel {
 	public void initData() {
 
 		model = new DefaultTableModel(new Object[] { "Mã", "Tên đoàn", "Ngày khởi hành",
-				"Ngày kết thúc", "Tổng thu", "Trạng thái"}, 0);
+				"Ngày kết thúc", "Trạng thái", "Tổng chi phí"}, 0);
 		tbl = new CustomTable(model);
 		scroller = new JScrollPane(tbl);
 		
 		TouristGroupMainPanel.touristGroups.forEach(TG -> {
-			model.addRow(new Object[] { TG.getId(), TG.getName(), TG.getDepatureDate(), TG.getEndDate(), TG.getStatus()});
+			Double totalCost = Double.valueOf(0);
+			if(!TG.getTouristGroupCosts().isEmpty())
+				for(TouristGroupCost TGCost: TG.getTouristGroupCosts()) {
+					totalCost+=TGCost.getTotalPrice();
+				}
+			model.addRow(new Object[] { TG.getId(), TG.getName(), TG.getDepatureDate(), TG.getEndDate(), TG.getStatus(), totalCost});
 		});
 	}
 

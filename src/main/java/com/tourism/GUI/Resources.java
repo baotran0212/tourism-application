@@ -18,6 +18,9 @@ public class Resources {
 	public static Color SECONDARY = new Color(63, 114, 175);
 	public static Color SECONDARY_DARK = new Color(17, 45, 78);
 	
+	public static int SEARCH_PANEL_WIDTH = 1000;
+	public static int SEARCH_PANEL_HEIGHT = 120;
+	
 	public static int MAIN_CONTENT_WIDTH = 1110;
 	public static int MAIN_CONTENT_HEIGHT = 700;
 	public static Dimension MAIN_CONTENT = new Dimension(MAIN_CONTENT_WIDTH, MAIN_CONTENT_HEIGHT);
@@ -27,6 +30,7 @@ public class Resources {
 	public static int SQUARE_EDGE_S = 46;
 	
 	public static Dimension SQUARE_XXS = new Dimension(SQUARE_EDGE_XXS, SQUARE_EDGE_XXS);
+	public static Dimension SQUARE_XXL= new Dimension(400, 400);
 	
 	public static Dimension RECTANGLE_XXS = new Dimension(100, SQUARE_EDGE_XXS);
 	
@@ -46,6 +50,7 @@ public class Resources {
 	public static ImageIcon TOURISM_LOGO = IconUtil.loadIcon("src/images/Tourism Logo.png", 200, 50);
 	public static ImageIcon CALENDAR_ICON = IconUtil.loadIcon("src/images/noun_Calendar.png", 28, 28);
 	public static ImageIcon ADD_ICON = IconUtil.loadIcon("src/images/add.png", 24, 24);
+	public static ImageIcon ADD_ICON_S = IconUtil.loadIcon("src/images/add.png", 18, 18);
 	public static ImageIcon DASHBOARD = IconUtil.loadIcon("src/images/dashboard.png", 28, 28);
 	public static ImageIcon TRAVEL = IconUtil.loadIcon("src/images/travel.png", 28, 28);
 	public static ImageIcon NETWORK = IconUtil.loadIcon("src/images/network.png", 28, 28);
@@ -55,9 +60,8 @@ public class Resources {
 	public static int DETAIL_WIDTH = 1000;
 	public static int DETAIL_HEIGHT = 200;
 	public static Dimension DETAIL_PANEL = new Dimension(DETAIL_WIDTH, DETAIL_HEIGHT);
+	public static Dimension DETAIL_PANEL_S = new Dimension(DETAIL_WIDTH, SEARCH_PANEL_HEIGHT);
 	
-	public static int SEARCH_PANEL_WIDTH = 1000;
-	public static int SEARCH_PANEL_HEIGHT = 120;
 	public static Dimension SEARCH_PANEL = new Dimension(SEARCH_PANEL_WIDTH, SEARCH_PANEL_HEIGHT);
 	public static Dimension INPUT_SEARCH_TEXTFIELD = new Dimension(100,22);
 	public static Dimension INPUT_SEARCH_PANEL = new Dimension(200,50);
