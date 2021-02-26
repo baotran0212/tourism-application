@@ -2,6 +2,7 @@ package com.tourism.GUI.frames.touristgroup.modify;
 
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.util.Iterator;
 import java.util.Optional;
 
 import javax.swing.GroupLayout;
@@ -13,6 +14,7 @@ import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 
 import com.tourism.BUS.TouristGroupController;
+import com.tourism.DAL.TouristGroupCostRepository;
 import com.tourism.DTO.TouristGroupCost;
 import com.tourism.DTO.TouristGroup;
 import com.tourism.GUI.CustomTable;
@@ -34,16 +36,18 @@ public class TouristGroupCostTable extends JPanel{
 	
 	JButton btnAdd;
 	
-	JPanel pnlSelectedHotel;
-	JLabel lblSelectedHotelId;
+	JPanel pnlSelectedCost;
+	JLabel lblSelectedCostId;
 	JLabel lblSeletecHotel;
 	
+	JButton btnModify;
 	JButton btnRemove;
 	
 	JScrollPane scroller;
 	JTable tbl;
 	DefaultTableModel model;
 	TouristGroupController touristGroupController;
+	TouristGroupCost selectedTouristGroupCost;
 	public TouristGroupCostTable() {
 		TG = TouristGroupMainPanel.selectedTouristGroup;
 		initData();
@@ -59,10 +63,11 @@ public class TouristGroupCostTable extends JPanel{
 		
 		btnAdd = new JButton(Resources.ADD_ICON);
 		
-		pnlSelectedHotel = new JPanel();
+		pnlSelectedCost = new JPanel();
 		lblSeletecHotel = new JLabel("Chi phí:");
-		lblSelectedHotelId = new JLabel();
+		lblSelectedCostId = new JLabel();
 		
+		btnModify = new JButton("Sửa");
 		btnRemove = new JButton("Xóa");
 		
 		tbl = new CustomTable(model);
@@ -73,24 +78,38 @@ public class TouristGroupCostTable extends JPanel{
 		btnAdd.setBackground(Resources.PRIMARY);
 		btnAdd.addMouseListener(new MouseAdapter() {
 			public void mousePressed(MouseEvent evt) {
-				Optional<TouristGroupCost> opt = new AddTouristGroupCostToTouristGroupDialog(TG).addHotelToTouristGroup();
-				opt.ifPresent(hotel -> {
-					TG.getTouristGroupCosts().add(hotel);
+				Optional<TouristGroupCost> opt = new AddTouristGroupCostToTouristGroupDialog().addCostToTouristGroup();
+				opt.ifPresent(cost-> {
+					TG.getTouristGroupCosts().add(cost);
 				});
 				loadTable();
 			}
 		});
 		
-		pnlSelectedHotel.add(lblSeletecHotel);
-		pnlSelectedHotel.add(lblSelectedHotelId);
+		pnlSelectedCost.add(lblSeletecHotel);
+		pnlSelectedCost.add(lblSelectedCostId);
+		pnlSelectedCost.setBackground(Resources.PRIMARY);
 		
+		btnModify.setBackground(Resources.PRIMARY_DARK);
+		btnModify.addMouseListener(new MouseAdapter() {
+			public void mousePressed(MouseEvent evt) {
+				selectedTouristGroupCost = new TouristGroupCostRepository().findById(Long.parseLong(lblSelectedCostId.getText())).get();
+				selectedTouristGroupCost = new AddTouristGroupCostToTouristGroupDialog(selectedTouristGroupCost).modifyCostTouristGroup();
+
+				TouristGroupMainPanel.selectedTouristGroup.getTouristGroupCosts().removeIf(
+						cost->(cost.getId()==selectedTouristGroupCost.getId()));
+				TouristGroupMainPanel.selectedTouristGroup.getTouristGroupCosts().add(selectedTouristGroupCost);
+				
+				loadTable();
+			}
+		});
 		btnRemove.setBackground(Resources.PRIMARY_DARK);
 		btnRemove.addMouseListener(new MouseAdapter() {
 			public void mousePressed(MouseEvent evt) {
 				if(new ConfirmDialog("Xóa khỏi danh sách?").confirm()) {
-					Long hotelId = Long.valueOf(lblSelectedHotelId.getText());
+					Long costId = Long.valueOf(lblSelectedCostId.getText());
 					TouristGroupMainPanel.selectedTouristGroup.getTouristGroupCosts().removeIf(
-							hotel->(hotel.getId() == hotelId ));
+							cost->(cost.getId() == costId ));
 					loadTable();
 				}
 			}
@@ -100,8 +119,8 @@ public class TouristGroupCostTable extends JPanel{
 		
 		tbl.addMouseListener(new MouseAdapter() {
 			public void mousePressed(MouseEvent evt) {
-				String hotelId = tbl.getValueAt(tbl.getSelectedRow(), 0).toString();
-				lblSelectedHotelId.setText(hotelId);
+				String costId = tbl.getValueAt(tbl.getSelectedRow(), 0).toString();
+				lblSelectedCostId.setText(costId);
 			}
 		});
 		tbl.setBackground(Resources.PRIMARY);
@@ -114,7 +133,8 @@ public class TouristGroupCostTable extends JPanel{
 				.addGroup(layout.createSequentialGroup()
 						.addComponent(btnAdd, Resources.SQUARE_EDGE_XXS ,Resources.SQUARE_EDGE_XXS, Resources.SQUARE_EDGE_XXS)
 						.addContainerGap()
-						.addComponent(pnlSelectedHotel)
+						.addComponent(pnlSelectedCost)
+						.addComponent(btnModify)
 						.addComponent(btnRemove))
 				.addComponent(scroller));
 		
@@ -122,18 +142,20 @@ public class TouristGroupCostTable extends JPanel{
 				.addComponent(lblHotelList)
 				.addGroup(layout.createParallelGroup()
 						.addComponent(btnAdd, Resources.SQUARE_EDGE_XXS, Resources.SQUARE_EDGE_XXS, Resources.SQUARE_EDGE_XXS)
-						.addComponent(pnlSelectedHotel)
+						.addComponent(pnlSelectedCost)
+						.addComponent(btnModify)
 						.addComponent(btnRemove))
 				.addComponent(scroller));
 		this.setLayout(layout);
+		this.setBackground(Resources.PRIMARY);
 	}
 	
 	public void loadTable() {
 		model.setRowCount(0);
 		if(TouristGroupMainPanel.selectedTouristGroup.getTouristGroupCosts() != null )
-			TouristGroupMainPanel.selectedTouristGroup.getTouristGroupCosts().forEach(hotel ->{
+			TouristGroupMainPanel.selectedTouristGroup.getTouristGroupCosts().forEach(cost ->{
 				model.addRow(new Object[] {
-						hotel.getId(), hotel.getTotalPrice(), hotel.getDescription()
+						cost.getId(), cost.getTotalPrice(), cost.getDescription()
 				});
 			});;
 	}

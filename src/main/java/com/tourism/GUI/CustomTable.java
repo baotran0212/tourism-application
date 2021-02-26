@@ -66,6 +66,7 @@ public class CustomTable extends JTable{
 	private void setColor() {
 		getTableHeader().setForeground(Resources.SECONDARY_DARK);
 		getTableHeader().setBackground(Resources.PRIMARY_DARK);
+		setBackground(Resources.PRIMARY);
 		setSelectionBackground(Resources.SECONDARY);
 		setSelectionForeground(Resources.PRIMARY);
 		setGridColor(Resources.SECONDARY_DARK);

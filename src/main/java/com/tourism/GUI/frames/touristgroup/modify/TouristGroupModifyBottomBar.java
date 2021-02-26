@@ -89,5 +89,6 @@ public class TouristGroupModifyBottomBar extends JPanel {
 						.addComponent(btnDelete, Resources.SQUARE_EDGE_XS, Resources.SQUARE_EDGE_XS, Resources.SQUARE_EDGE_XS)
 						));
 		this.setLayout(layout);
+		this.setBackground(Resources.PRIMARY);
 	}
 }

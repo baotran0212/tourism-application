@@ -26,4 +26,13 @@ public class TouristGroupCostController {
 		touristGroupCost = touristGroupCostRepository.findById(id).get();
 		return touristGroupCost;
 	}
+	
+	public TouristGroupCost create(TouristGroupCost cost) {
+		cost.setId(null);
+		return touristGroupCostRepository.save(cost);
+	}
+	
+	public TouristGroupCost modify(TouristGroupCost cost) {
+		return touristGroupCostRepository.save(cost);
+	}
 }

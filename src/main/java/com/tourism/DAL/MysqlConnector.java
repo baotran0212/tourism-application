@@ -16,14 +16,10 @@ public class MysqlConnector extends Connector {
 
   public MysqlConnector() {
 	super();
-    //this.host = ProjectProperties.getProperties("localhost");
-   // this.userName = ProjectProperties.getProperties("root");
-   // this.password = ProjectProperties.getProperties("");
-    //this.database = ProjectProperties.getProperties("tourism");
-    this.host = "localhost";
-    this.userName = "root";
-    this.password = "";
-    this.database = "tourism";
+    this.host = ProjectProperties.getProperties("mysql.host");
+    this.userName = ProjectProperties.getProperties("mysql.user");
+    this.password = ProjectProperties.getProperties("mysql.password");
+    this.database = ProjectProperties.getProperties("mysql.database");
   }
 
   public void getConnect() {

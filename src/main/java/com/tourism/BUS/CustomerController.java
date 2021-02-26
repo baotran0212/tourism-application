@@ -31,4 +31,17 @@ public class CustomerController {
 		customer.setTouristGroups(touristGroupRepository.findAllByCustomerId(customer.getId()));
 		return customer;
 	}
+	
+	public void createCustomer(Customer customer) {
+		customer.setId(null);
+		customerRepository.save(customer);
+	}
+	
+	public void modifyCustomer(Customer customer) {
+		customerRepository.save(customer);
+	}
+	
+	public void deleteCustomer(Long id) {
+		customerRepository.deleteById(id);
+	}
 }

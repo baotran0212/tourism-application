@@ -26,8 +26,10 @@ public class CostTypeRepository implements Repositories<CostType, Long> {
 
 	@Override
 	public Optional<CostType> findById(Long id) {
-		// TODO Auto-generated method stub
-		return null;
+		List<Long> ids = new ArrayList<Long>();
+		ids.add(id);
+		List<CostType> objs = findAllById(ids);
+		return objs.isEmpty() ? Optional.empty() : Optional.ofNullable(objs.get(0));
 	}
 
 	@Override
@@ -38,8 +40,11 @@ public class CostTypeRepository implements Repositories<CostType, Long> {
 
 	@Override
 	public List<CostType> findAllById(Iterable<Long> ids) {
-		// TODO Auto-generated method stub
-		return null;
+		StringBuilder query = new StringBuilder("SELECT * FROM cost_type WHERE ");
+		ids.forEach(id->{
+			query.append(" id = \"" + id +"\" ");
+		});
+		return extractResultSet(connector.executeQuery(query.toString()));
 	}
 
 	@Override

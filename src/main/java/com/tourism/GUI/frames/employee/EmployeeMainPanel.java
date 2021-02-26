@@ -1,5 +1,6 @@
 package com.tourism.GUI.frames.employee;
 
+import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.event.MouseAdapter;
@@ -8,6 +9,7 @@ import java.util.Iterator;
 
 import javax.swing.GroupLayout;
 import javax.swing.GroupLayout.Alignment;
+import javax.swing.border.EmptyBorder;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -19,6 +21,7 @@ import javax.swing.table.DefaultTableModel;
 
 import com.tourism.BUS.EmployeeController;
 import com.tourism.DTO.Employee;
+import com.tourism.GUI.CustomTable;
 import com.tourism.GUI.Resources;
 import com.tourism.GUI.frames.tour.TourFrame;
 import com.tourism.GUI.util.MessageDialog;
@@ -77,9 +80,9 @@ public class EmployeeMainPanel extends JPanel{
 	txtPhoneNumber = new JTextField();
 	
 	model = new DefaultTableModel(new Object[] {"Mã", "Tên", "CMND", "Địa chỉ", "Giới tính", "Số điện thoại"},0);
-	tbl = new JTable(model);
+	tbl = new CustomTable(model);
 	scroller = new JScrollPane(tbl);
-	pnlTable = new JPanel();
+	pnlTable = new JPanel(new BorderLayout());
 	
 	btnCreate = new JButton("Tạo mới");
 	btnSave = new JButton("Sửa");
@@ -166,11 +169,11 @@ public class EmployeeMainPanel extends JPanel{
 						.addComponent(txtGender)
 						.addComponent(txtPhoneNumber))
 				.addGroup(layout.createParallelGroup(Alignment.CENTER)
-						.addComponent(btnCreate)
-						.addComponent(btnDelete))
+						.addComponent(btnCreate, Resources.BUTTON_WIDTH, Resources.BUTTON_WIDTH, Resources.BUTTON_WIDTH)
+						.addComponent(btnDelete, Resources.BUTTON_WIDTH, Resources.BUTTON_WIDTH, Resources.BUTTON_WIDTH))
 				.addGroup(layout.createParallelGroup(Alignment.CENTER)
-						.addComponent(btnSave)
-						.addComponent(btnClear))
+						.addComponent(btnSave, Resources.BUTTON_WIDTH, Resources.BUTTON_WIDTH, Resources.BUTTON_WIDTH)
+						.addComponent(btnClear, Resources.BUTTON_WIDTH, Resources.BUTTON_WIDTH, Resources.BUTTON_WIDTH))
 				);
 		layout.setVerticalGroup(layout.createSequentialGroup()
 				.addGroup(layout.createParallelGroup(Alignment.CENTER)
@@ -212,13 +215,12 @@ public class EmployeeMainPanel extends JPanel{
 		pnlEmployee.setLayout(layout);
 		pnlEmployee.setPreferredSize(Resources.DETAIL_PANEL_S);
 	
-		tbl.setPreferredSize(Resources.MANAGER_TABLE);
-		scroller.setPreferredSize(Resources.MANAGER_TABLE_SCROLLER);
-		pnlTable.add(scroller);
+		pnlTable.setBorder(new EmptyBorder(10, 10, 10, 10));
+		pnlTable.add(scroller, BorderLayout.CENTER);
 		pnlTable.setPreferredSize(Resources.MANAGER_TABLE_PANEL);
 		pnlTable.setBackground(Resources.PRIMARY);
 		this.setBackground(Resources.PRIMARY_DARK);
-		this.setPreferredSize(new Dimension(1110,700));
+		this.setPreferredSize(Resources.MAIN_CONTENT);
 		this.add(pnlEmployee);
 		this.add(pnlTable);
 	}

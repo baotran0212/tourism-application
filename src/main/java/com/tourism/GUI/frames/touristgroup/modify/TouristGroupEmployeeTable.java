@@ -113,6 +113,7 @@ public class TouristGroupEmployeeTable extends JPanel{
 		pnlSelectedEmployee.add(lblSelectedPosition);
 		pnlSelectedEmployee.add(lblSelectedPositionId);
 		pnlSelectedEmployee.add(btnRemove);
+		pnlSelectedEmployee.setBackground(Resources.PRIMARY);
 		
 		btnRemove.setBackground(Resources.PRIMARY_DARK);
 		btnRemove.addMouseListener(new MouseAdapter() {
@@ -161,6 +162,7 @@ public class TouristGroupEmployeeTable extends JPanel{
 						.addComponent(pnlSelectedEmployee))
 				.addComponent(scroller));
 		this.setLayout(layout);
+		this.setBackground(Resources.PRIMARY);
 	}
 	
 	private void loadTable() {

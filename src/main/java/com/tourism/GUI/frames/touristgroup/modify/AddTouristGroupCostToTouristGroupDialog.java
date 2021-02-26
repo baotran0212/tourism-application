@@ -26,7 +26,9 @@ import com.tourism.DTO.TouristGroupCost;
 import com.tourism.DTO.CostType;
 import com.tourism.DTO.TouristGroup;
 import com.tourism.GUI.CustomTable;
+import com.tourism.GUI.MainFrame;
 import com.tourism.GUI.Resources;
+import com.tourism.GUI.frames.touristgroup.TouristGroupMainPanel;
 
 public class AddTouristGroupCostToTouristGroupDialog {
 	JDialog dialog;
@@ -47,11 +49,16 @@ public class AddTouristGroupCostToTouristGroupDialog {
 	
 	TouristGroupCostController touristGroupCostController;
 	TouristGroupController touristGroupController;
-	TouristGroup TG;
 	TouristGroupCost selectedTouristGroupCost;
 	
-	public AddTouristGroupCostToTouristGroupDialog(TouristGroup TG) {
-		this.TG = TG;
+	public AddTouristGroupCostToTouristGroupDialog() {
+		this.selectedTouristGroupCost = new TouristGroupCost();
+		initData();
+		initComp();
+	}
+	
+	public AddTouristGroupCostToTouristGroupDialog(TouristGroupCost cost) {
+		this.selectedTouristGroupCost = cost;
 		initData();
 		initComp();
 	}
@@ -70,15 +77,19 @@ public class AddTouristGroupCostToTouristGroupDialog {
 		pnlAddCostType = new JPanel(new FlowLayout(FlowLayout.LEADING));
 		txaDescription = new JTextArea();
 		
-		btnAdd = new JButton("Thêm");
+		btnAdd = new JButton("Lưu");
 		btnCancel = new JButton("Hủy");
 		
 		touristGroupCostController = new TouristGroupCostController();
 		touristGroupController = new TouristGroupController();
-		
 	}
 	
 	private void initComp() {
+		if(selectedTouristGroupCost.getId()!=null) {
+			txtTotalCost.setText(selectedTouristGroupCost.getTotalPrice().toString());
+			txaDescription.setText(selectedTouristGroupCost.getDescription());
+		}
+		
 		pnlAddCostType.add(cbxCostType);
 		pnlAddCostType.add(btnAddCostType);
 		List<CostType> costTypes = new CostTypeRepository().findAll();
@@ -89,12 +100,17 @@ public class AddTouristGroupCostToTouristGroupDialog {
 		btnAddCostType.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mousePressed(MouseEvent e) {
-				txaDescription.setText(txaDescription.getText() + "\n" + cbxCostType.getSelectedItem().toString());
+				String selectedItem = cbxCostType.getSelectedItem().toString();
+				txaDescription.setText(txaDescription.getText() + "\n" 
+			+ selectedItem.substring(selectedItem.indexOf(".")+1) + " : "
+			+ new CostTypeRepository().findById(Long.parseLong(selectedItem.substring(0,selectedItem.indexOf(".")))).get().getDescription()
+			);
 			}
 		});
 		
 		btnAdd.addMouseListener(new MouseAdapter() {
 			public void mousePressed(MouseEvent evt) {
+				selectedTouristGroupCost.setTouristGroupId(TouristGroupMainPanel.selectedTouristGroup.getId());
 				selectedTouristGroupCost.setTotalPrice(Double.parseDouble(txtTotalCost.getText()));
 				selectedTouristGroupCost.setDescription(txaDescription.getText());
 				dialog.dispose();
@@ -145,10 +161,18 @@ public class AddTouristGroupCostToTouristGroupDialog {
 		dialog.setVisible(true);
 	}
 	
-	public Optional<TouristGroupCost> addHotelToTouristGroup(){
+	public Optional<TouristGroupCost> addCostToTouristGroup(){
+		selectedTouristGroupCost = touristGroupCostController.create(selectedTouristGroupCost);
 		return selectedTouristGroupCost!=null ? Optional.of(selectedTouristGroupCost) : Optional.empty();
 	}
+	
+	public TouristGroupCost modifyCostTouristGroup(){
+		selectedTouristGroupCost = touristGroupCostController.modify(selectedTouristGroupCost);
+		System.out.print("saved" + selectedTouristGroupCost);
+		return selectedTouristGroupCost;
+	}
+	
 	public static void main(String[] args) {
-		new AddTouristGroupCostToTouristGroupDialog(new TouristGroup());
+		new AddTouristGroupCostToTouristGroupDialog();
 	}
 }
