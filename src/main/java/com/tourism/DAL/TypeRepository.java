@@ -1,13 +1,11 @@
 package com.tourism.DAL;
 
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import com.tourism.DTO.Tour;
-import com.tourism.DTO.TourPosition;
-import com.tourism.DTO.TouristGroup;
 import com.tourism.DTO.Type;
 
 public class TypeRepository implements Repositories<Type, Long> {
@@ -161,5 +159,30 @@ public class TypeRepository implements Repositories<Type, Long> {
 	public boolean testPrimaryKey(String id) {
 		// TODO Auto-generated method stub
 		return false;
+	}
+	
+	public String getNameById(Long id) throws SQLException {
+		String name = "";
+		ResultSet rsName = this.connector.executeQuery("SELECT name from type_of_tour where id ='"+id+"'");
+		while(rsName.next()) {
+			String Name = new String(rsName.getString("name"));
+			name = Name;
+		}
+		return name;
+	}
+	
+	public Long getIdByName(String name) {
+		Long id = (long) 0;
+		ResultSet rsId = this.connector.executeQuery("SELECT id from type_of_tour where name ='"+name+"'");
+		try {
+			while(rsId.next()) {
+				Long Id = new Long(rsId.getLong("id"));
+				id = Id;
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return id;
 	}
 }

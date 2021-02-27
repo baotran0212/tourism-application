@@ -2,12 +2,14 @@ package com.tourism.DAL;
 
 
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.logging.Logger;
 
 import com.tourism.DTO.Tour;
+import com.tourism.DTO.Type;
 
 /**
  * TourRepository
@@ -34,7 +36,8 @@ public class TourRepository implements Repositories<Tour, Long> {
 				updateQuery.append("type_id = \"" + e.getTypeId() + "\", ");
 				updateQuery.append("name = \"" + e.getName() + "\", ");
 				updateQuery.append("description = \"" + e.getDescription() + "\", ");
-				updateQuery.append("status = \"" + e.getStatus() + "\" ");
+				updateQuery.append("status = \"" + e.getStatus() + "\", ");
+				updateQuery.append("image = \"" + e.getImage() +"\" ");
 				updateQuery.append("WHERE id = \"" + e.getId() + "\" ;");
 				logger.info(updateQuery.toString());
 				this.connector.executeUpdate(updateQuery.toString());
@@ -46,14 +49,15 @@ public class TourRepository implements Repositories<Tour, Long> {
 //				});
 			} else {
 				StringBuilder insertQuery = new StringBuilder(
-						"INSERT INTO tour(`type_id`, `name`, `description`, `price`, `status`) VALUES ");
+						"INSERT INTO tour(`type_id`, `name`, `description`, `status`, `image`) VALUES ");
 				insertQuery.append("( \"" + e.getTypeId() + "\", ");
 				insertQuery.append("\"" + e.getName() + "\", ");
 				insertQuery.append("\"" + e.getDescription() + "\", ");
-				insertQuery.append("\"" + e.getStatus() + "\" );");
-				connector.executeUpdate(insertQuery.toString());
+				insertQuery.append("\"" + e.getStatus() + "\",");
+				insertQuery.append("\"" + e.getImage() +"\"); ");
+				this.connector.executeUpdate(insertQuery.toString());
 				ResultSet returnedResultSet = connector
-						.executeQuery("SELECT * FROM tourist_group ORDER BY `id` DESC LIMIT 1");
+						.executeQuery("SELECT * FROM tour ORDER BY `id` DESC LIMIT 1");
 				try {
 					while (returnedResultSet != null && returnedResultSet.next()) {
 						e.setId(Long.valueOf(returnedResultSet.getString("id")));
@@ -62,11 +66,11 @@ public class TourRepository implements Repositories<Tour, Long> {
 					e1.printStackTrace();
 				}
 			}
-//			// Save type
+			// Save type
 //			e.getType().setTours(new ArrayList<Tour>());
 //			e.setType(new TypeRepository().save(e.getType()));
 //			e.setTypeId(e.getType().getId());
-//			// Save tourist groups
+			// Save tourist groups
 //			e.getTouristGroups().forEach(TG -> {
 //				TG.setTour(new Tour());
 //				TG.setTourId(e.getId());
@@ -125,8 +129,7 @@ public class TourRepository implements Repositories<Tour, Long> {
 
 	@Override
 	public void deleteById(Long id) {
-		// TODO Auto-generated method stub
-
+		ResultSet rsTour = this.connector.executeQuery("DELETE FROM tour WHERE id='"+id+"'");
 	}
 
 	@Override
@@ -157,6 +160,8 @@ public class TourRepository implements Repositories<Tour, Long> {
 				tour.setName(rs.getString("name"));
 				tour.setDescription(rs.getString("description"));
 				tour.setStatus(rs.getString("status"));
+				tour.setImage(rs.getString("image"));
+				
 //				// Set tourist groups
 //				if (tour.getTouristGroups() == null) {
 //					ResultSet rsTG = connector.executeQuery(
@@ -195,4 +200,29 @@ public class TourRepository implements Repositories<Tour, Long> {
 		
 		return false;
 	}
+	
+	public void deleteIdLast() {
+		this.connector.executeUpdate("delete FROM tour ORDER BY id DESC limit 1");
+	}
+	
+	public Long getIdLast() {
+		ResultSet rsTour = this.connector.executeQuery("select id FROM tour ORDER BY id DESC limit 1");
+		Long id = null;
+		try {
+			while (rsTour.next()) {
+				Long Id =  new Long(rsTour.getLong("id"));
+				id = Id;
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		return id;
+	}
+	
+	public void AddEmptyTour() {
+		this.connector.executeUpdate("INSERT INTO tour(type_id,name,description,status,image) VALUES (null,null,null,null,null)");
+	}
+	
 }

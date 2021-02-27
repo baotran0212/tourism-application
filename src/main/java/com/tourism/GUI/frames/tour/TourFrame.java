@@ -25,6 +25,7 @@ import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.JTableHeader;
 
+import com.tourism.DAL.TourCostRepository;
 import com.tourism.DAL.TourRepository;
 import com.tourism.DAL.TypeRepository;
 import com.tourism.DTO.Tour;
@@ -32,7 +33,10 @@ import com.tourism.DTO.Type;
 
 import javax.swing.UIManager;
 import java.awt.event.ActionListener;
+import java.sql.SQLException;
 import java.awt.event.ActionEvent;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 
 public class TourFrame extends JFrame {
 
@@ -40,11 +44,11 @@ public class TourFrame extends JFrame {
 	private JTextField txt_maTour;
 	private JTextField txt_tenTour;
 	private JTextField txt_giaTour;
-	private JTextField txt_loaiTour;
 	private JTextField txt_trangThaiTour;
 	private JTextField txt_timTenTour;
 	private JTextField txt_timDiaDiem;
 	private JComboBox cbb_loaiTour = new JComboBox();
+	private JComboBox cbb_loaiTour_1 = new JComboBox();
 	private JTable table;
 	
 	/**
@@ -55,13 +59,20 @@ public class TourFrame extends JFrame {
 	DefaultTableModel tableModel;
 	TourRepository tourRepository = new TourRepository();
 	TypeRepository typeRepository = new TypeRepository();
+	TourCostRepository tourCosrRepository = new TourCostRepository();
 	private void findAll() {
 		listTour = tourRepository.findAll();
 		tableModel.setRowCount(0);
-		listTour.forEach((tour)->{
-			tableModel.addRow(new Object[] {
-				tour.getId(), tour.getName(), formatMoney(tour.getPrice()), tour.getDescription(), tour.getStatus()
-			});
+		listTour.forEach((tour)->{			
+				try {
+					tableModel.addRow(new Object[] {
+						tour.getId(), tour.getName(), typeRepository.getNameById(tour.getTypeId()), tour.getDescription(), tour.getStatus()
+					});
+				} catch (SQLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			
 		});
 	}
 	
@@ -69,6 +80,7 @@ public class TourFrame extends JFrame {
 		listType = typeRepository.findAll();
 		for(com.tourism.DTO.Type item : listType) {
 			cbb_loaiTour.addItem(item.getName());
+			cbb_loaiTour_1.addItem(item.getName());
 		}
 	}
 	
@@ -141,7 +153,7 @@ public class TourFrame extends JFrame {
 		lblNewLabel_1.setBounds(10, 44, 64, 14);
 		panel_1.add(lblNewLabel_1);
 		
-		JLabel lblNewLabel = new JLabel("CHI TI\u1EBET TOUR");
+		JLabel lblNewLabel = new JLabel("Qu\u1EA3n l\u00FD Tour");
 		lblNewLabel.setBounds(310, 11, 135, 21);
 		lblNewLabel.setFont(new Font("Times New Roman", Font.BOLD, 18));
 		panel_1.add(lblNewLabel);
@@ -163,7 +175,7 @@ public class TourFrame extends JFrame {
 		
 		JLabel lblNewLabel_1_4 = new JLabel("Tr\u1EA1ng th\u00E1i");
 		lblNewLabel_1_4.setFont(new Font("Times New Roman", Font.BOLD, 14));
-		lblNewLabel_1_4.setBounds(264, 70, 64, 14);
+		lblNewLabel_1_4.setBounds(264, 70, 64, 18);
 		panel_1.add(lblNewLabel_1_4);
 		
 		JButton btn_sua = new JButton("S\u1EEDa");
@@ -194,12 +206,6 @@ public class TourFrame extends JFrame {
 		txt_giaTour.setBounds(70, 94, 153, 20);
 		panel_1.add(txt_giaTour);
 		
-		txt_loaiTour = new JTextField();
-		txt_loaiTour.setFont(new Font("Times New Roman", Font.PLAIN, 14));
-		txt_loaiTour.setColumns(10);
-		txt_loaiTour.setBounds(387, 42, 153, 20);
-		panel_1.add(txt_loaiTour);
-		
 		txt_trangThaiTour = new JTextField();
 		txt_trangThaiTour.setFont(new Font("Times New Roman", Font.PLAIN, 14));
 		txt_trangThaiTour.setColumns(10);
@@ -210,6 +216,11 @@ public class TourFrame extends JFrame {
 		btn_them.setFont(new Font("Times New Roman", Font.BOLD, 14));
 		btn_them.setBounds(599, 41, 89, 23);
 		panel_1.add(btn_them);
+		
+		
+		cbb_loaiTour_1.setFont(new Font("Times New Roman", Font.PLAIN, 14));
+		cbb_loaiTour_1.setBounds(387, 41, 153, 22);
+		panel_1.add(cbb_loaiTour_1);
 		
 		JPanel panel_2 = new JPanel();
 		panel_2.setBorder(new MatteBorder(1, 1, 1, 1, (Color) new Color(0, 0, 0)));
@@ -292,26 +303,41 @@ public class TourFrame extends JFrame {
 				{null, null, null, null, null},
 			},
 			new String[] {
-				"M\u00E3 Tour", "T\u00EAn Tour", "Gi\u00E1 Tour", "H\u00ECnh \u1EA3nh", "Tr\u1EA1ng th\u00E1i"
+				"M\u00E3 Tour", "T\u00EAn Tour", "Lo\u1EA1i Tour", "M\u00F4 t\u1EA3", "Tr\u1EA1ng th\u00E1i"
 			}
 		) {
 			Class[] columnTypes = new Class[] {
-				String.class, String.class, Integer.class, Object.class, String.class
+				String.class, String.class, String.class, Object.class, String.class
 			};
 			public Class getColumnClass(int columnIndex) {
 				return columnTypes[columnIndex];
 			}
 		});
+		table.getColumnModel().getColumn(0).setPreferredWidth(70);
+		table.getColumnModel().getColumn(0).setMaxWidth(200);
+		table.getColumnModel().getColumn(3).setPreferredWidth(70);
+		table.getColumnModel().getColumn(3).setMaxWidth(200);
+		table.getColumnModel().getColumn(4).setPreferredWidth(90);
+		table.getColumnModel().getColumn(4).setMaxWidth(200);
 		scrollPane.setViewportView(table);
 		//Function=========================================================
 			tableModel = (DefaultTableModel) table.getModel();
 			findAll();
 			getTypleOfTourToCombobox();
-			
+			//// button thêm
 			btn_them.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
+					//tourRepository.AddEmptyTour();
 					AddTour addTour = new AddTour();
 					addTour.setVisible(true);
+				}
+			});
+			//// click dòng hiện tab properties
+			table.addMouseListener(new MouseAdapter() {
+				@Override
+				public void mouseClicked(MouseEvent e) {
+				PropertiesTour propertiesTour = new PropertiesTour();
+				propertiesTour.setVisible(true);
 				}
 			});
 	}
