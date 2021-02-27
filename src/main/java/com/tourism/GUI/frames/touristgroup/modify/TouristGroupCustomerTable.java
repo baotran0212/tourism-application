@@ -23,9 +23,6 @@ import com.tourism.GUI.util.ConfirmDialog;
 import com.tourism.GUI.util.MessageDialog;
 
 public class TouristGroupCustomerTable extends JPanel {
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
 	TouristGroupController touristGroupController = new TouristGroupController();
 	CustomerController customerController = new CustomerController();
@@ -89,6 +86,7 @@ public class TouristGroupCustomerTable extends JPanel {
 		
 		pnlSelectedCustomer.add(lblSelectedCustomer);
 		pnlSelectedCustomer.add(lblSelectedCustomerId);
+		pnlSelectedCustomer.setBackground(Resources.PRIMARY);
 		
 		btnRemove.setBackground(Resources.PRIMARY_DARK);
 		btnRemove.addMouseListener(new MouseAdapter() {
@@ -132,6 +130,7 @@ public class TouristGroupCustomerTable extends JPanel {
 						.addComponent(btnRemove))
 				.addComponent(scroller));
 		this.setLayout(layout);
+		this.setBackground(Resources.PRIMARY);
 	}
 	
 	private void loadTable() {

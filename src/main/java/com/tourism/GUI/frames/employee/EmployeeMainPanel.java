@@ -1,35 +1,36 @@
-package com.tourism.GUI.frames.customer;
+package com.tourism.GUI.frames.employee;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.Iterator;
 
 import javax.swing.GroupLayout;
 import javax.swing.GroupLayout.Alignment;
+import javax.swing.border.EmptyBorder;
 import javax.swing.JButton;
+import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
-import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableModel;
 
-import com.mysql.cj.Session.SessionEventListener;
-import com.mysql.cj.x.protobuf.MysqlxResultset.FetchDoneMoreOutParams;
-import com.tourism.BUS.CustomerController;
-import com.tourism.DTO.Customer;
+import com.tourism.BUS.EmployeeController;
+import com.tourism.DTO.Employee;
 import com.tourism.GUI.CustomTable;
 import com.tourism.GUI.Resources;
-import com.tourism.GUI.frames.touristgroup.modify.TouristGroupCustomerTable;
+import com.tourism.GUI.frames.tour.TourFrame;
 import com.tourism.GUI.util.MessageDialog;
 import com.tourism.service.Validation;
 
-public class CustomerMainPanel extends JPanel{
-	CustomerController customerController;
-	static Customer selectedCustomer;
-	JPanel pnlCustomer;
+public class EmployeeMainPanel extends JPanel{
+	EmployeeController employeeController; 
+	static Employee selectedEmployee;
+	JPanel pnlEmployee;
 	GroupLayout layout;
 	JLabel lblId;
 	JTextField txtId;
@@ -53,66 +54,68 @@ public class CustomerMainPanel extends JPanel{
 	JButton btnSave;
 	JButton btnDelete;
 	JButton btnClear;
-	public CustomerMainPanel() {
+
+	public EmployeeMainPanel() {
 		initData();
 		initComp();
 	}
+	
 	public void initData() {
-		customerController = new CustomerController();
-		selectedCustomer = new Customer();
-		
-		pnlCustomer = new JPanel();
-		layout = new GroupLayout(pnlCustomer);
-		lblId = new JLabel("ID");
-		txtId = new JTextField();
-		lblName = new JLabel("Tên");
-		txtName = new JTextField();
-		lblIdentityCard = new JLabel("CMND");
-		txtIdentityCard = new JTextField();
-		lblAddress = new JLabel("Địa chỉ");
-		txtAddress = new JTextField();
-		lblGender = new JLabel("Giới tính");
-		txtGender = new JTextField();
-		lblPhoneNumber = new JLabel("Số điện thoại");
-		txtPhoneNumber = new JTextField();
-		
-		model = new DefaultTableModel(new Object[] {"Mã", "Tên", "CMND", "Địa chỉ", "Giới tính", "Số điện thoại"},0);
-		tbl = new CustomTable(model);
-		scroller = new JScrollPane(tbl);
-		pnlTable = new JPanel(new BorderLayout());
-		
-		btnCreate = new JButton("Tạo mới");
-		btnSave = new JButton("Sửa");
-		btnDelete = new JButton("Xóa");
-		btnClear = new JButton("Làm trống");
+	employeeController = new EmployeeController();
+	selectedEmployee = new Employee();
+	
+	pnlEmployee = new JPanel();
+	layout = new GroupLayout(pnlEmployee);
+	lblId = new JLabel("ID");
+	txtId = new JTextField();
+	lblName = new JLabel("Tên");
+	txtName = new JTextField();
+	lblIdentityCard = new JLabel("CMND");
+	txtIdentityCard = new JTextField();
+	lblAddress = new JLabel("Địa chỉ");
+	txtAddress = new JTextField();
+	lblGender = new JLabel("Giới tính");
+	txtGender = new JTextField();
+	lblPhoneNumber = new JLabel("Số điện thoại");
+	txtPhoneNumber = new JTextField();
+	
+	model = new DefaultTableModel(new Object[] {"Mã", "Tên", "CMND", "Địa chỉ", "Giới tính", "Số điện thoại"},0);
+	tbl = new CustomTable(model);
+	scroller = new JScrollPane(tbl);
+	pnlTable = new JPanel(new BorderLayout());
+	
+	btnCreate = new JButton("Tạo mới");
+	btnSave = new JButton("Sửa");
+	btnDelete = new JButton("Xóa");
+	btnClear = new JButton("Làm trống");
 	}
 	
 	public void initComp() {
 		btnCreate.setBackground(Resources.PRIMARY_DARK);
 		btnCreate.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mousePressed(MouseEvent e) {
-				if(!validateInput()) {
-					new MessageDialog("ThÔng tin điền vào không hợp lệ");
-					return;
-				}
-				commitSelectedCustomer();
-				customerController.createCustomer(selectedCustomer);
-				loadTable();
+		@Override
+		public void mousePressed(MouseEvent e) {			
+			if(!validateInput()) {
+				new MessageDialog("Thông điền vào không hợp lệ");
+				return;
 			}
+			commitSelectedEmployee();
+			employeeController.createEmployee(selectedEmployee);
+			loadTable();
+		}
 		});
-		
 		btnDelete.setBackground(Resources.PRIMARY_DARK);
 		btnDelete.addMouseListener(new MouseAdapter() {
-			public void mousePressed(MouseEvent e) {
-				if(!validateInput()) {
-					new MessageDialog("Thông tin điền vào không hợp lệ");
-					return;
-				}
-				commitSelectedCustomer();
-				customerController.deleteCustomer(selectedCustomer.getId());
-				loadTable();
-			};
+		@Override
+		public void mousePressed(MouseEvent e) {
+			if(!validateInput()) {
+				new MessageDialog("Thông điền vào không hợp lệ");
+				return;
+			}
+			commitSelectedEmployee();
+			employeeController.deleteEmployee(selectedEmployee.getId());
+			loadTable();
+		}
 		});
 		
 		btnSave.setBackground(Resources.PRIMARY_DARK);
@@ -121,10 +124,10 @@ public class CustomerMainPanel extends JPanel{
 			public void mousePressed(MouseEvent e) {
 				if(!validateInput()) {
 					new MessageDialog("Thông tin điền vào không hợp lệ");
-					return;
+					return;				
 				}
-				commitSelectedCustomer();
-				customerController.modifyCustomer(selectedCustomer);
+				commitSelectedEmployee();
+				employeeController.modifyEmployee(selectedEmployee);
 				loadTable();
 			}
 		});
@@ -133,7 +136,7 @@ public class CustomerMainPanel extends JPanel{
 		btnClear.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mousePressed(MouseEvent e) {
-				selectedCustomer = new Customer();
+				selectedEmployee = new Employee();
 				txtId.setText(null);
 				txtName.setText(null);
 				txtIdentityCard.setText(null);
@@ -142,6 +145,7 @@ public class CustomerMainPanel extends JPanel{
 				txtPhoneNumber.setText(null);
 			}
 		});
+		
 		layout.setAutoCreateContainerGaps(true);
 		layout.setAutoCreateGaps(true);
 		
@@ -197,53 +201,72 @@ public class CustomerMainPanel extends JPanel{
 			@Override
 			public void mousePressed(MouseEvent e) {
 				Long selectedId = Long.parseLong(tbl.getValueAt(tbl.getSelectedRow(), 0).toString());
-				selectedCustomer = customerController.getById(selectedId);
-				txtId.setText(selectedCustomer.getId().toString());
-				txtName.setText(selectedCustomer.getName());
-				txtIdentityCard.setText(selectedCustomer.getIdentityCard());
-				txtGender.setText(selectedCustomer.getGender());
-				txtAddress.setText(selectedCustomer.getAddress1());
-				txtPhoneNumber.setText(selectedCustomer.getPhoneNumber());
+				selectedEmployee = employeeController.getById(selectedId);
+				txtId.setText(selectedEmployee.getId().toString());
+				txtName.setText(selectedEmployee.getName());
+				txtIdentityCard.setText(selectedEmployee.getIdentityCard());
+				txtGender.setText(selectedEmployee.getGender());
+				txtAddress.setText(selectedEmployee.getAddress1());
+				txtPhoneNumber.setText(selectedEmployee.getPhoneNumber());
 			}
 		});
 		
-		pnlCustomer.setBackground(Resources.PRIMARY);
-		pnlCustomer.setLayout(layout);
-		pnlCustomer.setPreferredSize(Resources.DETAIL_PANEL_S);
-		
+		pnlEmployee.setBackground(Resources.PRIMARY);
+		pnlEmployee.setLayout(layout);
+		pnlEmployee.setPreferredSize(Resources.DETAIL_PANEL_S);
+	
 		pnlTable.setBorder(new EmptyBorder(10, 10, 10, 10));
 		pnlTable.add(scroller, BorderLayout.CENTER);
 		pnlTable.setPreferredSize(Resources.MANAGER_TABLE_PANEL);
 		pnlTable.setBackground(Resources.PRIMARY);
 		this.setBackground(Resources.PRIMARY_DARK);
 		this.setPreferredSize(Resources.MAIN_CONTENT);
-		this.add(pnlCustomer);
+		this.add(pnlEmployee);
 		this.add(pnlTable);
 	}
-	
-	public void commitSelectedCustomer() {
-		selectedCustomer.setId(!txtId.getText().equals("") ? Long.valueOf(txtId.getText()) : null);
-		selectedCustomer.setName(txtName.getText());
-		selectedCustomer.setIdentityCard(txtIdentityCard.getText());
-		selectedCustomer.setAddress1(txtAddress.getText());
-		selectedCustomer.setGender(txtGender.getText());
-		selectedCustomer.setPhoneNumber(txtPhoneNumber.getText());
+
+	public void commitSelectedEmployee() {
+		selectedEmployee.setId(!txtId.getText().equals("") ? Long.valueOf(txtId.getText()) : null );
+		selectedEmployee.setName(txtName.getText());
+		selectedEmployee.setIdentityCard(txtIdentityCard.getText());
+		selectedEmployee.setAddress1(txtAddress.getText());
+		selectedEmployee.setGender(txtGender.getText());
+		selectedEmployee.setPhoneNumber(txtPhoneNumber.getText());
 	}
 	
 	public boolean validateInput() {
 		if(!Validation.checkDigit(txtId.getText())) {
+			System.out.print("ID");
 			return false;
 		}
-		if(!Validation.checkPhone_Number(txtPhoneNumber.getText()) || txtPhoneNumber.equals(null)){
+		if(!Validation.checkPhone_Number(txtPhoneNumber.getText()) || txtPhoneNumber.equals(null))
 			return false;
-		}
 		return true;
 	}
+	
 	public void loadTable() {
-		model.setRowCount(0);
-		for(Iterator<Customer> itr = customerController.getAll().iterator(); itr.hasNext() ;) {
-			Customer customer = itr.next();
-			model.addRow(new Object[] {customer.getId(), customer.getName(), customer.getIdentityCard(), customer.getAddress1(), customer.getGender(), customer.getPhoneNumber()});
+		model.setRowCount(0);		
+		for (Iterator<Employee> itr = employeeController.getAll().iterator(); itr.hasNext();) {
+			Employee emp = itr.next();
+			model.addRow(new Object[]{emp.getId(), emp.getName(), emp.getIdentityCard(), emp.getAddress1(), emp.getGender(), emp.getPhoneNumber()});
 		}
+	}
+	public static void main(String[] args) {
+		new TestFrame();
+	}
+
+}
+
+class TestFrame extends JFrame {
+	
+	public TestFrame() {
+		initComp();
+	}
+	
+	public void initComp() {
+		this.add(new EmployeeMainPanel());
+		this.setVisible(true);
+		this.pack();
+		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 	}
 }

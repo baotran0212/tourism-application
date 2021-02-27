@@ -28,7 +28,7 @@ public class TouristGroupModify extends JPanel {
 	TouristGroupBasicModifyPanel basicPanel;
 	TouristGroupCustomerTable customerPanel;
 	TouristGroupEmployeeTable employeePanel;
-	TouristGroupCostTable hotelPanel;
+	TouristGroupCostTable costPanel;
 	TouristGroupModifyBottomBar bottomBar;
 	GroupLayout layout;
 	public static TouristGroup TG;
@@ -48,7 +48,7 @@ public class TouristGroupModify extends JPanel {
 		basicPanel = new TouristGroupBasicModifyPanel();
 		customerPanel = new TouristGroupCustomerTable();
 		employeePanel = new TouristGroupEmployeeTable();
-		hotelPanel = new TouristGroupCostTable();
+		costPanel = new TouristGroupCostTable();
 		bottomBar = new TouristGroupModifyBottomBar();
 		layout = new GroupLayout(this);
 	}
@@ -57,20 +57,22 @@ public class TouristGroupModify extends JPanel {
 		layout.setAutoCreateContainerGaps(true);
 		layout.setAutoCreateGaps(true);
 		layout.setHorizontalGroup(layout.createParallelGroup()
-				.addComponent(basicPanel)
+				.addGroup(layout.createSequentialGroup()
+						.addComponent(basicPanel)
+						.addComponent(costPanel))
 				.addGroup(layout.createSequentialGroup()
 						.addComponent(customerPanel)
 						.addComponent(employeePanel)
-						.addComponent(hotelPanel)
 						)
 				.addComponent(bottomBar));
 		layout.setVerticalGroup(layout.createParallelGroup(Alignment.CENTER)
 				.addGroup(layout.createSequentialGroup()
-						.addComponent(basicPanel, 0, TGModifyResource.MODIFY_BASIC_PANEL_HEIGHT, TGModifyResource.MODIFY_BASIC_PANEL_HEIGHT)
+						.addGroup(layout.createParallelGroup()
+								.addComponent(basicPanel)
+								.addComponent(costPanel))
 						.addGroup(layout.createParallelGroup(Alignment.CENTER)
 								.addComponent(customerPanel)
 								.addComponent(employeePanel)
-								.addComponent(hotelPanel)
 								)
 						.addComponent(bottomBar)
 						)

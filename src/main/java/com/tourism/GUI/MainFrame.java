@@ -20,6 +20,8 @@ import javax.swing.JPanel;
 
 import com.tourism.DTO.User;
 import com.tourism.GUI.frames.analysis.AnalysisMainPanel;
+import com.tourism.GUI.frames.customer.CustomerMainPanel;
+import com.tourism.GUI.frames.employee.EmployeeMainPanel;
 import com.tourism.GUI.frames.tour.TourFrame;
 import com.tourism.GUI.frames.touristgroup.TouristGroupMainPanel;
 import com.tourism.GUI.util.IconUtil;
@@ -42,9 +44,11 @@ public class MainFrame extends JFrame {
 
 	// Array Jpanel nội dung chính
 	JPanel[] pnlMainContents;
-	public static TourFrame pnlTourManager;
+	public static JPanel pnlTourManager;
 	public static JPanel pnlTouristGroupManager;
 	public static JPanel pnlAnalysis;
+	public static JPanel pnlEmployeeManager;
+	public static JPanel pnlCustomerManager;
 	JLayeredPane layeredContent = new JLayeredPane();
 
 	public MainFrame(User user) {
@@ -61,14 +65,16 @@ public class MainFrame extends JFrame {
 		pnlTopBar = new JPanel(null);
 		functionSelected = new JLabel("--------\\/--------");
 		
-		titleMenuItems = new String[] {"Thống kê", "Quản lý tour", "Quản lý đoàn"};
-		iconMenuItems = new ImageIcon[] {Resources.DASHBOARD, Resources.TRAVEL, Resources.NETWORK};
+		titleMenuItems = new String[] {"Thống kê", "Quản lý tour", "Quản lý đoàn", "Quản lý nhân viên", "Quản lý khách hàng"};
+		iconMenuItems = new ImageIcon[] {Resources.DASHBOARD, Resources.TRAVEL, Resources.NETWORK, Resources.EMPLOYEE, Resources.TRAVELER};
 		pnlMenuItems = new MenuItem[titleMenuItems.length];
 		// Array Jpanel nội dung chính
-		pnlTourManager = new TourFrame();
+		pnlTourManager = new JPanel();
 		pnlTouristGroupManager = new TouristGroupMainPanel();
 		pnlAnalysis = new AnalysisMainPanel();
-		pnlMainContents = new JPanel[] { pnlAnalysis, pnlTourManager, pnlTouristGroupManager };
+		pnlEmployeeManager = new EmployeeMainPanel();
+		pnlCustomerManager = new CustomerMainPanel();
+		pnlMainContents = new JPanel[] { pnlAnalysis, pnlTourManager, pnlTouristGroupManager, pnlEmployeeManager, pnlCustomerManager };
 		layeredContent = new JLayeredPane();
 	}
 	

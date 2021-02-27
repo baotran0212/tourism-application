@@ -31,19 +31,20 @@ public class EmployeeRepository implements Repositories<Employee, Long> {
 			if (findById(e.getId()).isPresent()) {
 				StringBuilder updateQuery = new StringBuilder("UPDATE employee SET ");
 				updateQuery.append("name = \"" + e.getName() + "\", ");
-				updateQuery.append("indentity_card = \"" + e.getIdentityCard() + "\", ");
+				updateQuery.append("identity_card = \"" + e.getIdentityCard() + "\", ");
 				updateQuery.append("address1 = \"" + e.getAddress1() + "\", ");
 				updateQuery.append("address2 = \"" + e.getAddress2() + "\", ");
 				updateQuery.append("address3 = \"" + e.getAddress3() + "\", ");
 				updateQuery.append("street = \"" + e.getStreet() + "\", ");
 				updateQuery.append("gender = \"" + e.getGender() + "\", ");
-				updateQuery.append("phone_number = \"" + e.getPhoneNumber() + "\" ");
+				updateQuery.append("phone_number = \"" + e.getPhoneNumber() + "\", ");
 				updateQuery.append("status = \"" + e.getStatus() + "\" ");
 				updateQuery.append("WHERE id = \"" + e.getId() + "\" ;");
+				System.out.print(updateQuery);
 				this.connector.executeUpdate(updateQuery.toString());
 			} else {
 				StringBuilder insertQuery = new StringBuilder(
-						"INSERT INTO employee(`name`, `identity_card`, `address1`, `address2`, `address3`, `street`, `gender`, `phone_number`, `status`) VALUES ");
+						"INSERT INTO `employee` (`name`, `identity_card`, `address1`, `address2`, `address3`, `gender`, `phone_number`, `status`) VALUES ");
 				insertQuery.append("( \"" + e.getName() + "\", ");
 				insertQuery.append("\"" + e.getIdentityCard() + "\", ");
 				insertQuery.append("\"" + e.getAddress1() + "\", ");
@@ -113,8 +114,10 @@ public class EmployeeRepository implements Repositories<Employee, Long> {
 
 	@Override
 	public void deleteById(Long id) {
-		// TODO Auto-generated method stub
-
+		String deleteRelationShip = "DELETE FROM position_in_tour WHERE employee_id = \"" + id + "\" ;";
+		String query = "DELETE FROM employee WHERE id = \"" + id + "\" ;";
+		this.connector.executeUpdate(deleteRelationShip);
+		this.connector.executeUpdate(query);
 	}
 
 	@Override

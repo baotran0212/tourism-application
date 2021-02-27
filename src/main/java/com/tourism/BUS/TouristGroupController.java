@@ -111,6 +111,7 @@ public class TouristGroupController {
 			savedTGs.get(i).setCustomers(TG.getCustomers());
 			savedTGs.get(i).setTourPositions(TG.getTourPositions());
 			savedTGs.get(i).setTouristGroupCosts(TG.getTouristGroupCosts());
+			i++;
 		}
 		TGRepository.saveAllRelationShip(savedTGs);
 	}

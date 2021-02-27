@@ -1,3 +1,4 @@
+
 package com.tourism.DAL;
 
 
@@ -226,3 +227,4 @@ public class TourRepository implements Repositories<Tour, Long> {
 	}
 	
 }
+

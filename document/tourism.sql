@@ -1,4 +1,4 @@
--- MySQL dump 10.13  Distrib 8.0.23, for Win64 (x86_64)
+-- MySQL dump 10.13  Distrib 8.0.23, for Linux (x86_64)
 --
 -- Host: 127.0.0.1    Database: tourism
 -- ------------------------------------------------------
@@ -8,7 +8,7 @@
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
 /*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
-/*!50503 SET NAMES utf8 */;
+/*!50503 SET NAMES utf8mb4 */;
 /*!40103 SET @OLD_TIME_ZONE=@@TIME_ZONE */;
 /*!40103 SET TIME_ZONE='+00:00' */;
 /*!40014 SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0 */;
@@ -24,11 +24,11 @@ DROP TABLE IF EXISTS `cost_type`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `cost_type` (
-  `id` int NOT NULL,
+  `id` int NOT NULL AUTO_INCREMENT,
   `name` varchar(255) NOT NULL,
   `description` text,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8 ;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -37,6 +37,7 @@ CREATE TABLE `cost_type` (
 
 LOCK TABLES `cost_type` WRITE;
 /*!40000 ALTER TABLE `cost_type` DISABLE KEYS */;
+INSERT INTO `cost_type` VALUES (1,'Phí ăn uống','Chi phí ăn uống'),(2,'Phí phương tiện','Chi phí đi lại');
 /*!40000 ALTER TABLE `cost_type` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -90,7 +91,7 @@ CREATE TABLE `employee` (
   `phone_number` varchar(255) DEFAULT NULL,
   `status` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -99,7 +100,7 @@ CREATE TABLE `employee` (
 
 LOCK TABLES `employee` WRITE;
 /*!40000 ALTER TABLE `employee` DISABLE KEYS */;
-INSERT INTO `employee` VALUES (1,'name1','1223343','address1','address2','address3','34 A Random Street','male','123435678','active'),(2,'name2','1234567','address2','``','\'\'','2 A Random Street','female','0985654745','active');
+INSERT INTO `employee` VALUES (1,'name1','1223343','address1','address2','address3','34 A Random Street','male','123435678','active'),(3,'lonh','657657','67h','null','null',NULL,'nam','09675786876',NULL),(4,'lonh','657657','67h','null','null','null','nam','0998089098','null'),(6,'Anh','9088987','89yutryuty','null','null','null','nữ','0987765456','09567546546null');
 /*!40000 ALTER TABLE `employee` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -175,7 +176,7 @@ CREATE TABLE `position_in_tour` (
   CONSTRAINT `position_in_tour_ibfk_1` FOREIGN KEY (`tourist_group_id`) REFERENCES `tourist_group` (`id`),
   CONSTRAINT `position_in_tour_ibfk_2` FOREIGN KEY (`position_id`) REFERENCES `position` (`id`),
   CONSTRAINT `position_in_tour_ibfk_3` FOREIGN KEY (`employee_id`) REFERENCES `employee` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=124 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=133 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -184,7 +185,7 @@ CREATE TABLE `position_in_tour` (
 
 LOCK TABLES `position_in_tour` WRITE;
 /*!40000 ALTER TABLE `position_in_tour` DISABLE KEYS */;
-INSERT INTO `position_in_tour` VALUES (118,1,1,2),(119,1,2,1),(120,3,1,2),(121,3,1,1),(122,1,5,2),(123,5,1,2);
+INSERT INTO `position_in_tour` VALUES (121,3,1,1),(131,1,1,6);
 /*!40000 ALTER TABLE `position_in_tour` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -234,7 +235,7 @@ CREATE TABLE `tour_cost` (
   PRIMARY KEY (`id`),
   KEY `tour_cost_ibfk_2` (`tour_id`),
   CONSTRAINT `tour_cost_ibfk_2` FOREIGN KEY (`tour_id`) REFERENCES `tour` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -317,7 +318,7 @@ CREATE TABLE `tourist_group_cost` (
   PRIMARY KEY (`id`),
   KEY `tourist_group_id` (`tourist_group_id`),
   CONSTRAINT `tourist_group_cost_ibfk_1` FOREIGN KEY (`tourist_group_id`) REFERENCES `tourist_group` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -326,6 +327,7 @@ CREATE TABLE `tourist_group_cost` (
 
 LOCK TABLES `tourist_group_cost` WRITE;
 /*!40000 ALTER TABLE `tourist_group_cost` DISABLE KEYS */;
+INSERT INTO `tourist_group_cost` VALUES (4,1,30000,'\n Phí phương tiện : Chi phí đi lại'),(5,1,50000,'');
 /*!40000 ALTER TABLE `tourist_group_cost` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -415,4 +417,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2021-02-23 13:40:47
+-- Dump completed on 2021-02-26 16:18:08
