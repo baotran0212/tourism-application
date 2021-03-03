@@ -7,6 +7,7 @@ import java.util.Optional;
 import java.util.logging.Logger;
 
 import com.tourism.DTO.Tour;
+import com.tourism.DTO.TourCost;
 import com.tourism.DTO.TourLocation;
 
 public class TourLocationRepository implements Repositories<TourLocation, Long> {
@@ -25,11 +26,11 @@ public class TourLocationRepository implements Repositories<TourLocation, Long> 
 		entities.forEach(e -> {
 //			if(e.getType() !=null &&  e.getType().getId()!=null)
 //				e.setTypeId(e.getType().getId());
-//			if (findById(e.get).isPresent()) {
-//				StringBuilder updateQuery = new StringBuilder("UPDATE tour SET ");
-//				updateQuery.append("tour_id = \"" + e.getId() + "\", ");
-//				updateQuery.append("location_id = \"" + e.getLocation() + "\" ");
-//				updateQuery.append("WHERE tour_id = \"" + e.getId() + "\" ;");
+//			if (findById(e.getTour_id()).isPresent()) {
+//				StringBuilder updateQuery = new StringBuilder("UPDATE tour_location SET ");
+//				updateQuery.append("tour_id = \"" + e.getTour_id() + "\", ");
+//				updateQuery.append("location_id = \"" + e.getLocation_id() + "\" ");
+//				updateQuery.append("WHERE tour_id = \"" + e.getTour_id() + "\" ;");
 //				logger.info(updateQuery.toString());
 //				this.connector.executeUpdate(updateQuery.toString());
 //			} else {
@@ -47,6 +48,7 @@ public class TourLocationRepository implements Repositories<TourLocation, Long> 
 				} catch (Exception e1) {
 					e1.printStackTrace();
 				}
+//			}
 			
 			ids.add(e.getTour_id());
 		});
@@ -56,8 +58,10 @@ public class TourLocationRepository implements Repositories<TourLocation, Long> 
 
 	@Override
 	public Optional<TourLocation> findById(Long id) {
-		// TODO Auto-generated method stub
-		return null;
+		List<Long> ids = new ArrayList<Long>();
+		ids.add(id);
+		List<TourLocation> objs = findAllById(ids);
+		return objs.isEmpty() ? Optional.empty() : Optional.ofNullable(objs.get(0));
 	}
 
 	@Override
@@ -135,6 +139,10 @@ public class TourLocationRepository implements Repositories<TourLocation, Long> 
 			e.printStackTrace();
 		}
 		return tourLocations;
+	}
+	
+	public void deleteAllById(Long tour_id) {
+		this.connector.executeUpdate("delete from tour_location where tour_id ='" + tour_id + "'");
 	}
 
 }

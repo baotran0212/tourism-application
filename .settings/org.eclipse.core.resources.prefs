@@ -1,7 +1,6 @@
-<<<<<<< HEAD
 =\=\=\=\=\=\=
 <<<<<<<=HEAD
->>>>>>>=1710f019e689fb3ee19e89c9b0807a74eac7c986
+>>>>>>>=b6bf89b2c4853cac74bbc128b563a2f35388c3f1
 eclipse.preferences.version=1
 encoding//src/main/java/com/tourism/App.java=UTF-8
 encoding//src/main/java/com/tourism/GUI/LoginFrame.java=UTF-8
@@ -9,6 +8,9 @@ encoding//src/main/java/com/tourism/GUI/MainFrame.java=UTF-8
 encoding//src/main/java/com/tourism/GUI/Resources.java=UTF-8
 encoding//src/main/java/com/tourism/GUI/frames/analysis/AnalysisEmployeeActivity.java=UTF-8
 encoding//src/main/java/com/tourism/GUI/frames/analysis/AnalysisMainPanel.java=UTF-8
+encoding//src/main/java/com/tourism/GUI/frames/customer/CustomerMainPanel.java=UTF-8
+encoding//src/main/java/com/tourism/GUI/frames/employee/EmployeeMainPanel.java=UTF-8
+encoding//src/main/java/com/tourism/GUI/frames/tour/PropertiesTour.java=UTF-8
 encoding//src/main/java/com/tourism/GUI/frames/tour/TourFrame.java=UTF-8
 encoding//src/main/java/com/tourism/GUI/frames/touristgroup/TouristGroupMainPanel.java=UTF-8
 encoding//src/main/java/com/tourism/GUI/frames/touristgroup/management/TouristGroupDetailPanel.java=UTF-8
@@ -26,33 +28,3 @@ encoding//src/main/java/com/tourism/GUI/util/IconUtil.java=UTF-8
 encoding//src/main/java/com/tourism/service/JsonAddress.java=UTF-8
 encoding//src/main/java/com/tourism/service/address.json=UTF-8
 encoding//src/test/java/com/tourism/TestAddress.java=UTF-8
-=======
-=\=\=\=\=\=\=
-<<<<<<<=HEAD
->>>>>>>=1710f019e689fb3ee19e89c9b0807a74eac7c986
-eclipse.preferences.version=1
-encoding//src/main/java/com/tourism/App.java=UTF-8
-encoding//src/main/java/com/tourism/GUI/LoginFrame.java=UTF-8
-encoding//src/main/java/com/tourism/GUI/MainFrame.java=UTF-8
-encoding//src/main/java/com/tourism/GUI/Resources.java=UTF-8
-encoding//src/main/java/com/tourism/GUI/frames/analysis/AnalysisEmployeeActivity.java=UTF-8
-encoding//src/main/java/com/tourism/GUI/frames/analysis/AnalysisMainPanel.java=UTF-8
-encoding//src/main/java/com/tourism/GUI/frames/customer/CustomerMainPanel.java=UTF-8
-encoding//src/main/java/com/tourism/GUI/frames/employee/EmployeeMainPanel.java=UTF-8
-encoding//src/main/java/com/tourism/GUI/frames/touristgroup/TouristGroupMainPanel.java=UTF-8
-encoding//src/main/java/com/tourism/GUI/frames/touristgroup/management/TouristGroupDetailPanel.java=UTF-8
-encoding//src/main/java/com/tourism/GUI/frames/touristgroup/management/TouristGroupSearchPanel.java=UTF-8
-encoding//src/main/java/com/tourism/GUI/frames/touristgroup/management/TouristGroupTablePanel.java=UTF-8
-encoding//src/main/java/com/tourism/GUI/frames/touristgroup/modify/AddCustomerToTouristGroupDialog.java=UTF-8
-encoding//src/main/java/com/tourism/GUI/frames/touristgroup/modify/AddEmployeeToTouristGroupDialog.java=UTF-8
-encoding//src/main/java/com/tourism/GUI/frames/touristgroup/modify/AddTouristGroupCostToTouristGroupDialog.java=UTF-8
-encoding//src/main/java/com/tourism/GUI/frames/touristgroup/modify/TouristGroupBasicModifyPanel.java=UTF-8
-encoding//src/main/java/com/tourism/GUI/frames/touristgroup/modify/TouristGroupCostTable.java=UTF-8
-encoding//src/main/java/com/tourism/GUI/frames/touristgroup/modify/TouristGroupCustomerTable.java=UTF-8
-encoding//src/main/java/com/tourism/GUI/frames/touristgroup/modify/TouristGroupEmployeeTable.java=UTF-8
-encoding//src/main/java/com/tourism/GUI/frames/touristgroup/modify/TouristGroupModifyBottomBar.java=UTF-8
-encoding//src/main/java/com/tourism/GUI/util/IconUtil.java=UTF-8
-encoding//src/main/java/com/tourism/service/JsonAddress.java=UTF-8
-encoding//src/main/java/com/tourism/service/address.json=UTF-8
-encoding//src/test/java/com/tourism/TestAddress.java=UTF-8
->>>>>>> b6bf89b2c4853cac74bbc128b563a2f35388c3f1

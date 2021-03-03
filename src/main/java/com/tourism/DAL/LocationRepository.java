@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Optional;
 
 import com.tourism.DTO.Location;
+import com.tourism.DTO.TourLocation;
 import com.tourism.DTO.TouristGroup;
 
 public class LocationRepository implements Repositories<Location, Long> {

@@ -156,5 +156,20 @@ public class TourCostRepository implements Repositories<TourCost, Long> {
 		}
 		return price;
 	}
+	
+	public Long getIdByTourId(Long tour_id)  {
+		Long id = new Long(0);
+		ResultSet rsPrice = this.connector.executeQuery("SELECT id from tour_cost where tour_id ='"+tour_id+"'");
+		try {
+			while(rsPrice.next()) {
+				Long Id = new Long(rsPrice.getLong("id"));
+				id = Id;
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return id;
+	}
 
 }
