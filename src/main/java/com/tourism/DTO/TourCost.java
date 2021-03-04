@@ -17,3 +17,5 @@ public class TourCost {
 	String PriceFromTime;
 	String PriceToTime;
 }
+
+

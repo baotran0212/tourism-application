@@ -38,18 +38,15 @@ import java.sql.SQLException;
 import java.awt.event.ActionEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import javax.swing.JRadioButton;
+import javax.swing.ButtonGroup;
 
 public class TourFrame extends JFrame {
 
 	private JPanel contentPane;
-	private JTextField txt_maTour;
-	private JTextField txt_tenTour;
-	private JTextField txt_giaTour;
-	private JTextField txt_trangThaiTour;
 	private JTextField txt_timTenTour;
 	private JTextField txt_timDiaDiem;
 	private JComboBox cbb_loaiTour = new JComboBox();
-	private JComboBox cbb_loaiTour_1 = new JComboBox();
 	private JTable table;
 	
 	/**
@@ -61,13 +58,14 @@ public class TourFrame extends JFrame {
 	TourRepository tourRepository = new TourRepository();
 	TypeRepository typeRepository = new TypeRepository();
 	TourCostRepository tourCosrRepository = new TourCostRepository();
+	private final ButtonGroup buttonGroup = new ButtonGroup();
 	private void findAll() {
 		listTour = tourRepository.findAll();
 		tableModel.setRowCount(0);
 		listTour.forEach((tour)->{			
 				try {
 					tableModel.addRow(new Object[] {
-						tour.getId(), tour.getName(), typeRepository.getNameById(tour.getTypeId()), tour.getDescription(), tour.getStatus()
+						tour.getId(), tour.getName(), typeRepository.getNameById(tour.getTypeId()), tour.getDescription(), tour.getStatus(), tour.getImage()
 					});
 				} catch (SQLException e) {
 					// TODO Auto-generated catch block
@@ -79,9 +77,10 @@ public class TourFrame extends JFrame {
 	
 	private void getTypleOfTourToCombobox() {
 		listType = typeRepository.findAll();
+		cbb_loaiTour.addItem("");
 		for(com.tourism.DTO.Type item : listType) {
 			cbb_loaiTour.addItem(item.getName());
-			cbb_loaiTour_1.addItem(item.getName());
+			
 		}
 	}
 	
@@ -102,148 +101,116 @@ public class TourFrame extends JFrame {
 	public TourFrame() {
 		//Frame============================================================
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 803, 525);
+		setBounds(100, 100, 1100, 700);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
 		
 		JPanel panel = new JPanel();
-		panel.setBounds(5, 5, 781, 471);
+		panel.setBounds(5, 5, 1079, 656);
 		contentPane.add(panel);
 		panel.setLayout(null);
 		
 		JPanel panel_1 = new JPanel();
 		panel_1.setBorder(new MatteBorder(1, 1, 1, 1, (Color) new Color(0, 0, 0)));
-		panel_1.setBounds(0, 0, 775, 135);
+		panel_1.setBounds(10, 0, 1059, 95);
 		panel.add(panel_1);
 		panel_1.setLayout(null);
 		
-		JLabel lblNewLabel_1 = new JLabel("M\u00E3 tour");
-		lblNewLabel_1.setFont(new Font("Times New Roman", Font.BOLD, 14));
-		lblNewLabel_1.setBounds(10, 44, 64, 14);
-		panel_1.add(lblNewLabel_1);
-		
 		JLabel lblNewLabel = new JLabel("Qu\u1EA3n l\u00FD Tour");
-		lblNewLabel.setBounds(310, 11, 135, 21);
-		lblNewLabel.setFont(new Font("Times New Roman", Font.BOLD, 18));
+		lblNewLabel.setBounds(476, 11, 139, 21);
+		lblNewLabel.setFont(new Font("Times New Roman", Font.BOLD, 22));
 		panel_1.add(lblNewLabel);
 		
-		JLabel lblNewLabel_1_1 = new JLabel("T\u00EAn tour");
-		lblNewLabel_1_1.setFont(new Font("Times New Roman", Font.BOLD, 14));
-		lblNewLabel_1_1.setBounds(10, 69, 64, 14);
-		panel_1.add(lblNewLabel_1_1);
-		
-		JLabel lblNewLabel_1_2 = new JLabel("Gi\u00E1 tour");
-		lblNewLabel_1_2.setFont(new Font("Times New Roman", Font.BOLD, 14));
-		lblNewLabel_1_2.setBounds(10, 94, 64, 14);
-		panel_1.add(lblNewLabel_1_2);
-		
-		JLabel lblNewLabel_1_3 = new JLabel("Lo\u1EA1i h\u00ECnh du l\u1ECBch");
-		lblNewLabel_1_3.setFont(new Font("Times New Roman", Font.BOLD, 14));
-		lblNewLabel_1_3.setBounds(265, 44, 112, 14);
-		panel_1.add(lblNewLabel_1_3);
-		
-		JLabel lblNewLabel_1_4 = new JLabel("Tr\u1EA1ng th\u00E1i");
-		lblNewLabel_1_4.setFont(new Font("Times New Roman", Font.BOLD, 14));
-		lblNewLabel_1_4.setBounds(264, 70, 64, 18);
-		panel_1.add(lblNewLabel_1_4);
-		
-		JButton btn_sua = new JButton("S\u1EEDa");
-		btn_sua.setFont(new Font("Times New Roman", Font.BOLD, 14));
-		btn_sua.setBounds(599, 65, 89, 23);
-		panel_1.add(btn_sua);
-		
-		JButton btn_xoa = new JButton("X\u00F3a");
-		btn_xoa.setFont(new Font("Times New Roman", Font.BOLD, 14));
-		btn_xoa.setBounds(599, 90, 89, 23);
-		panel_1.add(btn_xoa);
-		
-		txt_maTour = new JTextField();
-		txt_maTour.setFont(new Font("Times New Roman", Font.PLAIN, 14));
-		txt_maTour.setBounds(70, 42, 153, 20);
-		panel_1.add(txt_maTour);
-		txt_maTour.setColumns(10);
-		
-		txt_tenTour = new JTextField();
-		txt_tenTour.setFont(new Font("Times New Roman", Font.PLAIN, 14));
-		txt_tenTour.setColumns(10);
-		txt_tenTour.setBounds(70, 66, 153, 20);
-		panel_1.add(txt_tenTour);
-		
-		txt_giaTour = new JTextField();
-		txt_giaTour.setFont(new Font("Times New Roman", Font.PLAIN, 14));
-		txt_giaTour.setColumns(10);
-		txt_giaTour.setBounds(70, 94, 153, 20);
-		panel_1.add(txt_giaTour);
-		
-		txt_trangThaiTour = new JTextField();
-		txt_trangThaiTour.setFont(new Font("Times New Roman", Font.PLAIN, 14));
-		txt_trangThaiTour.setColumns(10);
-		txt_trangThaiTour.setBounds(387, 67, 153, 20);
-		panel_1.add(txt_trangThaiTour);
-		
-		JButton btn_them = new JButton("Th\u00EAm");
-		btn_them.setFont(new Font("Times New Roman", Font.BOLD, 14));
-		btn_them.setBounds(599, 41, 89, 23);
-		panel_1.add(btn_them);
-		
-		
-		cbb_loaiTour_1.setFont(new Font("Times New Roman", Font.PLAIN, 14));
-		cbb_loaiTour_1.setBounds(387, 41, 153, 22);
-		panel_1.add(cbb_loaiTour_1);
-		
-		JPanel panel_2 = new JPanel();
-		panel_2.setBorder(new MatteBorder(1, 1, 1, 1, (Color) new Color(0, 0, 0)));
-		panel_2.setBounds(0, 144, 775, 67);
-		panel.add(panel_2);
-		panel_2.setLayout(null);
-		
 		JLabel lblNewLabel_1_5 = new JLabel("T\u00EAn tour");
-		lblNewLabel_1_5.setBounds(10, 11, 53, 17);
+		lblNewLabel_1_5.setBounds(77, 55, 53, 17);
+		panel_1.add(lblNewLabel_1_5);
 		lblNewLabel_1_5.setFont(new Font("Times New Roman", Font.BOLD, 14));
-		panel_2.add(lblNewLabel_1_5);
-		
-		JLabel lblNewLabel_1_5_1 = new JLabel("\u0110\u1ECBa \u0111i\u1EC3m");
-		lblNewLabel_1_5_1.setFont(new Font("Times New Roman", Font.BOLD, 14));
-		lblNewLabel_1_5_1.setBounds(215, 11, 65, 17);
-		panel_2.add(lblNewLabel_1_5_1);
-		
-		JLabel lblNewLabel_1_5_2 = new JLabel("Lo\u1EA1i h\u00ECnh");
-		lblNewLabel_1_5_2.setFont(new Font("Times New Roman", Font.BOLD, 14));
-		lblNewLabel_1_5_2.setBounds(423, 11, 65, 17);
-		panel_2.add(lblNewLabel_1_5_2);
-		
-		JButton btn_tim = new JButton("T\u00ECm");
-		btn_tim.setFont(new Font("Times New Roman", Font.BOLD, 14));
-		btn_tim.setBounds(676, 8, 89, 23);
-		panel_2.add(btn_tim);
 		
 		txt_timTenTour = new JTextField();
+		txt_timTenTour.setBounds(136, 53, 166, 20);
+		panel_1.add(txt_timTenTour);
 		txt_timTenTour.setFont(new Font("Times New Roman", Font.PLAIN, 14));
-		txt_timTenTour.setBounds(70, 10, 116, 20);
-		panel_2.add(txt_timTenTour);
 		txt_timTenTour.setColumns(10);
 		
+		JLabel lblNewLabel_1_5_1 = new JLabel("\u0110\u1ECBa \u0111i\u1EC3m");
+		lblNewLabel_1_5_1.setBounds(380, 55, 65, 17);
+		panel_1.add(lblNewLabel_1_5_1);
+		lblNewLabel_1_5_1.setFont(new Font("Times New Roman", Font.BOLD, 14));
+		
 		txt_timDiaDiem = new JTextField();
+		txt_timDiaDiem.setBounds(441, 53, 166, 20);
+		panel_1.add(txt_timDiaDiem);
 		txt_timDiaDiem.setFont(new Font("Times New Roman", Font.PLAIN, 14));
 		txt_timDiaDiem.setColumns(10);
-		txt_timDiaDiem.setBounds(279, 9, 116, 20);
-		panel_2.add(txt_timDiaDiem);
+		
+		JLabel lblNewLabel_1_5_2 = new JLabel("Lo\u1EA1i h\u00ECnh");
+		lblNewLabel_1_5_2.setBounds(687, 55, 65, 17);
+		panel_1.add(lblNewLabel_1_5_2);
+		lblNewLabel_1_5_2.setFont(new Font("Times New Roman", Font.BOLD, 14));
+		cbb_loaiTour.setBounds(751, 52, 180, 22);
+		panel_1.add(cbb_loaiTour);
 		
 		
 		cbb_loaiTour.setFont(new Font("Times New Roman", Font.PLAIN, 14));
-		cbb_loaiTour.setBounds(486, 9, 180, 22);
-		panel_2.add(cbb_loaiTour);
+		
+		JButton btn_tim = new JButton("T\u00ECm");
+		
+		btn_tim.setBounds(960, 52, 89, 23);
+		panel_1.add(btn_tim);
+		btn_tim.setFont(new Font("Times New Roman", Font.BOLD, 14));
+		
+		JPanel panel_2 = new JPanel();
+		panel_2.setBorder(new MatteBorder(1, 1, 1, 1, (Color) new Color(0, 0, 0)));
+		panel_2.setBounds(10, 144, 1059, 67);
+		panel.add(panel_2);
+		panel_2.setLayout(null);
+		
+		JRadioButton radio_tenTour = new JRadioButton("Tên Tour");
+		buttonGroup.add(radio_tenTour);
+		radio_tenTour.setFont(new Font("Times New Roman", Font.BOLD, 14));
+		radio_tenTour.setBounds(131, 23, 109, 23);
+		panel_2.add(radio_tenTour);
+		
+		JRadioButton radio_giaTour = new JRadioButton("Giá Tour");
+		radio_giaTour.setFont(new Font("Times New Roman", Font.BOLD, 14));
+		buttonGroup.add(radio_giaTour);
+		radio_giaTour.setBounds(279, 23, 109, 23);
+		panel_2.add(radio_giaTour);
+		
+		JRadioButton rdbtnNewRadioButton = new JRadioButton("Trạng thái");
+		buttonGroup.add(rdbtnNewRadioButton);
+		rdbtnNewRadioButton.setFont(new Font("Times New Roman", Font.BOLD, 14));
+		rdbtnNewRadioButton.setBounds(418, 23, 109, 23);
+		panel_2.add(rdbtnNewRadioButton);
+		
+		JButton btnNewButton = new JButton("Giảm dần");
+		
+		btnNewButton.setFont(new Font("Times New Roman", Font.BOLD, 14));
+		btnNewButton.setBounds(570, 23, 98, 23);
+		panel_2.add(btnNewButton);
+		
+		JButton btnTngDn = new JButton("Tăng dần");
+		
+		btnTngDn.setFont(new Font("Times New Roman", Font.BOLD, 14));
+		btnTngDn.setBounds(727, 23, 98, 23);
+		panel_2.add(btnTngDn);
+		
+		JButton btnTiLi = new JButton("Tải lại");
+		
+		btnTiLi.setFont(new Font("Times New Roman", Font.BOLD, 14));
+		btnTiLi.setBounds(882, 23, 98, 23);
+		panel_2.add(btnTiLi);
 		
 		JPanel panel_3 = new JPanel();
 		panel_3.setBorder(new MatteBorder(1, 1, 1, 1, (Color) new Color(0, 0, 0)));
-		panel_3.setBounds(0, 222, 775, 249);
+		panel_3.setBounds(0, 222, 1079, 394);
 		panel.add(panel_3);
 		panel_3.setLayout(null);
 		
 		JScrollPane scrollPane = new JScrollPane();
-		scrollPane.setBounds(0, 0, 775, 249);
+		scrollPane.setBounds(0, 0, 1079, 388);
 		panel_3.add(scrollPane);
 		
 		table = new JTable();
@@ -259,26 +226,26 @@ public class TourFrame extends JFrame {
 	      table.getTableHeader().setFont(headerFont);
 		table.setModel(new DefaultTableModel(
 			new Object[][] {
-				{null, null, null, null, null},
-				{null, null, null, null, null},
-				{null, null, null, null, null},
-				{null, null, null, null, null},
-				{null, null, null, null, null},
-				{null, null, null, null, null},
-				{null, null, null, null, null},
-				{null, null, null, null, null},
-				{null, null, null, null, null},
-				{null, null, null, null, null},
-				{null, null, null, null, null},
-				{null, null, null, null, null},
-				{null, null, null, null, null},
+				{null, null, null, null, null, null},
+				{null, null, null, null, null, null},
+				{null, null, null, null, null, null},
+				{null, null, null, null, null, null},
+				{null, null, null, null, null, null},
+				{null, null, null, null, null, null},
+				{null, null, null, null, null, null},
+				{null, null, null, null, null, null},
+				{null, null, null, null, null, null},
+				{null, null, null, null, null, null},
+				{null, null, null, null, null, null},
+				{null, null, null, null, null, null},
+				{null, null, null, null, null, null},
 			},
 			new String[] {
-				"M\u00E3 Tour", "T\u00EAn Tour", "Lo\u1EA1i Tour", "M\u00F4 t\u1EA3", "Tr\u1EA1ng th\u00E1i"
+				"M\u00E3 Tour", "T\u00EAn Tour", "Lo\u1EA1i Tour", "M\u00F4 t\u1EA3", "Tr\u1EA1ng th\u00E1i", "H\u00ECnh \u1EA3nh"
 			}
 		) {
 			Class[] columnTypes = new Class[] {
-				String.class, String.class, String.class, Object.class, String.class
+				String.class, String.class, String.class, Object.class, String.class, Object.class
 			};
 			public Class getColumnClass(int columnIndex) {
 				return columnTypes[columnIndex];
@@ -286,30 +253,128 @@ public class TourFrame extends JFrame {
 		});
 		table.getColumnModel().getColumn(0).setPreferredWidth(70);
 		table.getColumnModel().getColumn(0).setMaxWidth(200);
-		table.getColumnModel().getColumn(3).setPreferredWidth(70);
+		table.getColumnModel().getColumn(1).setPreferredWidth(150);
+		table.getColumnModel().getColumn(2).setPreferredWidth(80);
+		table.getColumnModel().getColumn(3).setPreferredWidth(150);
 		table.getColumnModel().getColumn(3).setMaxWidth(200);
 		table.getColumnModel().getColumn(4).setPreferredWidth(90);
 		table.getColumnModel().getColumn(4).setMaxWidth(200);
+		table.getColumnModel().getColumn(5).setPreferredWidth(83);
+		table.getColumnModel().getColumn(5).setMaxWidth(105);
 		scrollPane.setViewportView(table);
+		
+		JButton btn_them = new JButton("Th\u00EAm");
+		btn_them.setBounds(491, 622, 89, 23);
+		panel.add(btn_them);
+		btn_them.setFont(new Font("Times New Roman", Font.BOLD, 18));
+		//// button thêm
+		btn_them.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				//tourRepository.AddEmptyTour();
+				AddTour addTour = new AddTour();
+				addTour.setVisible(true);
+			}
+		});
 		//Function=========================================================
 			tableModel = (DefaultTableModel) table.getModel();
 			findAll();
 			getTypleOfTourToCombobox();
-			//// button thêm
-			btn_them.addActionListener(new ActionListener() {
-				public void actionPerformed(ActionEvent e) {
-					//tourRepository.AddEmptyTour();
-					AddTour addTour = new AddTour();
-					addTour.setVisible(true);
-				}
-			});
 			//// click dòng hiện tab properties
 			table.addMouseListener(new MouseAdapter() {
 				@Override
 				public void mouseClicked(MouseEvent e) {
 				PropertiesTour propertiesTour = new PropertiesTour();
+				int index = table.getSelectedRow();
+				PropertiesTour.setMaTour(tableModel.getValueAt(index, 0).toString());
+				propertiesTour.setTenTour(tableModel.getValueAt(index, 1).toString());
+				propertiesTour.setLoaiTour(tableModel.getValueAt(index, 2).toString());
+				propertiesTour.setMoTa(tableModel.getValueAt(index, 3).toString());
+				propertiesTour.setTrangThai(tableModel.getValueAt(index,4).toString());
+				propertiesTour.setHinhAnh(tableModel.getValueAt(index, 5).toString());
+				propertiesTour.setGiaBatDau(tourRepository.getDateFromTime(tableModel.getValueAt(index, 0).toString()));
+				propertiesTour.setGiaKetThuc(tourRepository.getDateToTime(tableModel.getValueAt(index, 0).toString()));
+				propertiesTour.setGia(tourRepository.getPriceById(tableModel.getValueAt(index, 0).toString()));
 				propertiesTour.setVisible(true);
+				}
+			});
+			// tìm kiếm
+			btn_tim.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+					listTour = tourRepository.searchTour(txt_timTenTour.getText(), txt_timDiaDiem.getText(), cbb_loaiTour.getSelectedItem().toString());
+					tableModel.setRowCount(0);
+					listTour.forEach((tour)->{			
+							try {
+								tableModel.addRow(new Object[] {
+									tour.getId(), tour.getName(), typeRepository.getNameById(tour.getTypeId()), tour.getDescription(), tour.getStatus(), tour.getImage()
+								});
+							} catch (SQLException e1) {
+								// TODO Auto-generated catch block
+								e1.printStackTrace();
+							}
+						
+					});
+					
+				}
+			});
+			
+			btnNewButton.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+					if(radio_tenTour.isSelected()) {
+						listTour = tourRepository.sortTourByName(txt_timTenTour.getText(), txt_timDiaDiem.getText(), cbb_loaiTour.getSelectedItem().toString(),1);
+					}
+					if(radio_giaTour.isSelected()) {
+						listTour = tourRepository.sortTourByPrice(txt_timTenTour.getText(), txt_timDiaDiem.getText(), cbb_loaiTour.getSelectedItem().toString(),1);
+					}
+					if(rdbtnNewRadioButton.isSelected()) {
+						listTour = tourRepository.sortTourByStatus(txt_timTenTour.getText(), txt_timDiaDiem.getText(), cbb_loaiTour.getSelectedItem().toString(),1);
+					}
+					tableModel.setRowCount(0);
+					listTour.forEach((tour)->{			
+							try {
+								tableModel.addRow(new Object[] {
+									tour.getId(), tour.getName(), typeRepository.getNameById(tour.getTypeId()), tour.getDescription(), tour.getStatus(), tour.getImage()
+								});
+							} catch (SQLException e1) {
+								// TODO Auto-generated catch block
+								e1.printStackTrace();
+							}
+						
+					});
+				}
+			});
+			
+			btnTngDn.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+					if(radio_tenTour.isSelected()) {
+						listTour = tourRepository.sortTourByName(txt_timTenTour.getText(), txt_timDiaDiem.getText(), cbb_loaiTour.getSelectedItem().toString(),0);
+					}
+					if(radio_giaTour.isSelected()) {
+						listTour = tourRepository.sortTourByPrice(txt_timTenTour.getText(), txt_timDiaDiem.getText(), cbb_loaiTour.getSelectedItem().toString(),0);
+					}
+					if(rdbtnNewRadioButton.isSelected()) {
+						listTour = tourRepository.sortTourByStatus(txt_timTenTour.getText(), txt_timDiaDiem.getText(), cbb_loaiTour.getSelectedItem().toString(),0);
+					}
+					tableModel.setRowCount(0);
+					listTour.forEach((tour)->{			
+							try {
+								tableModel.addRow(new Object[] {
+									tour.getId(), tour.getName(), typeRepository.getNameById(tour.getTypeId()), tour.getDescription(), tour.getStatus(), tour.getImage()
+								});
+							} catch (SQLException e1) {
+								// TODO Auto-generated catch block
+								e1.printStackTrace();
+							}
+						
+					});
+				}
+			});
+			
+			btnTiLi.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+					findAll();
+					cbb_loaiTour.setSelectedIndex(0);
 				}
 			});
 	}
 }
+

@@ -11,6 +11,10 @@ encoding//src/main/java/com/tourism/GUI/frames/analysis/AnalysisMainPanel.java=U
 encoding//src/main/java/com/tourism/GUI/frames/analysis/TourOperationSituation.java=UTF-8
 encoding//src/main/java/com/tourism/GUI/frames/customer/CustomerMainPanel.java=UTF-8
 encoding//src/main/java/com/tourism/GUI/frames/employee/EmployeeMainPanel.java=UTF-8
+<<<<<<< HEAD
+=======
+encoding//src/main/java/com/tourism/GUI/frames/tour/PropertiesTour.java=UTF-8
+>>>>>>> 5fc92ed13055a6ab3afa8980c2db1720021e839f
 encoding//src/main/java/com/tourism/GUI/frames/tour/TourFrame.java=UTF-8
 encoding//src/main/java/com/tourism/GUI/frames/touristgroup/TouristGroupMainPanel.java=UTF-8
 encoding//src/main/java/com/tourism/GUI/frames/touristgroup/management/TouristGroupDetailPanel.java=UTF-8

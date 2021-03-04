@@ -187,3 +187,6 @@ public class TypeRepository implements Repositories<Type, Long> {
 		return id;
 	}
 }
+
+
+

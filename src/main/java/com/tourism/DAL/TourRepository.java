@@ -2,6 +2,7 @@
 package com.tourism.DAL;
 
 
+import java.sql.Date;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -224,6 +225,136 @@ public class TourRepository implements Repositories<Tour, Long> {
 	
 	public void AddEmptyTour() {
 		this.connector.executeUpdate("INSERT INTO tour(type_id,name,description,status,image) VALUES (null,null,null,null,null)");
+	}
+	
+	public Double getPriceById(String tour_id) {
+		ResultSet rsTour = this.connector.executeQuery("select price FROM tour_cost where tour_id ='" + tour_id + "'");
+		Double price = null;
+		try {
+			while (rsTour.next()) {
+				Double Price =  new Double(rsTour.getDouble("price"));
+				price = Price;
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		return price;
+	}
+	
+	public String getDateFromTime(String tour_id) {
+		ResultSet rsTour = this.connector.executeQuery("select price_from_time FROM tour_cost where tour_id ='" + tour_id + "'");
+		String dateFromTime = null;
+		try {
+			while (rsTour.next()) {
+				String DateFromTime = new String(rsTour.getString("price_from_time"));
+				dateFromTime = DateFromTime;
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		return dateFromTime;
+	}
+	
+	public String getDateToTime(String tour_id) {
+		ResultSet rsTour = this.connector.executeQuery("select price_to_time FROM tour_cost where tour_id ='" + tour_id + "'");
+		String dateToTime = null;
+		try {
+			while (rsTour.next()) {
+				String DateToTime =  new String(rsTour.getString("price_to_time"));
+				dateToTime = DateToTime;
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		return dateToTime;
+	}
+	
+	public List<Tour> searchTour(String nameTour, String location, String typeTour){
+		ResultSet rsTour = this.connector.executeQuery("SELECT t.id, t.type_id, t.name ,t.description ,t.status, t.image"
+				+ " from tour t, tour_location tl, type_of_tour tt, location l"
+				+ " WHERE t.id = tl.tour_id AND t.type_id = tt.id AND tl.location_id = l.id "
+				+ "AND t.name LIKE '%" + nameTour + "%' "
+				+ "AND tt.name LIKE '%" + typeTour + "%' "
+				+ "AND l.name LIKE '%" + location + "%'\n"
+				);
+		return extractResultSet(rsTour);
+	}
+	public List<Tour> sortTourByName(String nameTour, String location, String typeTour, int temp){
+		ResultSet rsTour;
+		if(temp == 1) {
+			 rsTour = this.connector.executeQuery("SELECT t.id, t.type_id, t.name ,t.description ,t.status, t.image"
+					+ " from tour t, tour_location tl, type_of_tour tt, location l, tour_cost tc"
+					+ " WHERE t.id = tl.tour_id AND t.type_id = tt.id AND tl.location_id = l.id AND t.id = tc.tour_id "
+					+ "AND t.name LIKE '%" + nameTour + "%' "
+					+ "AND tt.name LIKE '%" + typeTour + "%' "
+					+ "AND l.name LIKE '%" + location + "%'\n"
+					+ "order by t.name desc"
+					);
+		} else {
+			rsTour = this.connector.executeQuery("SELECT t.id, t.type_id, t.name ,t.description ,t.status, t.image"
+					+ " from tour t, tour_location tl, type_of_tour tt, location l, tour_cost tc"
+					+ " WHERE t.id = tl.tour_id AND t.type_id = tt.id AND tl.location_id = l.id AND t.id = tc.tour_id "
+					+ "AND t.name LIKE '%" + nameTour + "%' "
+					+ "AND tt.name LIKE '%" + typeTour + "%' "
+					+ "AND l.name LIKE '%" + location + "%'\n"
+					+ "order by t.name asc"
+					);
+		}
+		return extractResultSet(rsTour);
+	}
+	
+	public List<Tour> sortTourByPrice(String nameTour, String location, String typeTour, int temp){
+		ResultSet rsTour;
+		if(temp == 1) {
+			 rsTour = this.connector.executeQuery("SELECT t.id, t.type_id, t.name ,t.description ,t.status, t.image"
+					+ " from tour t, tour_location tl, type_of_tour tt, location l, tour_cost tc"
+					+ " WHERE t.id = tl.tour_id AND t.type_id = tt.id AND tl.location_id = l.id AND t.id = tc.tour_id "
+					+ "AND t.name LIKE '%" + nameTour + "%' "
+					+ "AND tt.name LIKE '%" + typeTour + "%' "
+					+ "AND l.name LIKE '%" + location + "%'\n"
+					+ "order by tc.price desc"
+					);
+		} else {
+			rsTour = this.connector.executeQuery("SELECT t.id, t.type_id, t.name ,t.description ,t.status, t.image"
+					+ " from tour t, tour_location tl, type_of_tour tt, location l, tour_cost tc"
+					+ " WHERE t.id = tl.tour_id AND t.type_id = tt.id AND tl.location_id = l.id AND t.id = tc.tour_id "
+					+ "AND t.name LIKE '%" + nameTour + "%' "
+					+ "AND tt.name LIKE '%" + typeTour + "%' "
+					+ "AND l.name LIKE '%" + location + "%'\n"
+					+ "order by tc.price asc"
+					);
+		}
+		return extractResultSet(rsTour);
+	}
+	
+	public List<Tour> sortTourByStatus(String nameTour, String location, String typeTour, int temp){
+		ResultSet rsTour;
+		if(temp == 1) {
+			 rsTour = this.connector.executeQuery("SELECT t.id, t.type_id, t.name ,t.description ,t.status, t.image"
+					+ " from tour t, tour_location tl, type_of_tour tt, location l, tour_cost tc"
+					+ " WHERE t.id = tl.tour_id AND t.type_id = tt.id AND tl.location_id = l.id AND t.id = tc.tour_id "
+					+ "AND t.name LIKE '%" + nameTour + "%' "
+					+ "AND tt.name LIKE '%" + typeTour + "%' "
+					+ "AND l.name LIKE '%" + location + "%'\n"
+					+ "order by t.status desc"
+					);
+		} else {
+			rsTour = this.connector.executeQuery("SELECT t.id, t.type_id, t.name ,t.description ,t.status, t.image"
+					+ " from tour t, tour_location tl, type_of_tour tt, location l, tour_cost tc"
+					+ " WHERE t.id = tl.tour_id AND t.type_id = tt.id AND tl.location_id = l.id AND t.id = tc.tour_id "
+					+ "AND t.name LIKE '%" + nameTour + "%' "
+					+ "AND tt.name LIKE '%" + typeTour + "%' "
+					+ "AND l.name LIKE '%" + location + "%'\n"
+					+ "order by t.status asc"
+					);
+		}
+		return extractResultSet(rsTour);
 	}
 	
 }

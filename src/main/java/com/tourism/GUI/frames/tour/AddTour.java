@@ -51,6 +51,7 @@ public class AddTour extends JFrame {
 	private JTextField txt_tenTour;
 	private JTextField txt_giaTour;
 	private JTable table;
+	JLabel lbl_maTour = new JLabel();
 	JDateChooser date_from = new JDateChooser();
 	JDateChooser date_to = new JDateChooser();
 	
@@ -228,7 +229,7 @@ public class AddTour extends JFrame {
 		lblNewLabel_1_2_1.setBounds(230, 157, 77, 14);
 		panel_1.add(lblNewLabel_1_2_1);
 		
-		JLabel lbl_maTour = new JLabel("6");
+		
 		lbl_maTour.setFont(new Font("Times New Roman", Font.BOLD, 14));
 		lbl_maTour.setBounds(297, 157, 46, 14);
 		panel_1.add(lbl_maTour);
@@ -399,7 +400,6 @@ public class AddTour extends JFrame {
 		
 		btn_Huy.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				tourRepository.deleteIdLast();
 				dispose();
 			}
 		});
