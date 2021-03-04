@@ -23,10 +23,12 @@ import com.tourism.DTO.Customer;
 import com.tourism.GUI.CustomTable;
 import com.tourism.GUI.Resources;
 import com.tourism.GUI.frames.touristgroup.modify.TouristGroupCustomerTable;
+import com.tourism.GUI.util.ConfirmDialog;
 import com.tourism.GUI.util.MessageDialog;
 import com.tourism.service.Validation;
 
 public class CustomerMainPanel extends JPanel{
+	static String ERROR_MESSAGE;
 	CustomerController customerController;
 	static Customer selectedCustomer;
 	JPanel pnlCustomer;
@@ -93,7 +95,7 @@ public class CustomerMainPanel extends JPanel{
 			@Override
 			public void mousePressed(MouseEvent e) {
 				if(!validateInput()) {
-					new MessageDialog("ThÔng tin điền vào không hợp lệ");
+					new MessageDialog(ERROR_MESSAGE);
 					return;
 				}
 				commitSelectedCustomer();
@@ -106,12 +108,14 @@ public class CustomerMainPanel extends JPanel{
 		btnDelete.addMouseListener(new MouseAdapter() {
 			public void mousePressed(MouseEvent e) {
 				if(!validateInput()) {
-					new MessageDialog("Thông tin điền vào không hợp lệ");
+					new MessageDialog(ERROR_MESSAGE);
 					return;
 				}
-				commitSelectedCustomer();
-				customerController.deleteCustomer(selectedCustomer.getId());
-				loadTable();
+				if(new ConfirmDialog("Bạn chắc chắn muốn xóa?").confirm()) {					
+					commitSelectedCustomer();
+					customerController.deleteCustomer(selectedCustomer.getId());
+					loadTable();
+				}
 			};
 		});
 		
@@ -120,7 +124,7 @@ public class CustomerMainPanel extends JPanel{
 			@Override
 			public void mousePressed(MouseEvent e) {
 				if(!validateInput()) {
-					new MessageDialog("Thông tin điền vào không hợp lệ");
+					new MessageDialog(ERROR_MESSAGE);
 					return;
 				}
 				commitSelectedCustomer();
@@ -231,10 +235,8 @@ public class CustomerMainPanel extends JPanel{
 	}
 	
 	public boolean validateInput() {
-		if(!Validation.checkDigit(txtId.getText())) {
-			return false;
-		}
 		if(!Validation.checkPhone_Number(txtPhoneNumber.getText()) || txtPhoneNumber.equals(null)){
+			ERROR_MESSAGE = "Số điện thoại không hợp lệ";
 			return false;
 		}
 		return true;

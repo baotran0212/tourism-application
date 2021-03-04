@@ -41,7 +41,7 @@ public class AnalysisEmployeeActivity extends JPanel {
 	JButton btnEnDate;
 	
 	JButton btnAnalysis;
-	JPanel pnlActivity;
+	JPanel pnlAnalysis;
 	
 	DefaultTableModel model;
 	JTable tbl;
@@ -65,7 +65,7 @@ public class AnalysisEmployeeActivity extends JPanel {
 	btnEnDate = new JButton(Resources.CALENDAR_ICON);
 	
 	btnAnalysis = new JButton("Thống kê");
-	pnlActivity = new JPanel();
+	pnlAnalysis = new JPanel();
 	
 	model = new DefaultTableModel(new Object[] {"Mã", "Tên", "Sđt", "Địa chỉ", "Số lần đi tour"}, 0);
 	tbl = new CustomTable(model);
@@ -104,14 +104,14 @@ public class AnalysisEmployeeActivity extends JPanel {
 				loadTable();
 			}
 		});
-		pnlActivity.add(lblStartDate);
-		pnlActivity.add(txtStartDate);
-		pnlActivity.add(btnStartDate);
-		pnlActivity.add(lblEndDate);
-		pnlActivity.add(txtEndDate);
-		pnlActivity.add(btnEnDate);
-		pnlActivity.add(btnAnalysis);
-		pnlActivity.setBackground(Resources.PRIMARY);
+		pnlAnalysis.add(lblStartDate);
+		pnlAnalysis.add(txtStartDate);
+		pnlAnalysis.add(btnStartDate);
+		pnlAnalysis.add(lblEndDate);
+		pnlAnalysis.add(txtEndDate);
+		pnlAnalysis.add(btnEnDate);
+		pnlAnalysis.add(btnAnalysis);
+		pnlAnalysis.setBackground(Resources.PRIMARY);
 		//Table
 		
 		loadTable();
@@ -122,10 +122,10 @@ public class AnalysisEmployeeActivity extends JPanel {
 		layout.setAutoCreateContainerGaps(true);
 		layout.setAutoCreateGaps(true);
 		layout.setHorizontalGroup(layout.createParallelGroup()
-				.addComponent(pnlActivity)
+				.addComponent(pnlAnalysis)
 				.addComponent(pnlTable));
 		layout.setVerticalGroup(layout.createSequentialGroup()
-				.addComponent(pnlActivity, Resources.INPUT_HEIGHT_XXL, Resources.INPUT_HEIGHT_XXL, Resources.INPUT_HEIGHT_XXL)
+				.addComponent(pnlAnalysis, Resources.INPUT_HEIGHT_XXL, Resources.INPUT_HEIGHT_XXL, Resources.INPUT_HEIGHT_XXL)
 				.addComponent(pnlTable));
 		this.setLayout(layout);
 		this.setBackground(Resources.PRIMARY_DARK);

@@ -117,8 +117,8 @@ public class CustomerRepository implements Repositories<Customer, Long> {
 
 	@Override
 	public void deleteById(Long id) {
-		String deleteRelationShip = "DELETE FROM tourist_group_customer WHERE customer customer_id = \"" + id + "\" ;";
-		String query = "DELETE FROM employee WHERE id = \"" +id + "\" ;";
+		String deleteRelationShip = "DELETE FROM tourist_group_customer WHERE customer_id = \"" + id + "\" ;";
+		String query = "DELETE FROM customer WHERE id = \"" +id + "\" ;";
 		this.connector.executeUpdate(deleteRelationShip);
 		this.connector.executeUpdate(query);
 	}

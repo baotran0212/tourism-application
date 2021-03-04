@@ -13,3 +13,5 @@
 # PROBLEM REPORT
 ```
 ```
+# BUSSINESS RULE
+TouristGroup has Price = Price * Count(Customer);
