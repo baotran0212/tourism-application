@@ -53,7 +53,7 @@ public class EmployeeRepository implements Repositories<Employee, Long> {
 				insertQuery.append("\"" + e.getAddress3() + "\", ");
 				insertQuery.append("\""+e.getStreet() + "\", ");
 				insertQuery.append("\"" + e.getGender() + "\", ");
-				insertQuery.append("\"" + e.getPhoneNumber() + "\" ");
+				insertQuery.append("\"" + e.getPhoneNumber() + "\", ");
 				insertQuery.append("\"" + e.getStatus() + "\" ); ");
 				System.out.println(insertQuery);
 				connector.executeUpdate(insertQuery.toString());
