@@ -52,6 +52,9 @@ public class TouristGroupBasicModifyPanel extends JPanel {
 	JLabel lblStatus;
 	static JComboBox<String> cbxStatus;
 	
+	JLabel lblTourPrice;
+	JLabel lblTourPriceValue;
+	
 	TouristGroup TG;
 	TourController tourController;
 	
@@ -92,6 +95,8 @@ public class TouristGroupBasicModifyPanel extends JPanel {
 			if(tour.getId() == TG.getTourId())
 				cbxTourName.setSelectedItem( tour.getId() + ". "  + tour.getName() );
 		});
+		
+		
 	}
 	
 	public void initComp() {

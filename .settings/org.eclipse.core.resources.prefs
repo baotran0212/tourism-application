@@ -1,6 +1,6 @@
 =\=\=\=\=\=\=
 <<<<<<<=HEAD
->>>>>>>=b6bf89b2c4853cac74bbc128b563a2f35388c3f1
+>>>>>>>=5fc92ed13055a6ab3afa8980c2db1720021e839f
 eclipse.preferences.version=1
 encoding//src/main/java/com/tourism/App.java=UTF-8
 encoding//src/main/java/com/tourism/GUI/LoginFrame.java=UTF-8
@@ -8,13 +8,10 @@ encoding//src/main/java/com/tourism/GUI/MainFrame.java=UTF-8
 encoding//src/main/java/com/tourism/GUI/Resources.java=UTF-8
 encoding//src/main/java/com/tourism/GUI/frames/analysis/AnalysisEmployeeActivity.java=UTF-8
 encoding//src/main/java/com/tourism/GUI/frames/analysis/AnalysisMainPanel.java=UTF-8
-encoding//src/main/java/com/tourism/GUI/frames/analysis/TourOperationSituation.java=UTF-8
+encoding//src/main/java/com/tourism/GUI/frames/analysis/TourOperationSituation/TourOperationSituation.java=UTF-8
 encoding//src/main/java/com/tourism/GUI/frames/customer/CustomerMainPanel.java=UTF-8
 encoding//src/main/java/com/tourism/GUI/frames/employee/EmployeeMainPanel.java=UTF-8
-<<<<<<< HEAD
-=======
 encoding//src/main/java/com/tourism/GUI/frames/tour/PropertiesTour.java=UTF-8
->>>>>>> 5fc92ed13055a6ab3afa8980c2db1720021e839f
 encoding//src/main/java/com/tourism/GUI/frames/tour/TourFrame.java=UTF-8
 encoding//src/main/java/com/tourism/GUI/frames/touristgroup/TouristGroupMainPanel.java=UTF-8
 encoding//src/main/java/com/tourism/GUI/frames/touristgroup/management/TouristGroupDetailPanel.java=UTF-8
