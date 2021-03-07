@@ -31,7 +31,7 @@ public class Tour {
 
 	List<TouristGroup> touristGroups ;
 	List<Location> locations;
-	//List<TourCost> tourCosts;
+	List<TourCost> tourCosts;
 	Location location;
 	List<Long> idLocation;
 }

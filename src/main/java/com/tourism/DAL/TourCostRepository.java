@@ -10,6 +10,7 @@ import java.util.logging.Logger;
 
 import com.tourism.DTO.Tour;
 import com.tourism.DTO.TourCost;
+import com.tourism.GUI.Resources;
 
 public class TourCostRepository implements Repositories<TourCost, Long> {
 	Connector connector = new MysqlConnector();
@@ -171,5 +172,26 @@ public class TourCostRepository implements Repositories<TourCost, Long> {
 		}
 		return id;
 	}
-
+	
+	public List<TourCost> findByTourId(Long tourId){
+		ResultSet rs = this.connector.executeQuery("SELECT * FROM tour_cost WHERE tour_id=\""+tourId +"\" ;");
+		return extractFromResultSet(rs);
+	}
+	
+	public List<TourCost> extractFromResultSet(ResultSet rs){
+		List<TourCost> tourCosts= new ArrayList<TourCost>();
+		try {
+			while(rs.next()) {
+				tourCosts.add(new TourCost(
+						Long.valueOf(rs.getLong("id")),
+						Long.valueOf(rs.getLong("tour_id")),
+						Double.valueOf(rs.getDouble("price")),
+						rs.getString("price_from_time"),
+						rs.getString("price_to_time")
+						));
+			}
+		} catch (Exception e) {
+		}
+		return tourCosts;
+	}
 }

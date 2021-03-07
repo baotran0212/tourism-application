@@ -45,7 +45,7 @@ public class AnalysisMainPanel extends JPanel{
 	
 	public void initComp() {
 		comboItems.add(new ComboItemPanel("Số lần đi tour của nhân viên", new AnalysisEmployeeActivity()));
-		comboItems.add(new ComboItemPanel("Hoạt động của tour", new TourOperationSituationMain()));
+		comboItems.add(new ComboItemPanel("Doanh thu tour", new TourOperationSituationMain()));
 		comboItems.add(new ComboItemPanel("Đoàn du lịch", new AnalysisTouristGroup()));
 		comboItems.forEach(comboItem -> {
 		cbxAnalysis.addItem(comboItem.getName());
