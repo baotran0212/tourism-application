@@ -162,7 +162,7 @@ public class CustomerRepository implements Repositories<Customer, Long> {
 				Customer customer = new Customer();
 				customer.setId(Long.valueOf(rs.getLong("id")));
 				customer.setName(rs.getString("name"));
-				customer.setIdentityCard("identity_card");
+				customer.setIdentityCard(rs.getString("identity_card"));
 				customer.setAddress1(rs.getString("address1"));
 				customer.setAddress2(rs.getString("address2"));
 				customer.setAddress3(rs.getString("address3"));

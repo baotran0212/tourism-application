@@ -55,7 +55,7 @@ public class TouristGroupBasicModifyPanel extends JPanel {
 	static JComboBox<String> cbxStatus;
 	
 	JLabel lblRevenue;
-	JTextField txtRevenueValue;
+	static JTextField txtRevenueValue;
 	JButton btnModifyRevenue;
 	JPanel pnlRevenue;
 	
@@ -234,6 +234,7 @@ public class TouristGroupBasicModifyPanel extends JPanel {
 		TG.setStatus(cbxStatus.getSelectedItem().toString());
 		String tourName = cbxTourName.getSelectedItem().toString();
 		TG.setTourId(Long.valueOf(tourName.substring(0, tourName.lastIndexOf("."))));
+		TG.setRevenue(Double.valueOf( txtRevenueValue.getText()));
 		return true;
 	}
 	

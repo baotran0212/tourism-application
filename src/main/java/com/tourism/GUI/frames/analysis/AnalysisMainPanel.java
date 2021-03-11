@@ -15,6 +15,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 
 import com.tourism.GUI.Resources;
+import com.tourism.GUI.frames.analysis.Employee.AnalysisEmployeeActivity;
 import com.tourism.GUI.frames.analysis.TourOperationSituation.TourOperationSituation;
 import com.tourism.GUI.frames.analysis.TourOperationSituation.TourOperationSituationMain;
 import com.tourism.GUI.frames.analysis.TouristGroup.AnalysisTouristGroup;

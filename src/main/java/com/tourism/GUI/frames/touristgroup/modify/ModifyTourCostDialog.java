@@ -89,6 +89,7 @@ public class ModifyTourCostDialog {
 						).getPrice().toString()
 				);
 				Double newRevenue = Double.valueOf(lblCostValue.getText()) * Double.valueOf(lblCustomerValue.getText());
+				System.out.println(newRevenue);
 				lblRevenueValue.setText(
 						newRevenue.toString()
 				);
