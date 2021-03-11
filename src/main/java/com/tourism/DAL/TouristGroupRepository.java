@@ -56,13 +56,14 @@ public class TouristGroupRepository implements Repositories<TouristGroup, Long> 
 				this.connector.executeUpdate(updateQuery.toString());
 			} else {
 				StringBuilder insertQuery = new StringBuilder(
-						"INSERT INTO tourist_group(`tour_id`, `name`, `depature_date`, `end_date`, `description`, `food_price`, `transport_price`, `hotel_price`, `other_price`, `status`, `revenue`) VALUES ");
+						"INSERT INTO tourist_group(`tour_id`, `name`, `depature_date`, `end_date`, `status`, `revenue`) VALUES ");
 				insertQuery.append("( \"" + e.getTourId() + "\", ");
 				insertQuery.append("\"" + e.getName() + "\", ");
 				insertQuery.append("\"" + Resources.simpleDateFormat.format(e.getDepatureDate()) + "\", ");
 				insertQuery.append("\"" + Resources.simpleDateFormat.format(e.getEndDate()) + "\", ");
 				insertQuery.append("\"" + e.getStatus() + "\", ");
 				insertQuery.append("\"" + e.getRevenue() + "\"); ");
+				System.out.println(insertQuery.toString());
 				connector.executeUpdate(insertQuery.toString());
 				ResultSet returnedResultSet = connector
 						.executeQuery("SELECT * FROM tourist_group ORDER BY `id` DESC LIMIT 1");

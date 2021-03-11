@@ -1,4 +1,4 @@
-package com.tourism.GUI.frames.analysis;
+package com.tourism.GUI.frames.analysis.Employee;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -146,7 +146,7 @@ public class AnalysisEmployeeActivity extends JPanel {
 					emp.getId(),
 					emp.getName(),
 					emp.getPhoneNumber(),
-					emp.getStreet() + ", " + emp.getAddress3() + ", " + emp.getAddress2() + ", " + emp.getAddress1(),
+					emp.getAddress1(),
 					emp.getTouristGroups().size()});
 		});
 		tbl.getParent().revalidate();
